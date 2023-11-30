@@ -1,0 +1,16 @@
+[package]
+name = "on_chain_radio"
+version = "1.0.0"
+authors = []
+
+[addresses]
+addr_on_chain_radio = "9f5a1acdaeb54a53e78b5fe9f1045884145da9ed850016d8c2a4806ffb1532bf"
+
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]
