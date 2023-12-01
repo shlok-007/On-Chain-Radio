@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
                     className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
                     onClick={() => setNavbar(!navbar)}
                   >
-                    Sign up
+                    Connect Wallet
                   </a>
                 </li>
 

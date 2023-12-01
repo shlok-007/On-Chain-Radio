@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Navbar } from "../components/Navbar";
 import { UploadForm } from "../components/UploadForm";
 import { RevenueForm } from "../components/RevenueForm";
-import { Footer } from "../components/Footer";
+import  Footer  from "../components/Footer";
 
 const Uplaod: React.FC = () => {
     const [revenue, setRevenue] = useState([<RevenueForm />]);
