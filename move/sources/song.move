@@ -1,25 +1,27 @@
 module addr_on_chain_radio::song{
-import 0x1::std::address;
-import 0x1::std::string::String;
-import 0x1::std::vec::Vec;
-import 0x1::aptos_std::event;
-import 0x1::aptos_crypto::Crypto;
-resource struct Song {
+use aptos_framework::account;
+use aptos_framework::event;
+use std::address;
+use std::string::String;
+use std::vector::Vec;
+use aptos_std::event;
+
+struct Song has store, drop, copy{
     id: u64,
     artist: address,
     title: vector<u8>,
     content: vector<u8>,
     tip_pool: u64,
 }
-resource struct UserProfile {
+ struct UserProfile has store, drop, copy {
     user: address,
-    listened_tracks: Vec<u64>,
+    listened_tracks: vector<u64>,
 }
-resource struct Artist {
+struct Artist has store, drop, copy{
     address: address,
     authorized: bool,
 }
-resource struct Tip {
+struct Tip has store, drop, copy{
     sender: address,
     amount: u64,
 }
@@ -47,19 +49,22 @@ public fun upload_Song(title: vector<u8>, content: vector<u8>) {
 public fun listen_Song(user: &signer, track_id: u64) {
         let user_address = signer::address_of(user);
         // song from stor
-        let track = move_from<Song>(move(id));
+        let track = move_from<Song>(id);
         // Add to user listen tracks
-        let mut user_profile = move_from_opt<UserProfile>(move(user_address));
-        if let Some(profile) = user_profile {
-            profile.listened_tracks.push(id);
-            move_to<UserProfile>(move(user_address), move(profile));
-        } else {
+        let user_profile = move_from_opt<UserProfile>(user_address);
+        if (user_profile)
+        {
+            let v=user_profile.listened_tracks;
+            vector::push_back(&mut v,track);
+            move_to<UserProfile>(user_address, user_profile);
+        } 
+        else {
             // If !user profile, create a new
             let new_profile = UserProfile {
                 user: user_address,
-                listened_tracks: vec![id],
+                listened_tracks: track,
             };
-            move_to<UserProfile>(move(user_address), move(new_profile));
+            move_to<UserProfile>(user_address, new_profile);
         }
     }
     public fun authorizeArtist(artist: address, authorized: bool) {
@@ -70,44 +75,50 @@ public fun listen_Song(user: &signer, track_id: u64) {
         let composerResource = borrow_global_mut<Artist>(composer);
         let singerResource = borrow_global_mut<Artist>(singer);
         let bandResource = borrow_global_mut<Artist>(band);
-        if !composerResource.authorized {
-            abort("Composer is not authorized");
+        if(!composerResource.authorized)
+        {
+          return 0;
         }
-        if !singerResource.authorized {
-            abort("Singer is not authorized");
+        else if(!singerResource.authorized) 
+        {
+            return 0;
         }
-        if !bandResource.authorized {
-            abort("Band is not authorized");
+        else if(!bandResource.authorized)
+        {
+            return 0;
         }
-    let total_amount = Aptos::coin_balance_of<CoinType>(sender);
-    assert(total_amount >= amount, 0x0);
+        else
+        {
+        let total_amount = Aptos::coin_balance_of<CoinType>(sender);
+        assert(total_amount >= amount, 0x0);
     
-    //(25:40:35 distri)
-    let composer_share = (amount * 25) / 100;
-    let singer_share = (amount * 40) / 100;
-    let band_share = (amount * 35) / 100;
-    //total to be amt
-    assert(composer_share + singer_share + band_share == amount, 0x1);
-    Aptos::coin_transfer<CoinType>(sender, composer, composer_share);
-    Aptos::coin_transfer<CoinType>(sender, singer, singer_share);
-    Aptos::coin_transfer<CoinType>(sender, band, band_share);
-    // Event emitter
-    let event = TipDistributionEvent {
-        sender: sender,
-        composer: composer,
-        singer: singer,
-        band: band,
-        amount: amount,
-        composer_share: composer_share,
-        singer_share: singer_share,
-        band_share: band_share,
-    };
-    event::emit(event);
+        //(25:40:35 distri)
+        let composer_share = (amount * 25) / 100;
+        let singer_share = (amount * 40) / 100;
+        let band_share = (amount * 35) / 100;
+        //total to be amt
+        assert(composer_share + singer_share + band_share == amount, 0x1);
+        Aptos::coin_transfer<CoinType>(sender, composer, composer_share);
+        Aptos::coin_transfer<CoinType>(sender, singer, singer_share);
+        Aptos::coin_transfer<CoinType>(sender, band, band_share);
+        // Event emitter
+        let event = TipDistributionEvent {
+            sender: sender,
+            composer: composer,
+            singer: singer,
+            band: band,
+            amount: amount,
+            composer_share: composer_share,
+            singer_share: singer_share,
+            band_share: band_share,
+        };
+        event::emit(event);
+        }
 }
 
 public fun test_upload_Song() {
-    let title: vector<u8> = "My Song Title".encode_utf8().unwrap();
-    let content: vector<u8> = "Song content..".encode_utf8().unwrap();
+    let title: vector<u8> = "My Song Title";
+    let content: vector<u8> = "Song content..";
 
     // Get the artist's address for testing
     let artist_address = signer();
