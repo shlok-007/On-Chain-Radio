@@ -2,7 +2,7 @@ import { useState } from "react";
 import ladyMusic from "../assets/ladyMusic.png";
 import { Navbar } from "../components/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import TipModal from "../components/TipModal";
 
