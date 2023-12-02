@@ -1,5 +1,7 @@
 import { useState } from "react";
 import logo from "../assets/Logo.png";
+import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
+import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 
 const Navbar: React.FC = () => {
   const [navbar, setNavbar] = useState(false);
@@ -100,7 +102,9 @@ const Navbar: React.FC = () => {
                   </a>
                 </li>
 
-                <li className="my-4">
+                <WalletSelector/>
+
+                {/* <li className="my-4">
                   <a
                     href="/technologies-developed"
                     className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
@@ -108,7 +112,7 @@ const Navbar: React.FC = () => {
                   >
                     Connect Wallet
                   </a>
-                </li>
+                </li> */}
 
               </ul>
             </div>

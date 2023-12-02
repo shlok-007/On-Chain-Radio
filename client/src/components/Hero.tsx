@@ -1,4 +1,6 @@
 import ladyMusic from "../assets/ladyMusic.png";
+import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
+import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 
 const Hero = () => {
   return (
@@ -19,9 +21,10 @@ const Hero = () => {
               music journey begins here.
             </p>
             <div className="flex justify-center">
-              <button className="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+              {/* <button className="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
                 Sign in
-              </button>
+              </button> */}
+              <WalletSelector />
               <button className="ml-4 inline-flex text-gray-900 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">
                 Explore
               </button>
