@@ -1,51 +1,79 @@
-import React from "react";
-import NavBarDashboard from "../components/NavBarDashboard";
-import Chart from "../components/Chart";
+import * as React from "react";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import Person2Icon from "@mui/icons-material/Person2";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import Tables from "../components/Tables";
+import Insights from "../components/Insights";
+import Profile from "../components/Profile";
 
-const Dashboard = () => {
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
   return (
-      <div className="bg-black text-white">
-        <NavBarDashboard />
-
-        <div>
-          <div className="flex flex-col justify-center items-center md:py-10 md:px-16 overflow-y-auto w-full">
-            <h2>Dashboard</h2>
-
-            <div className="flex md:space-x-8 py-6 flex-col md:flex-row gap-y-4">
-              <div className="flex flex-col rounded-md border w-[350px] p-8 justify-center">
-                <h2>Yatharth Verma</h2>
-                <p className="text-gray-500 mt-3">Your Expenses: Rs10000</p>
-              </div>
-              <div className="flex flex-col rounded-md border w-[350px] p-8 justify-center">
-                <h2>Yatharth Verma</h2>
-                <p className="text-gray-500 mt-3">Your Savings: Rs100000</p>
-              </div>
-            </div>
-
-{/* ---------------------------CHART--------------------------- */}
-
-            <div className="flex md:space-x-8 py-6 w-full justify-center items-center">
-              <div className="flex flex-col rounded-md border w-[350px] md:w-[726px] p-8 justify-center">
-                Expenses Graph
-                <Chart />
-              </div>
-            </div>
-
-
-            <div className="flex md:space-x-8 py-6 flex-col md:flex-row gap-y-4">
-              <div className="flex flex-col rounded-md border w-[350px] p-8 justify-center">
-                <h2>Yatharth Verma</h2>
-                <p className="text-gray-500 mt-3">Your Expenses: Rs10000</p>
-              </div>
-              <div className="flex flex-col rounded-md border w-[350px] p-8 justify-center">
-                <h2>Yatharth Verma</h2>
-                <p className="text-gray-500 mt-3">Your Savings: Rs100000</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
-};
+}
 
-export default Dashboard;
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
+export default function Dashboard() {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
+  return (
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+          centered
+        >
+          <Tab icon={<DashboardIcon />} label="DashBoard" iconPosition="start" />
+          <Tab label="Transactions" icon={<ShowChartIcon />} iconPosition="start" />
+          <Tab icon={<Person2Icon />} label="Profile" iconPosition="start" />
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={value} index={0}>
+        <Insights />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        <Tables />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <Profile />
+      </CustomTabPanel>
+    </Box>
+  );
+}
