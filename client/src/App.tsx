@@ -4,7 +4,8 @@ import { Navbar } from './components/Navbar';
 // import Footer from './components/Footer';
 // import { Songs } from './components/Songs';
 // import SongDetails from './pages/SongDetails';
-import Dashboard from './pages/Dashboard';
+// import Dashboard from './pages/Dashboard';
+import Auth from './pages/Auth';
 
 function App() {
   return (
@@ -14,8 +15,9 @@ function App() {
       <Songs />
       <Footer />
       <SongDetails /> */}
-      <Navbar />
-      <Dashboard />
+      {/* <Navbar />
+      <Dashboard /> */}
+      <Auth />
     </div>
   );
 }
