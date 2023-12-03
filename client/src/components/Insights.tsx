@@ -21,7 +21,7 @@ const Dashboard = () => {
 
         <div className="flex md:space-x-8 py-6 w-full justify-center items-center">
           <div className="flex flex-col rounded-md border w-[350px] md:w-[726px] p-8 justify-center">
-            Expenses Graph
+            <p>Expenses Graph</p>
             <Chart />
           </div>
         </div>

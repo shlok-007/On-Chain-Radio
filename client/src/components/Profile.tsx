@@ -135,7 +135,7 @@ const Profile = () => {
               haven't heard of them.
             </p>
           </div>
-          <div className="flex flex-wrap -m-4">
+          <div className="flex flex-wrap m-4">
 
 
             <div className="p-4 lg:w-1/4 md:w-1/2">

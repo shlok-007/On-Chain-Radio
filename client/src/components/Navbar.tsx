@@ -2,9 +2,11 @@ import { useState } from "react";
 import logo from "../assets/Logo.png";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
+import { SigninModal } from "./SigninModal";
 
 const Navbar: React.FC = () => {
   const [navbar, setNavbar] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div>
       <nav className="w-full bg-black">
@@ -18,7 +20,9 @@ const Navbar: React.FC = () => {
                   alt="logo"
                   className="cursor-pointer text-xl w-20 py-2 px-2"
                 />
-                <h1 className="text-3xl flex items-center bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 bg-clip-text text-transparent">PeerPlay</h1>
+                <h1 className="text-3xl flex items-center bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 bg-clip-text text-transparent">
+                  PeerPlay
+                </h1>
               </a>
               {/* HAMBURGER BUTTON FOR MOBILE */}
               <div className="lg:hidden">
@@ -68,7 +72,6 @@ const Navbar: React.FC = () => {
               }`}
             >
               <ul className="h-screen lg:h-auto items-center justify-center lg:flex ">
-
                 <li className="my-4">
                   <a
                     href="/"
@@ -89,7 +92,6 @@ const Navbar: React.FC = () => {
                   </a>
                 </li>
 
-
                 {/* -----------------ENDED HERE----------------- */}
 
                 <li className="my-4">
@@ -102,7 +104,7 @@ const Navbar: React.FC = () => {
                   </a>
                 </li>
 
-                <WalletSelector/>
+                <WalletSelector />
 
                 {/* <li className="my-4">
                   <a
@@ -114,13 +116,24 @@ const Navbar: React.FC = () => {
                   </a>
                 </li> */}
 
+                <li className="my-4">
+                  <button
+                    className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
+                    onClick={() => setIsModalOpen(!isModalOpen)}
+                  >
+                    Connect
+                  </button>
+                </li>
               </ul>
             </div>
           </div>
         </div>
       </nav>
+      {isModalOpen && (
+        <SigninModal onClose={() => setIsModalOpen(!isModalOpen)} />
+      )}
     </div>
   );
-}
+};
 
-export {Navbar};
+export { Navbar };
