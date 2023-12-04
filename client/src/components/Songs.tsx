@@ -8,7 +8,7 @@ const Songs: React.FC = () => {
 
         {/*--------------------- <!-- FREE SECTION >-------------------------- */}
 
-      <main className="grid place-items-center min-h-screen bg-gradient-to-b from-black to-indigo-900 p-5">
+      <main className="grid place-items-center min-h-screen bg-gradient-to-b from-gray-950 to-[#56757d] p-5">
         <div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
             Free Stations
@@ -25,7 +25,7 @@ const Songs: React.FC = () => {
       </main>
 
         {/*--------------------- <!-- PREMIUM SECTION >----------------------- */}
-      <main className="grid place-items-center min-h-screen bg-gradient-to-t from-black to-indigo-900 p-5">
+      <main className="grid place-items-center min-h-screen bg-gradient-to-t from-gray-950 to-[#56757d] p-5">
         <div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
             Premium Stations
