@@ -1,6 +1,8 @@
-import React from 'react'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const Auth = () => {
+const Auth: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div>
         <section className="gradient-form h-full bg-neutral-200 dark:bg-neutral-700">
@@ -74,7 +76,7 @@ const Auth = () => {
 
                   {/* <!--Register button--> */}
                   <div className="flex items-center justify-between pb-6">
-                    <p className="mb-0 mr-2">Don't have an account?</p>
+                    <a onClick={() => navigate("/")} href="#" className="mb-0 mr-2">Already have an account?</a>
                     <button
                       type="button"
                       className="inline-block rounded border-2 border-danger px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-danger transition duration-150 ease-in-out hover:border-danger-600 hover:bg-neutral-500 hover:bg-opacity-10 hover:text-danger-600 focus:border-danger-600 focus:text-danger-600 focus:outline-none focus:ring-0 active:border-danger-700 active:text-danger-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"

@@ -3,8 +3,11 @@ import logo from "../assets/Logo.png";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { SigninModal } from "./SigninModal";
+import { useNavigate } from "react-router-dom";
+
 
 const Navbar: React.FC = () => {
+  const navigate = useNavigate();
   const [navbar, setNavbar] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
@@ -14,7 +17,7 @@ const Navbar: React.FC = () => {
           <div>
             <div className="flex items-center justify-between lg:block">
               {/* LOGO */}
-              <a href="/" className="flex">
+              <a href="#" className="flex" onClick={() => navigate("/")}>
                 <img
                   src={logo}
                   alt="logo"
@@ -84,7 +87,7 @@ const Navbar: React.FC = () => {
 
                 <li className="my-4">
                   <a
-                    href="/people"
+                    href="#exploresongs"
                     className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
                     onClick={() => setNavbar(!navbar)}
                   >
@@ -96,11 +99,11 @@ const Navbar: React.FC = () => {
 
                 <li className="my-4">
                   <a
-                    href="/projects"
+                    href="#"
                     className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                    onClick={() => setNavbar(!navbar)}
+                    onClick={() => navigate("/dashboard")}
                   >
-                    Contact
+                    Dashboard
                   </a>
                 </li>
 
@@ -119,7 +122,7 @@ const Navbar: React.FC = () => {
                 <li className="my-4">
                   <button
                     className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
-                    onClick={() => setIsModalOpen(!isModalOpen)}
+                    onClick={() => navigate("/signup")}
                   >
                     Connect
                   </button>
