@@ -31,7 +31,7 @@ const PremiumCard: React.FC<PremiumCardProps> = ({ login, setLogin, subscribe, s
   return (
     <>
       {/* <!-- CARD 1 --> */}
-      <div className="bg-[#ffca28] shadow-lg rounded p-3">
+      <div className="bg-[#ebc247] shadow-lg rounded p-3">
         <div className="group relative">
           <img
             className="w-full md:w-72 block rounded"
