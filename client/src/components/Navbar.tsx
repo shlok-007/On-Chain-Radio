@@ -12,12 +12,12 @@ const Navbar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div>
-      <nav className="w-full bg-black">
+      <nav className="w-full bg-gray-950">
         <div className="justify-between pr-4 mx-auto  lg:items-center lg:flex">
           <div>
             <div className="flex items-center justify-between lg:block">
               {/* LOGO */}
-              <a href="#" className="flex" onClick={() => navigate("/")}>
+              <a href="" className="flex" onClick={() => navigate("/")}>
                 <img
                   src={logo}
                   alt="logo"

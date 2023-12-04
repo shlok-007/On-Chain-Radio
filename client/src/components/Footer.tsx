@@ -5,7 +5,7 @@ const Footer = () => {
   const navigate = useNavigate();
   return (
     <div>
-      <footer className="text-gray-400 body-font bg-black">
+      <footer className="text-gray-400 body-font bg-gray-950">
         <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
           <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
             <a
@@ -135,7 +135,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="bg-gray-100">
+        <div className="bg-gray-950">
           <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
             <p className="text-gray-500 text-sm text-center sm:text-left">
               © 2023 PeerPlay —
