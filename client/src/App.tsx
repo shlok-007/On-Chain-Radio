@@ -1,24 +1,24 @@
 import './App.css';
-import { Navbar } from './components/Navbar';
-// import { Hero } from './components/Hero';
-// import Footer from './components/Footer';
-// import { Songs } from './components/Songs';
-// import SongDetails from './pages/SongDetails';
-// import Dashboard from './pages/Dashboard';
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import { Home } from './pages/Home';
+import { Upload } from './pages/Upload';
+import Subscribe from './pages/Subscribe';
+import Dashboard from './pages/Dashboard';
+import SongDetails from './pages/SongDetails';
 import Auth from './pages/Auth';
 
 function App() {
   return (
-    <div className="App">
-      {/* <Navbar />
-      <Hero />
-      <Songs />
-      <Footer />
-      <SongDetails /> */}
-      {/* <Navbar />
-      <Dashboard /> */}
-      <Auth />
-    </div>
+    <Router>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/signup' element={<Auth />} />
+        <Route path='/uploadsongs' element={<Upload />} />
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/subscribe' element={<Subscribe />} />
+        <Route path='/playsongs' element={<SongDetails />} />
+      </Routes>
+    </Router>
   );
 }
 

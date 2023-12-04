@@ -5,9 +5,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import TipModal from "../components/TipModal";
+import { useLocation } from "react-router-dom";
 
 const SongDetails = () => {
   const [like, setLike] = useState(false);
+  const location = useLocation();
+  const genre = location.state?.id || 'No genre Selected';
+  console.log(genre)
 
   return (
     <div className="h-screen bg-[#7CA4AE] ">

@@ -1,13 +1,16 @@
+import { useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <div>
       <footer className="text-gray-400 body-font bg-black">
         <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
           <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
             <a
-              href="#home"
+              href="#"
+              onClick={() => navigate("/")}
               className="flex title-font font-medium items-center md:justify-start justify-center text-gray-100"
             >
               <img src={Logo} alt="PeerPlay" className="w-20" />
