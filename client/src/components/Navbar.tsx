@@ -4,18 +4,26 @@ import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { SigninModal } from "./SigninModal";
 import { useNavigate } from "react-router-dom";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { disconnect } from "process";
 
 interface NavbarProps {
-    login: boolean,
-    setLogin: React.Dispatch<React.SetStateAction<boolean>>,
-    subscribe: boolean,
-    setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+  login?: boolean,
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
+  subscribe: boolean,
+  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
   const navigate = useNavigate();
   const [navbar, setNavbar] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {disconnect} = useWallet();
+
+  const handleDisconnect = async () => {
+    disconnect();
+  };
+
   return (
     <div>
       <nav className="w-full bg-gray-950">
@@ -76,9 +84,8 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
           </div>
           <div>
             <div
-              className={`flex-1 justify-self-center pb-3 mt-8 lg:block lg:pb-0 lg:mt-0 ${
-                navbar ? "p-4 lg:p-0 block" : "hidden"
-              }`}
+              className={`flex-1 justify-self-center pb-3 mt-8 lg:block lg:pb-0 lg:mt-0 ${navbar ? "p-4 lg:p-0 block" : "hidden"
+                }`}
             >
               <ul className="h-screen lg:h-auto items-center justify-center lg:flex ">
                 <li className="my-4">
@@ -104,52 +111,60 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                 {/* -----------------ENDED HERE----------------- */}
 
                 {
-                  login && 
+                  login &&
                   <li className="my-4">
-                  <a
-                    href="#"
-                    className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                    onClick={() => navigate("/dashboard")}
-                  >
-                    Dashboard
-                  </a>
-                </li>
+                    <a
+                      href="#"
+                      className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
+                      onClick={() => navigate("/dashboard")}
+                    >
+                      Dashboard
+                    </a>
+                  </li>
                 }
                 {
-                  login && 
+                  login &&
                   <li className="my-4">
-                  <a
-                    href="#"
-                    className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                    onClick={() => navigate("/uploadsongs")}
-                  >
-                    Upload
-                  </a>
-                </li>
+                    <a
+                      href="#"
+                      className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
+                      onClick={() => navigate("/uploadsongs")}
+                    >
+                      Upload
+                    </a>
+                  </li>
                 }
-
-                <WalletSelector />
-
-                {/* <li className="my-4">
-                  <a
-                    href="/technologies-developed"
-                    className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
-                    onClick={() => setNavbar(!navbar)}
-                  >
-                    Connect Wallet
-                  </a>
-                </li> */}
-
+                {
+                  login &&
+                  <li className="my-4">
+                    <a
+                      href="#"
+                      className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
+                      onClick={() => navigate("/profile")}
+                    >
+                      Profile
+                    </a>
+                  </li>
+                }
+                
+                {
+                  login && <button
+                  className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
+                  onClick={handleDisconnect}
+                >
+                  Disconnect Wallet
+                </button>
+                }
                 {
                   !login &&
                   <li className="my-4">
-                  <button
-                    className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
-                    onClick={() => navigate("/signup")}
-                  >
-                    Connect
-                  </button>
-                </li>
+                    <button
+                      className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
+                      onClick={() => navigate("/signup")}
+                    >
+                      Get Started
+                    </button>
+                  </li>
                 }
               </ul>
             </div>

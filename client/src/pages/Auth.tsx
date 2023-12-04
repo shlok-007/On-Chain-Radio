@@ -1,10 +1,51 @@
-import React from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
+import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
+import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import Avatar from "../components/Avatar";
+import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
 
 const Auth: React.FC = () => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [isModalOpen, setModalOpen] = useState(false);
+  const { wallet, isLoading } = useWallet();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      console.log("Form submitted");
+      console.log(username);
+      console.log(email);
+      setModalOpen(true);
+    } catch (error) {
+      console.error("Failed to connect wallet", error);
+    }
+  };
+
+  // useEffect(() => {
+    
+  // }, [isLoading]);
+
+  useEffect(() => {
+    if (wallet) {
+      navigate("/");
+    }
+  }, [wallet]);
+
+
+
+
+  const handleConnectWallet = async () => {
+    try {
+      setModalOpen(true);
+    } catch (error) {
+      console.error("Failed to connect wallet", error);
+    }
+  };
+
   return (
     <div className="bg-gradient-to-b from-black to-indigo-900">
       <section className="gradient-form h-full flex justify-center">
@@ -24,14 +65,15 @@ const Auth: React.FC = () => {
                         </h4>
                       </div>
 
-                      <form>
+                      <form onSubmit={handleSubmit}>
                         <p className="mb-4">Please login to your account</p>
                         {/* <!--Username input--> */}
                         <div className="relative mb-4">
                           <input
                             type="text"
                             className="peer block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear"
-                            id="exampleFormControlInput1"
+                            value={username}
+                            onChange={(e) => { setUsername(e.target.value) }}
                             placeholder="Username"
                             required
                           />
@@ -40,28 +82,30 @@ const Auth: React.FC = () => {
                         {/* <!--Email--> */}
                         <div className="relative mb-4">
                           <input
-                            type="text"
+                            type="email"
                             className="peer block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear"
-                            id="exampleFormControlInput1"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             placeholder="Email"
                             required
                           />
                         </div>
 
-                                                {/* <!--Register button--> */}
-                                                <div className="flex items-center justify-between pb-6">
+                        {/* <!--Register button--> */}
+                        <div className="flex items-center justify-between pb-6">
                           <a
                             onClick={() => navigate("/")}
                             href="#"
                             className="mb-0 mr-2"
                           >
-                            Connect your Petra wallet
+                            Already have an account?
                           </a>
                           <button
                             type="button"
                             className="inline-block rounded border-2 border-danger px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-danger transition duration-150 ease-in-out hover:border-danger-600 hover:bg-neutral-500 hover:bg-opacity-10 hover:text-danger-600 focus:border-danger-600 focus:text-danger-600 focus:outline-none focus:ring-0 active:border-danger-700 active:text-danger-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
                             data-te-ripple-init
                             data-te-ripple-color="light"
+                            onClick={handleConnectWallet}
                           >
                             Connect Wallet
                           </button>
@@ -71,19 +115,14 @@ const Auth: React.FC = () => {
                         <div className="mb-12 pb-1 pt-1 text-center">
                           <button
                             className="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal bg-gradient-to-l from-red-500 via-blue-500 to-yellow-400 text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
-                            type="button"
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
-                            // style={{
-                            //   background:
-                            //     "linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)",
-                            // }}
+                            type="submit"
                           >
-                            Install Petra Wallet
+                            Install Wallet
                           </button>
+                          <div className="hidden">
+                            <WalletSelector isModalOpen={isModalOpen} setModalOpen={setModalOpen} />
+                          </div>
 
-                          {/* <!--Forgot password link--> */}
-                          {/* <a href="#!">Forgot password?</a> */}
                         </div>
 
 
@@ -94,10 +133,6 @@ const Auth: React.FC = () => {
                   {/* <!-- Right column container with background and description--> */}
                   <div
                     className="flex items-center lg:w-6/12 bg-gradient-to-l from-red-500 via-blue-500 to-yellow-400"
-                    // style={{
-                    //   background:
-                    //     "linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)",
-                    // }}
                   >
                     <div className="px-4 py-6 text-white md:mx-6 md:p-12">
                       <h4 className="mb-6 text-xl font-semibold">

@@ -24,7 +24,7 @@ const Upload: React.FC<UploadProps> = ({ login, setLogin, subscribe, setSubscrib
   return (
     <div>
       <div className="text-center">
-        <Navbar login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe}  />
+      <Navbar login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />
         <form className="w-3/4 mx-auto my-10 py-5">
           <p className="w-full text-3xl sm:text-4xl font-bold m-auto">Upload Your Song</p>
           <UploadForm />

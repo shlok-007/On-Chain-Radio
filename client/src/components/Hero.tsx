@@ -1,8 +1,16 @@
 import ladyMusic from "../assets/ladyMusic.png";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
+import { Link } from "react-router-dom";
 
-const Hero = () => {
+interface HeroProps {
+  login?: boolean,
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
+  subscribe: boolean,
+  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Hero:  React.FC<HeroProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
   return (
     <div>
       <section className="text-gray-200 body-font bg-gray-950">
@@ -21,13 +29,15 @@ const Hero = () => {
               music journey begins here.
             </p>
             <div className="flex justify-center">
-              {/* <button className="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
-                Sign in
-              </button> */}
-              <WalletSelector />
+              { !login && <WalletSelector />}
+              
               <a href="#exploresongs" className="ml-4 inline-flex text-gray-900 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">
                 Explore
               </a>
+              <Link to="/learn-more" className="ml-4 inline-flex items-center text-gray-100 focus:outline-none text-lg">
+                Learn More &#8594;
+              </Link>
+
             </div>
           </div>
           <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
@@ -43,4 +53,4 @@ const Hero = () => {
   );
 };
 
-export {Hero};
+export { Hero };

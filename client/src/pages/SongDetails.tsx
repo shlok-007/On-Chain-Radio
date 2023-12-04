@@ -14,7 +14,7 @@ interface SongDetailsProps {
   setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SongDetails: React.FC<SongDetailsProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
+const SongDetails: React.FC<SongDetailsProps> = ({login, setLogin, subscribe ,setSubscribe}) => {
   const [like, setLike] = useState(false);
   const location = useLocation();
   const genre = location.state?.id || 'No genre Selected';
