@@ -1,23 +1,22 @@
 import './App.css';
 import { Navbar } from './components/Navbar';
-// import { Hero } from './components/Hero';
-// import Footer from './components/Footer';
+import { Hero } from './components/Hero';
+import Footer from './components/Footer';
 // import { Songs } from './components/Songs';
-// import SongDetails from './pages/SongDetails';
+// // import SongDetails from './pages/SongDetails';
 // import Dashboard from './pages/Dashboard';
-import Auth from './pages/Auth';
+// import PremiumCard from './components/PremiumCard';
+// import FreeCard from './components/FreeCard';
+import { Songs } from './components/Songs';
+
 
 function App() {
   return (
     <div className="App">
-      {/* <Navbar />
+      <Navbar />
       <Hero />
       <Songs />
       <Footer />
-      <SongDetails /> */}
-      {/* <Navbar />
-      <Dashboard /> */}
-      <Auth />
     </div>
   );
 }
