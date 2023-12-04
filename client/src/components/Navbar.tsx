@@ -5,8 +5,14 @@ import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { SigninModal } from "./SigninModal";
 import { useNavigate } from "react-router-dom";
 
+interface NavbarProps {
+    login: boolean,
+    setLogin: React.Dispatch<React.SetStateAction<boolean>>,
+    subscribe: boolean,
+    setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
   const navigate = useNavigate();
   const [navbar, setNavbar] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -97,7 +103,9 @@ const Navbar: React.FC = () => {
 
                 {/* -----------------ENDED HERE----------------- */}
 
-                <li className="my-4">
+                {
+                  login && 
+                  <li className="my-4">
                   <a
                     href="#"
                     className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
@@ -106,6 +114,19 @@ const Navbar: React.FC = () => {
                     Dashboard
                   </a>
                 </li>
+                }
+                {
+                  login && 
+                  <li className="my-4">
+                  <a
+                    href="#"
+                    className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
+                    onClick={() => navigate("/uploadsongs")}
+                  >
+                    Upload
+                  </a>
+                </li>
+                }
 
                 <WalletSelector />
 
@@ -119,7 +140,9 @@ const Navbar: React.FC = () => {
                   </a>
                 </li> */}
 
-                <li className="my-4">
+                {
+                  !login &&
+                  <li className="my-4">
                   <button
                     className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
                     onClick={() => navigate("/signup")}
@@ -127,6 +150,7 @@ const Navbar: React.FC = () => {
                     Connect
                   </button>
                 </li>
+                }
               </ul>
             </div>
           </div>

@@ -2,7 +2,14 @@ import React from "react";
 import FreeCard from "./FreeCard";
 import PremiumCard from "./PremiumCard";
 
-const Songs: React.FC = () => {
+interface SongsProps {
+  login: boolean,
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
+  subscribe: boolean,
+  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Songs: React.FC<SongsProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
   return (
     <div>
 
@@ -15,10 +22,10 @@ const Songs: React.FC = () => {
           </h1>
           <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {/* <!-- FREE CARD  --> */}
-            <FreeCard />
-            <FreeCard />
-            <FreeCard />
-            <FreeCard />
+            <FreeCard login={login} setLogin={setLogin} genre="Jazz" />
+            <FreeCard login={login} setLogin={setLogin} genre="Pop" />
+            <FreeCard login={login} setLogin={setLogin} genre="Country" />
+            <FreeCard login={login} setLogin={setLogin} genre="Classical" />
             {/* <!-- END OF FREE CARD  --> */}
           </section>
         </div>
@@ -32,10 +39,10 @@ const Songs: React.FC = () => {
           </h1>
           <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {/* <!-- FREE CARD  --> */}
-            <PremiumCard />
-            <PremiumCard />
-            <PremiumCard />
-            <PremiumCard />
+            <PremiumCard login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} genre="Jazz" />
+            <PremiumCard login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} genre="Pop"/>
+            <PremiumCard login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} genre="Country"/>
+            <PremiumCard login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} genre="Classical"/>
             {/* <!-- END OF FREE CARD  --> */}
           </section>
         </div>
