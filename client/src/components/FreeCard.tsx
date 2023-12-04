@@ -20,7 +20,7 @@ const FreeCard: React.FC<FreeCardProps> = ({login, setLogin, genre}) => {
   const [pause, setPause] = useState(false);
   const navigate = useNavigate();
   const handlePlay = () => {
-    login ? navigate("/uploadsongs") : navigate("/signup")
+    login ? navigate("/playsongs") : navigate("/signup")
   }
 
   return (

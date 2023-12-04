@@ -9,7 +9,7 @@ import SongDetails from './pages/SongDetails';
 import Auth from './pages/Auth';
 
 function App() {
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState(true);
   const [subscribe, setSubscribe] = useState(false);
   return (
     <Router>

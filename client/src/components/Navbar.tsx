@@ -115,6 +115,18 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                   </a>
                 </li>
                 }
+                {
+                  login && 
+                  <li className="my-4">
+                  <a
+                    href="#"
+                    className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
+                    onClick={() => navigate("/uploadsongs")}
+                  >
+                    Upload
+                  </a>
+                </li>
+                }
 
                 <WalletSelector />
 
