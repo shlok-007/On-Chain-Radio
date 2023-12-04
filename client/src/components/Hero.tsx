@@ -2,6 +2,7 @@ import ladyMusic from "../assets/ladyMusic.png";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { Link } from "react-router-dom";
+import { HashLink } from 'react-router-hash-link';
 
 interface HeroProps {
   login?: boolean,
@@ -31,9 +32,9 @@ const Hero:  React.FC<HeroProps> = ({ login, setLogin, subscribe, setSubscribe }
             <div className="flex justify-center">
               { !login && <WalletSelector />}
               
-              <a href="#exploresongs" className="ml-4 inline-flex text-gray-900 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">
+              <HashLink smooth to="#exploresongs" className="ml-4 inline-flex text-gray-900 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">
                 Explore
-              </a>
+              </HashLink>
               <Link to="/learn-more" className="ml-4 inline-flex items-center text-gray-100 focus:outline-none text-lg">
                 Learn More &#8594;
               </Link>
