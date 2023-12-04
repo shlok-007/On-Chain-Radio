@@ -3,9 +3,12 @@ import logo from "../assets/Logo.png";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { SigninModal } from "./SigninModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { disconnect } from "process";
+import { Link } from "react-router-dom";
+import { HashLink } from 'react-router-hash-link';
+
 
 interface NavbarProps {
   login?: boolean,
@@ -18,7 +21,8 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
   const navigate = useNavigate();
   const [navbar, setNavbar] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {disconnect} = useWallet();
+  const { disconnect } = useWallet();
+  const location = useLocation();
 
   const handleDisconnect = async () => {
     disconnect();
@@ -99,13 +103,14 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                 </li>
 
                 <li className="my-4">
-                  <a
-                    href="#exploresongs"
+                  <HashLink
+                    smooth
+                    to="/#exploresongs"
                     className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
                     onClick={() => setNavbar(!navbar)}
                   >
                     Explore
-                  </a>
+                  </HashLink>
                 </li>
 
                 {/* -----------------ENDED HERE----------------- */}
@@ -146,17 +151,26 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                     </a>
                   </li>
                 }
-                
+
                 {
                   login && <button
-                  className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
-                  onClick={handleDisconnect}
-                >
-                  Disconnect Wallet
-                </button>
+                    className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
+                    onClick={handleDisconnect}
+                  >
+                    Disconnect Wallet
+                  </button>
                 }
                 {
-                  !login &&
+                  !login && location.pathname == "/signup" &&
+                  <li className="my-4">
+                    <Link to="/learn-more" className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md">
+                      Learn More
+                    </Link>
+                    
+                  </li>
+                }
+                {
+                  !login && location.pathname !== "/signup" &&
                   <li className="my-4">
                     <button
                       className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
@@ -166,6 +180,7 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                     </button>
                   </li>
                 }
+
               </ul>
             </div>
           </div>

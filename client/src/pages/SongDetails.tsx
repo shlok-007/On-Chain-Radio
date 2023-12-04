@@ -1,6 +1,5 @@
 import { useState } from "react";
 import ladyMusic from "../assets/ladyMusic.png";
-import { Navbar } from "../components/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
@@ -22,8 +21,6 @@ const SongDetails: React.FC<SongDetailsProps> = ({login, setLogin, subscribe ,se
 
   return (
     <div className="h-screen bg-[#7CA4AE] ">
-      <Navbar login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />
-
       <div className="bg-[#7CA4AE] font-sans grid place-items-center py-12">
         <div className="bg-gray-800 md:grid md:grid-cols-2 rounded-md overflow-hidden mx-2 ">
 

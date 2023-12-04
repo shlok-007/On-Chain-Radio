@@ -37,7 +37,6 @@ const Hero:  React.FC<HeroProps> = ({ login, setLogin, subscribe, setSubscribe }
               <Link to="/learn-more" className="ml-4 inline-flex items-center text-gray-100 focus:outline-none text-lg">
                 Learn More &#8594;
               </Link>
-
             </div>
           </div>
           <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">

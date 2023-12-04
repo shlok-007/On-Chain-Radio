@@ -10,6 +10,8 @@ import Auth from './pages/Auth';
 import Profile from './components/Profile';
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import LearnMore from './pages/LearnMore';
+import { Navbar } from './components/Navbar';
+import Footer from './components/Footer';
 
 function App() {
   const { wallet } = useWallet();
@@ -28,6 +30,7 @@ function App() {
 
   return (
     <Router>
+      <Navbar login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />
       <Routes>
         <Route path='/' element={<Home login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />} />
         <Route path='/signup' element={<Auth />} />
@@ -38,6 +41,7 @@ function App() {
         <Route path='/profile' element={<Dashboard />} />
         <Route path='/learn-more' element={<LearnMore />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }

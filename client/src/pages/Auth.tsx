@@ -47,12 +47,12 @@ const Auth: React.FC = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-black to-indigo-900">
-      <section className="gradient-form h-full flex justify-center">
-        <div className="container h-full md:p-10">
-          <div className="g-6 flex h-full flex-wrap items-center justify-center text-neutral-800 dark:text-neutral-200">
+    <div className="bg-gradient-to-b bg-[#7CA4AE]">
+      <section className="gradient-form w-full flex justify-center items-center">
+        <div className="container h-full w-4/5 md:py-16">
+          <div className="g-6 flex h-full flex-wrap items-center justify-center text-neutral-200">
             <div className="w-full">
-              <div className="block bg-white shadow-lg dark:bg-gray-700">
+              <div className="block bg-gray-900">
                 <div className="g-0 lg:flex lg:flex-wrap">
                   {/* <!-- Left column container--> */}
                   <div className="px-4 md:px-0 lg:w-6/12">
@@ -114,7 +114,7 @@ const Auth: React.FC = () => {
                         {/* <!--Submit button--> */}
                         <div className="mb-12 pb-1 pt-1 text-center">
                           <button
-                            className="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal bg-gradient-to-l from-red-500 via-blue-500 to-yellow-400 text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
+                            className="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white bg-blue-500"
                             type="submit"
                           >
                             Install Wallet
@@ -132,7 +132,7 @@ const Auth: React.FC = () => {
 
                   {/* <!-- Right column container with background and description--> */}
                   <div
-                    className="flex items-center lg:w-6/12 bg-gradient-to-l from-red-500 via-blue-500 to-yellow-400"
+                    className="flex items-center lg:w-6/12 bg-gray-800"
                   >
                     <div className="px-4 py-6 text-white md:mx-6 md:p-12">
                       <h4 className="mb-6 text-xl font-semibold">
