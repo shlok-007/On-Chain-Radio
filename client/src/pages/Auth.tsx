@@ -1,45 +1,57 @@
-import React, { useState,useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import Avatar from "../components/Avatar";
 import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
+import { AptosClient, Types } from 'aptos';
+import { PetraWallet } from "petra-plugin-wallet-adapter";
+
+const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
 
 interface AuthProps {
   address: string,
   publicKey: string | string[]
 }
 
-const Auth: React.FC<AuthProps> = ({address, publicKey}: AuthProps) => {
+declare global {
+  interface Window {
+    PetraWallet: any;
+    aptos: any;
+  }
+}
+
+
+const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
-  const { wallet, isLoading } = useWallet();
+  const { wallet, connected, isLoading } = useWallet();
+  const Petra = new PetraWallet();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAccountCreation = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!wallet) {
+      alert("Please connect your wallet");
+      return;
+    }
     try {
-      console.log("Form submitted");
-      console.log(username);
-      console.log(email);
-      setModalOpen(true);
+      const transaction = {
+        type: "entry_function_payload",
+        function: `${address}::user::create_account`,
+        arguments: [username, email, false],
+        type_arguments: [],
+      };
+      
+      const result = await window.aptos.signAndSubmitTransaction(transaction);
+      console.log(result);
+      // if the transaction was successful then navigate to home page
     } catch (error) {
       console.error("Failed to connect wallet", error);
     }
   };
-
-  // useEffect(() => {
-    
-  // }, [isLoading]);
-
-  useEffect(() => {
-    if (wallet) {
-      navigate("/");
-    }
-  }, [wallet]);
-
 
   const handleConnectWallet = async () => {
     try {
@@ -47,6 +59,14 @@ const Auth: React.FC<AuthProps> = ({address, publicKey}: AuthProps) => {
     } catch (error) {
       console.error("Failed to connect wallet", error);
     }
+  };
+
+  const handleHaveAnAccount = async () => {
+    // open a pop up
+    // connect to wallet
+    // check if the user has an account
+    // if yes, navigate to home page
+    // if no, navigate to signup page
   };
 
   return (
@@ -64,14 +84,21 @@ const Auth: React.FC<AuthProps> = ({address, publicKey}: AuthProps) => {
                       <div className="text-center">
                         <img className="mx-auto w-48" src={Logo} alt="logo" />
                         <h4 className="mb-12 mt-1 pb-1 text-xl font-semibold">
-                          We are The PeerPlay Team
+                          PeerPlay
                         </h4>
                       </div>
+                      <form onSubmit={handleAccountCreation}>
 
-                      <form onSubmit={handleSubmit}>
-                        <p className="mb-4">Please login to your account</p>
+                        {!connected && <a onClick={handleConnectWallet} className="hover:cursor-pointer">
+                          First configure your wallet
+                        </a>
+                        }
+                        {connected && <div className="text-indigo-500">Wallet Connected</div>
+                        }
+
+
                         {/* <!--Username input--> */}
-                        <div className="relative mb-4">
+                        <div className="relative my-4">
                           <input
                             type="text"
                             className="peer block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear"
@@ -97,21 +124,11 @@ const Auth: React.FC<AuthProps> = ({address, publicKey}: AuthProps) => {
                         {/* <!--Register button--> */}
                         <div className="flex items-center justify-between pb-6">
                           <a
-                            onClick={() => navigate("/")}
-                            href="#"
-                            className="mb-0 mr-2"
+                            onClick={handleHaveAnAccount}
+                            className="mb-0 mr-2 hover:cursor-pointer"
                           >
-                            Already have an account?
+                            Already have an account? Log in
                           </a>
-                          <button
-                            type="button"
-                            className="inline-block rounded border-2 border-danger px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-danger transition duration-150 ease-in-out hover:border-danger-600 hover:bg-neutral-500 hover:bg-opacity-10 hover:text-danger-600 focus:border-danger-600 focus:text-danger-600 focus:outline-none focus:ring-0 active:border-danger-700 active:text-danger-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
-                            onClick={handleConnectWallet}
-                          >
-                            Connect Wallet
-                          </button>
                         </div>
 
                         {/* <!--Submit button--> */}
@@ -120,15 +137,12 @@ const Auth: React.FC<AuthProps> = ({address, publicKey}: AuthProps) => {
                             className="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white bg-blue-500"
                             type="submit"
                           >
-                            Install Wallet
+                            Submit
                           </button>
                           <div className="hidden">
                             <WalletSelector isModalOpen={isModalOpen} setModalOpen={setModalOpen} />
                           </div>
-
                         </div>
-
-
                       </form>
                     </div>
                   </div>

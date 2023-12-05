@@ -38,6 +38,9 @@ function App() {
   }, [wallet]);
   
 
+  // address is the wallet address
+  // publicKey is the wallet public key
+
   return (
     <Router>
       <Navbar login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />
