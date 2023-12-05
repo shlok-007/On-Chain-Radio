@@ -5,7 +5,7 @@ import { Home } from './pages/Home';
 import { Upload } from './pages/Upload';
 import Subscribe from './pages/Subscribe';
 import Dashboard from './pages/Dashboard';
-import SongDetails from './pages/SongDetails';
+import SongDetails from './pages/PlayRadio';
 import Auth from './pages/Auth';
 import Profile from './components/Profile';
 import { useWallet } from "@aptos-labs/wallet-adapter-react";

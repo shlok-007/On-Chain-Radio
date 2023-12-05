@@ -36,8 +36,6 @@ const Auth: React.FC = () => {
   }, [wallet]);
 
 
-
-
   const handleConnectWallet = async () => {
     try {
       setModalOpen(true);

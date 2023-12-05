@@ -1,8 +1,10 @@
 import ladyMusic from "../assets/ladyMusic.png";
+import { useState, useEffect } from "react";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { Link } from "react-router-dom";
 import { HashLink } from 'react-router-hash-link';
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 interface HeroProps {
   login?: boolean,
@@ -11,7 +13,25 @@ interface HeroProps {
   setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Hero:  React.FC<HeroProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
+const Hero: React.FC<HeroProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
+
+  const [isModalOpen, setModalOpen] = useState(false);
+  const { wallet, isLoading } = useWallet();
+
+  useEffect(() => {
+    if (wallet) {
+      setLogin(true);
+    }
+  }, [wallet]);
+
+  const handleConnectWallet = async () => {
+    try {
+      setModalOpen(true);
+    } catch (error) {
+      console.error("Failed to connect wallet", error);
+    }
+  };
+
   return (
     <div>
       <section className="text-gray-200 body-font bg-gray-950">
@@ -30,8 +50,21 @@ const Hero:  React.FC<HeroProps> = ({ login, setLogin, subscribe, setSubscribe }
               music journey begins here.
             </p>
             <div className="flex justify-center">
-              { !login && <WalletSelector />}
-              
+              {
+                !login &&
+                <button
+                  type="button"
+                  className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
+                  data-te-ripple-init
+                  data-te-ripple-color="light"
+                  onClick={handleConnectWallet}
+                >
+                  Connect Wallet
+                </button>
+              }
+              <div className="hidden">
+                <WalletSelector isModalOpen={isModalOpen} setModalOpen={setModalOpen} />
+              </div>
               <HashLink smooth to="#exploresongs" className="ml-4 inline-flex text-gray-900 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">
                 Explore
               </HashLink>

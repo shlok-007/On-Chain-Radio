@@ -18,7 +18,7 @@ const Songs: React.FC<SongsProps> = ({ login, setLogin, subscribe, setSubscribe 
         !login && <main className="grid place-items-center min-h-screen bg-gradient-to-b from-gray-950 via-[#56757d] to-gray-950 p-5">
           <div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
-              Free Stations
+              Listen Now
             </h1>
             <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {/* <!-- FREE CARD  --> */}
