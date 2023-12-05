@@ -43,7 +43,12 @@ function a11yProps(index: number) {
   };
 }
 
-export default function Dashboard() {
+interface DashboardProps {
+  address: string;
+  publicKey: string | string[];
+}
+
+export default function Dashboard({address,publicKey}: DashboardProps) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -69,7 +74,7 @@ export default function Dashboard() {
           <Insights />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <Tables />
+          <Tables address={address} publicKey={publicKey} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
           <Profile />

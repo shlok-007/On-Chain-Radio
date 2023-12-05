@@ -6,7 +6,12 @@ import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import Avatar from "../components/Avatar";
 import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
 
-const Auth: React.FC = () => {
+interface AuthProps {
+  address: string,
+  publicKey: string | string[]
+}
+
+const Auth: React.FC<AuthProps> = ({address, publicKey}: AuthProps) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");

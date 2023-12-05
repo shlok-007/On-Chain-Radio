@@ -77,7 +77,13 @@ const rows = [
   createData(15, "Brazil", "BR", 210147125, 8515767),
 ];
 
-export default function StickyHeadTable() {
+interface TableProps {
+  address: string;
+  publicKey: string | string[];
+}
+
+export default function StickyHeadTable({ address, publicKey }: TableProps) {
+  console.log(address, publicKey);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
