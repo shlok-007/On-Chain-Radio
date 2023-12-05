@@ -22,7 +22,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ address, publicKey }: SubscribePr
       function: `${address}::user::subscribe_to_premium`,
     };
     console.log(plan);
-    // not completed yet
+    // left
   }
   
 
