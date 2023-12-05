@@ -21,8 +21,6 @@ function App() {
   const [address, setAddress] = useState('');
   const [publicKey, setPublicKey] = useState<string | string[]>([]);
 
-  
-
   useEffect(() => {
     if (wallet) {
       setLogin(true);
@@ -49,7 +47,7 @@ function App() {
         <Route path='/signup' element={<Auth address={address} publicKey={publicKey}/>} />
         <Route path='/uploadsongs' element={<Upload login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />} />
         <Route path='/dashboard' element={<Dashboard address={address} publicKey={publicKey}  />} />
-        <Route path='/subscribe' element={<Subscribe />} />
+        <Route path='/subscribe' element={<Subscribe address={address} publicKey={publicKey} />} />
         <Route path='/playsongs' element={<SongDetails login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe}  />} />
         <Route path='/profile' element={<Dashboard address={address} publicKey={publicKey}/>} />
         <Route path='/learn-more' element={<LearnMore />} />

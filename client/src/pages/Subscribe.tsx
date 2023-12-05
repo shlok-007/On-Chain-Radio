@@ -1,6 +1,31 @@
-import React from "react";
+import React, {useState} from "react";
+import { AptosClient } from 'aptos';
+import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
 
-const Subscribe = () => {
+const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
+
+interface SubscribeProps {
+  address: string,
+  publicKey: string | string[]
+}
+
+const Subscribe: React.FC<SubscribeProps> = ({ address, publicKey }: SubscribeProps) => {
+  const { wallet,connected } = useWallet();
+
+  const handleTransaction = async (plan: Number) => {
+    if(!connected){
+      alert("Please connect your wallet");
+      return;
+    }
+    const transaction = {
+      type: "entry_function_payload",
+      function: `${address}::user::subscribe_to_premium`,
+    };
+    console.log(plan);
+    // not completed yet
+  }
+  
+
   return (
     <div>
       <section className="text-gray-600 body-font overflow-hidden">
@@ -107,7 +132,7 @@ const Subscribe = () => {
                   </span>
                   Mixtape chillwave tumeric
                 </p>
-                <button className="flex items-center justify-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded">
+                <button className="flex items-center justify-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded" onClick={()=>handleTransaction(0)}>
                   Subscribe
                 </button>
                 <p className="text-xs text-gray-500 mt-3">
@@ -195,7 +220,7 @@ const Subscribe = () => {
                   </span>
                   Mixtape chillwave tumeric
                 </p>
-                <button className="flex items-center justify-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded">
+                <button className="flex items-center justify-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded onClick={()=>handleTransaction(1)">
                   Subscribe
                 </button>
                 <p className="text-xs text-gray-500 mt-3">
@@ -296,8 +321,8 @@ const Subscribe = () => {
                   </span>
                   Mixtape chillwave tumeric
                 </p>
-                <button className="flex items-center justify-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded">
-                  Sybscribe
+                <button className="flex items-center justify-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded" onClick={()=>handleTransaction(2)}>
+                  Subscribe
                 </button>
                 <p className="text-xs text-gray-500 mt-3">
                   Literally you probably haven't heard of them jean shorts.
