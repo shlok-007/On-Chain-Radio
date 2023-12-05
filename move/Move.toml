@@ -5,7 +5,8 @@ authors = []
 
 [addresses]
 addr_on_chain_radio = "9f5a1acdaeb54a53e78b5fe9f1045884145da9ed850016d8c2a4806ffb1532bf"
-admin_address = "d0acc1f7cee58e2fdb626ffb93e50c6aa11d0284b37559f630a207ec2ab77f01"
+admin = "d0acc1f7cee58e2fdb626ffb93e50c6aa11d0284b37559f630a207ec2ab77f01"
+addr_songStore = "74da080bf55797f1762ed74445faf17cc9f045b39a6a4d3defd8f6d00246dea1"
 
 [dev-addresses]
 

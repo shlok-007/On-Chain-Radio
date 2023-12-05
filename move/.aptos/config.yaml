@@ -12,3 +12,15 @@ profiles:
     account: 9f5a1acdaeb54a53e78b5fe9f1045884145da9ed850016d8c2a4806ffb1532bf
     rest_url: "https://fullnode.devnet.aptoslabs.com"
     faucet_url: "https://faucet.devnet.aptoslabs.com"
+  songStore:
+    private_key: "0x05d35c6f841c22f60dc3464e2788960b981c8d70e9e153bef5e6551739e58f68"
+    public_key: "0xf0ed840d83256c9ddf335cbcc978aba80db2733550a5db464f23a7c45dab06bc"
+    account: 74da080bf55797f1762ed74445faf17cc9f045b39a6a4d3defd8f6d00246dea1
+    rest_url: "https://fullnode.devnet.aptoslabs.com"
+    faucet_url: "https://faucet.devnet.aptoslabs.com"
+  community:
+    private_key: "0xf003b60c4f9033fb093340c7f9f9c08e2bcc2b9381d1d9c5ad1edb35147968be"
+    public_key: "0x4b5f9a6809b328523d8b016bc07d3f43e7d8cbb9de7f86e7e23fd06d6e35e42d"
+    account: 9338dc146afa3e43dd60283eb5d5fca0d062acc6132c5d91aa5c1705b45ceee7
+    rest_url: "https://fullnode.devnet.aptoslabs.com"
+    faucet_url: "https://faucet.devnet.aptoslabs.com"

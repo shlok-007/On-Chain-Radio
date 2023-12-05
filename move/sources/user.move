@@ -17,7 +17,7 @@ module addr_on_chain_radio::user{
     const ALREADY_SUBSCRIBED: u64 = 1;
     const INSUFFICIENT_FUNDS: u64 = 2;
     
-    struct Account has key {
+    struct Account has key, store {
         wallet_address: address,
         name: String,
         email: String,
@@ -74,7 +74,7 @@ module addr_on_chain_radio::user{
         assert!(acc_balance >= Premium_fee, INSUFFICIENT_FUNDS);
 
         let admin_cut = Premium_fee - Premium_fee*Premium_artist_cut_percentage/100;
-        aptos_account::transfer(account, @admin_address, admin_cut);
+        aptos_account::transfer(account, @admin, admin_cut);
 
         let i = 0;
         //-------To be fetched from SongStore module-------//
@@ -117,6 +117,9 @@ module addr_on_chain_radio::user{
         // set up global time for testing purpose
         timestamp::set_time_has_started_for_testing(aptos_framework);
         timestamp::update_global_time_for_test_secs(10);
+        print(&utf8(b"Before time: "));
+        let _before_time = timestamp::now_seconds();
+        print(&_before_time);
         let (_burn_cap, _mint_cap) = aptos_framework::aptos_coin::initialize_for_test(aptos_framework);
         let aptos_framework_address = signer::address_of(aptos_framework);
         account::create_account_for_test(aptos_framework_address);
@@ -136,26 +139,28 @@ module addr_on_chain_radio::user{
         assert!(borrow_global<Account>(customer_address).premium, 92);
         print(&utf8(b"Balance after subscription: "));
         print(&coin::balance<AptosCoin>(customer_address));
-
+        print(&utf8(b"After time: "));
+        let _after_time = timestamp::now_seconds();
+        print(&_after_time);
         coin::destroy_burn_cap(_burn_cap);
         coin::destroy_mint_cap(_mint_cap);
     }
 
-    #[test(admin = @0x123)]
-    public entry fun update_bio_test(admin: &signer) acquires Account{
-        let admin_address = signer::address_of(admin);
-        account::create_account_for_test(signer::address_of(admin));
-        create_account(admin, string::utf8(b"John Doe"), string::utf8(b"john123@gmail.com"), false);
-        let acc = borrow_global<Account>(admin_address);
+    #[test(test_acc = @0x123)]
+    public entry fun update_bio_test(test_acc: &signer) acquires Account{
+        let test_acc_address = signer::address_of(test_acc);
+        account::create_account_for_test(signer::address_of(test_acc));
+        create_account(test_acc, string::utf8(b"John Doe"), string::utf8(b"john123@gmail.com"), false);
+        let acc = borrow_global<Account>(test_acc_address);
         print(&utf8(b"Bio before update: "));
         print(&acc.bio.location);
         print(&acc.bio.profession);
         print(&acc.bio.about);
-        update_bio(admin, string::utf8(b"New York"), string::utf8(b"Musician"), string::utf8(b"I am a musician"));
-        assert!(borrow_global<Account>(admin_address).bio.location == string::utf8(b"New York"), 93);
-        assert!(borrow_global<Account>(admin_address).bio.profession == string::utf8(b"Musician"), 94);
-        assert!(borrow_global<Account>(admin_address).bio.about == string::utf8(b"I am a musician"), 95);
-        acc = borrow_global<Account>(admin_address);
+        update_bio(test_acc, string::utf8(b"New York"), string::utf8(b"Musician"), string::utf8(b"I am a musician"));
+        assert!(borrow_global<Account>(test_acc_address).bio.location == string::utf8(b"New York"), 93);
+        assert!(borrow_global<Account>(test_acc_address).bio.profession == string::utf8(b"Musician"), 94);
+        assert!(borrow_global<Account>(test_acc_address).bio.about == string::utf8(b"I am a musician"), 95);
+        acc = borrow_global<Account>(test_acc_address);
         print(&utf8(b"Bio after update: "));
         print(&acc.bio.location);
         print(&acc.bio.profession);
