@@ -4,13 +4,10 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-addr_on_chain_radio = "9f5a1acdaeb54a53e78b5fe9f1045884145da9ed850016d8c2a4806ffb1532bf"
+addr_on_chain_radio = "bebe574b455ce6b3ce909b61d856038c25ada16e777521982811c43786e4ec54"
+admin_address = "179134171776ad8339946253488fbf0c6520774e3a8dea047d7294b0c0294c06"
 
 [dev-addresses]
 
-[dependencies.AptosFramework]
-git = "https://github.com/aptos-labs/aptos-core.git"
-rev = "mainnet"
-subdir = "aptos-move/framework/aptos-framework"
-
-[dev-dependencies]
+[dependencies]
+AptosFramework = { local = "../framework/aptos-framework" }
