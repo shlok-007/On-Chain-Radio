@@ -9,15 +9,29 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 
-const PremiumCard = () => {
+interface PremiumCardProps {
+  login: boolean,
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
+  subscribe: boolean,
+  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>,
+  genre: string
+}
+
+const PremiumCard: React.FC<PremiumCardProps> = ({ login, setLogin, subscribe, setSubscribe, genre }) => {
   const [like, setLike] = useState(false);
   const [pause, setPause] = useState(false);
+  const navigate = useNavigate();
+
+  const handlePlay = () => {
+    !login ? navigate("/signup") : !subscribe ? navigate("/subscribe") : navigate("/playsongs", {state: {id: genre + " premium"}})
+  }
 
   return (
     <>
       {/* <!-- CARD 1 --> */}
-      <div className="bg-[#ffca28] shadow-lg rounded p-3">
+      <div className="bg-[#ebc247] shadow-lg rounded p-3">
         <div className="group relative">
           <img
             className="w-full md:w-72 block rounded"
@@ -42,7 +56,7 @@ const PremiumCard = () => {
               )}
             </button>
 
-            <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
+            <button onClick={handlePlay} className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
               {pause ? (
                 <FontAwesomeIcon
                   icon={faPause}
@@ -65,7 +79,7 @@ const PremiumCard = () => {
         </div>
         <div className="p-5">
           <div className="flex justify-between">
-            <h3 className="text-black text-lg">Epoch</h3>
+            <h3 className="text-black text-lg">{genre}</h3>
             <Stack direction="row" spacing={1}>
               <Chip
                 label="Premium"

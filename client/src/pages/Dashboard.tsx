@@ -43,7 +43,12 @@ function a11yProps(index: number) {
   };
 }
 
-export default function Dashboard() {
+interface DashboardProps {
+  address: string;
+  publicKey: string | string[];
+}
+
+export default function Dashboard({address,publicKey}: DashboardProps) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -51,28 +56,31 @@ export default function Dashboard() {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-          centered
-        >
-          <Tab icon={<DashboardIcon />} label="DashBoard" iconPosition="start" />
-          <Tab label="Transactions" icon={<ShowChartIcon />} iconPosition="start" />
-          <Tab icon={<Person2Icon />} label="Profile" iconPosition="start" />
-        </Tabs>
+    <div>
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+            centered
+          >
+            <Tab icon={<DashboardIcon />} label="DashBoard" iconPosition="start" />
+            <Tab label="Transactions" icon={<ShowChartIcon />} iconPosition="start" />
+            <Tab icon={<Person2Icon />} label="Profile" iconPosition="start" />
+          </Tabs>
+        </Box>
+        <CustomTabPanel value={value} index={0}>
+          <Insights />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          <Tables address={address} publicKey={publicKey} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          <Profile />
+        </CustomTabPanel>
       </Box>
-      <CustomTabPanel value={value} index={0}>
-        <Insights />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <Tables />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <Profile />
-      </CustomTabPanel>
-    </Box>
+    </div>
+
   );
 }

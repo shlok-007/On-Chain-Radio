@@ -10,9 +10,5 @@ addr_songStore = "74da080bf55797f1762ed74445faf17cc9f045b39a6a4d3defd8f6d00246de
 
 [dev-addresses]
 
-[dependencies.AptosFramework]
-git = "https://github.com/aptos-labs/aptos-core.git"
-rev = "mainnet"
-subdir = "aptos-move/framework/aptos-framework"
-
-[dev-dependencies]
+[dependencies]
+AptosFramework = { local = "../framework/aptos-framework" }

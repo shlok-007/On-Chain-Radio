@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { Navbar } from "../components/Navbar";
 import { UploadForm } from "../components/UploadForm";
 import { RevenueForm } from "../components/RevenueForm";
-import Footer from "../components/Footer";
 
-const Upload: React.FC = () => {
+interface UploadProps {
+  login: boolean,
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
+  subscribe: boolean,
+  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Upload: React.FC<UploadProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
   const [revenue, setRevenue] = useState([<RevenueForm />]);
   const addPerson: React.MouseEventHandler<HTMLButtonElement> = () => {
     setRevenue((pre) => {
@@ -17,7 +22,6 @@ const Upload: React.FC = () => {
   return (
     <div>
       <div className="text-center">
-        <Navbar />
         <form className="w-3/4 mx-auto my-10 py-5">
           <p className="w-full text-3xl sm:text-4xl font-bold m-auto">Upload Your Song</p>
           <UploadForm />
@@ -48,7 +52,6 @@ const Upload: React.FC = () => {
           </div>
         </form>
       </div>
-      <Footer />
     </div>
   );
 };

@@ -3,21 +3,39 @@ import logo from "../assets/Logo.png";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { SigninModal } from "./SigninModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { disconnect } from "process";
+import { Link } from "react-router-dom";
+import { HashLink } from 'react-router-hash-link';
 
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  login?: boolean,
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
+  subscribe: boolean,
+  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
   const navigate = useNavigate();
   const [navbar, setNavbar] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { disconnect } = useWallet();
+  const location = useLocation();
+
+  const handleDisconnect = async () => {
+    disconnect();
+  };
+
   return (
     <div>
-      <nav className="w-full bg-black">
+      <nav className="w-full bg-gray-950">
         <div className="justify-between pr-4 mx-auto  lg:items-center lg:flex">
           <div>
             <div className="flex items-center justify-between lg:block">
               {/* LOGO */}
-              <a href="#" className="flex" onClick={() => navigate("/")}>
+              <a href="" className="flex" onClick={() => navigate("/")}>
                 <img
                   src={logo}
                   alt="logo"
@@ -70,9 +88,8 @@ const Navbar: React.FC = () => {
           </div>
           <div>
             <div
-              className={`flex-1 justify-self-center pb-3 mt-8 lg:block lg:pb-0 lg:mt-0 ${
-                navbar ? "p-4 lg:p-0 block" : "hidden"
-              }`}
+              className={`flex-1 justify-self-center pb-3 mt-8 lg:block lg:pb-0 lg:mt-0 ${navbar ? "p-4 lg:p-0 block" : "hidden"
+                }`}
             >
               <ul className="h-screen lg:h-auto items-center justify-center lg:flex ">
                 <li className="my-4">
@@ -86,47 +103,84 @@ const Navbar: React.FC = () => {
                 </li>
 
                 <li className="my-4">
-                  <a
-                    href="#exploresongs"
+                  <HashLink
+                    smooth
+                    to="/#exploresongs"
                     className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
                     onClick={() => setNavbar(!navbar)}
                   >
                     Explore
-                  </a>
+                  </HashLink>
                 </li>
 
                 {/* -----------------ENDED HERE----------------- */}
 
-                <li className="my-4">
-                  <a
-                    href="#"
-                    className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                    onClick={() => navigate("/dashboard")}
-                  >
-                    Dashboard
-                  </a>
-                </li>
+                {
+                  login &&
+                  <li className="my-4">
+                    <a
+                      href="#"
+                      className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
+                      onClick={() => navigate("/dashboard")}
+                    >
+                      Dashboard
+                    </a>
+                  </li>
+                }
+                {
+                  login &&
+                  <li className="my-4">
+                    <a
+                      href="#"
+                      className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
+                      onClick={() => navigate("/uploadsongs")}
+                    >
+                      Upload
+                    </a>
+                  </li>
+                }
+                {
+                  login &&
+                  <li className="my-4">
+                    <a
+                      href="#"
+                      className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
+                      onClick={() => navigate("/profile")}
+                    >
+                      Profile
+                    </a>
+                  </li>
+                }
 
-                <WalletSelector />
-
-                {/* <li className="my-4">
-                  <a
-                    href="/technologies-developed"
+                {
+                  login && <button
                     className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
-                    onClick={() => setNavbar(!navbar)}
+                    onClick={handleDisconnect}
                   >
-                    Connect Wallet
-                  </a>
-                </li> */}
-
-                <li className="my-4">
-                  <button
-                    className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
-                    onClick={() => navigate("/signup")}
-                  >
-                    Connect
+                    Disconnect Wallet
                   </button>
-                </li>
+                }
+                {
+                  !login && location.pathname == "/signup" &&
+                  <li className="my-4">
+                    <Link to="/learn-more" className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md">
+                      Learn More
+                    </Link>
+                    
+                  </li>
+                }
+                {
+                  !login && location.pathname !== "/signup" &&
+                  <li className="my-4">
+                    <button
+                      className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
+                      onClick={() => navigate("/signup")}
+                    >
+                      Get Started
+                    </button>
+                  </li>
+                }
+
               </ul>
             </div>
           </div>

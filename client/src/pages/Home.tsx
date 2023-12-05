@@ -1,18 +1,22 @@
 import React from "react";
-import { Navbar } from "../components/Navbar";
 import { Hero } from "../components/Hero";
 import { Songs } from "../components/Songs";
 import Footer from "../components/Footer";
 
-const Home: React.FC = () => {
+interface HomeProps {
+    login: boolean,
+    setLogin: React.Dispatch<React.SetStateAction<boolean>>,
+    subscribe: boolean,
+    setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Home: React.FC<HomeProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
     return (
         <div>
-            <Navbar />
-            <Hero />
+            <Hero login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />
             <section id="exploresongs">
-                <Songs />
+                <Songs login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />
             </section>
-            <Footer />
         </div>
     )
 }

@@ -1,119 +1,180 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Logo from "../assets/Logo.png";
+import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
+import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
+import Avatar from "../components/Avatar";
+import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
+import { AptosClient, Types } from 'aptos';
+import { PetraWallet } from "petra-plugin-wallet-adapter";
 
-const Auth: React.FC = () => {
+const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
+
+interface AuthProps {
+  address: string,
+  publicKey: string | string[]
+}
+
+declare global {
+  interface Window {
+    PetraWallet: any;
+    aptos: any;
+  }
+}
+
+
+const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [isModalOpen, setModalOpen] = useState(false);
+  const { wallet, connected, isLoading } = useWallet();
+  const Petra = new PetraWallet();
+
+  const handleAccountCreation = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!wallet) {
+      alert("Please connect your wallet");
+      return;
+    }
+    try {
+      const transaction = {
+        type: "entry_function_payload",
+        function: `${address}::user::create_account`,
+        arguments: [username, email, false],
+        type_arguments: [],
+      };
+      
+      const result = await window.aptos.signAndSubmitTransaction(transaction);
+      console.log(result);
+      // if the transaction was successful then navigate to home page
+    } catch (error) {
+      console.error("Failed to connect wallet", error);
+    }
+  };
+
+  const handleConnectWallet = async () => {
+    try {
+      setModalOpen(true);
+    } catch (error) {
+      console.error("Failed to connect wallet", error);
+    }
+  };
+
+  const handleHaveAnAccount = async () => {
+    // open a pop up
+    // connect to wallet
+    // check if the user has an account
+    // if yes, navigate to home page
+    // if no, navigate to signup page
+  };
+
   return (
-    <div>
-        <section className="gradient-form h-full bg-neutral-200 dark:bg-neutral-700">
-  <div className="container h-full p-10">
-    <div
-      className="g-6 flex h-full flex-wrap items-center justify-center text-neutral-800 dark:text-neutral-200">
-      <div className="w-full">
-        <div
-          className="block rounded-lg bg-white shadow-lg dark:bg-neutral-800">
-          <div className="g-0 lg:flex lg:flex-wrap">
-            {/* <!-- Left column container--> */}
-            <div className="px-4 md:px-0 lg:w-6/12">
-              <div className="md:mx-6 md:p-12">
-                {/* <!--Logo--> */}
-                <div className="text-center">
-                  <img
-                    className="mx-auto w-48"
-                    src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
-                    alt="logo" />
-                  <h4 className="mb-12 mt-1 pb-1 text-xl font-semibold">
-                    We are The Lotus Team
-                  </h4>
+    <div className="bg-gradient-to-b bg-[#7CA4AE]">
+      <section className="gradient-form w-full flex justify-center items-center">
+        <div className="container h-full w-4/5 md:py-16">
+          <div className="g-6 flex h-full flex-wrap items-center justify-center text-neutral-200">
+            <div className="w-full">
+              <div className="block bg-gray-900">
+                <div className="g-0 lg:flex lg:flex-wrap">
+                  {/* <!-- Left column container--> */}
+                  <div className="px-4 md:px-0 lg:w-6/12">
+                    <div className="md:mx-6 md:p-12">
+                      {/* <!--Logo--> */}
+                      <div className="text-center">
+                        <img className="mx-auto w-48" src={Logo} alt="logo" />
+                        <h4 className="mb-12 mt-1 pb-1 text-xl font-semibold">
+                          PeerPlay
+                        </h4>
+                      </div>
+                      <form onSubmit={handleAccountCreation}>
+
+                        {!connected && <a onClick={handleConnectWallet} className="hover:cursor-pointer">
+                          First configure your wallet
+                        </a>
+                        }
+                        {connected && <div className="text-indigo-500">Wallet Connected</div>
+                        }
+
+
+                        {/* <!--Username input--> */}
+                        <div className="relative my-4">
+                          <input
+                            type="text"
+                            className="peer block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear"
+                            value={username}
+                            onChange={(e) => { setUsername(e.target.value) }}
+                            placeholder="Username"
+                            required
+                          />
+                        </div>
+
+                        {/* <!--Email--> */}
+                        <div className="relative mb-4">
+                          <input
+                            type="email"
+                            className="peer block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Email"
+                            required
+                          />
+                        </div>
+
+                        {/* <!--Register button--> */}
+                        <div className="flex items-center justify-between pb-6">
+                          <a
+                            onClick={handleHaveAnAccount}
+                            className="mb-0 mr-2 hover:cursor-pointer"
+                          >
+                            Already have an account? Log in
+                          </a>
+                        </div>
+
+                        {/* <!--Submit button--> */}
+                        <div className="mb-12 pb-1 pt-1 text-center">
+                          <button
+                            className="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white bg-blue-500"
+                            type="submit"
+                          >
+                            Submit
+                          </button>
+                          <div className="hidden">
+                            <WalletSelector isModalOpen={isModalOpen} setModalOpen={setModalOpen} />
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  {/* <!-- Right column container with background and description--> */}
+                  <div
+                    className="flex items-center lg:w-6/12 bg-gray-800"
+                  >
+                    <div className="px-4 py-6 text-white md:mx-6 md:p-12">
+                      <h4 className="mb-6 text-xl font-semibold">
+                        Choose your avatar
+                      </h4>
+                      <p className="text-sm">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit, sed do eiusmod tempor incididunt ut labore et
+                        dolore magna aliqua. Ut enim ad minim veniam, quis
+                        nostrud exercitation ullamco laboris nisi ut aliquip ex
+                        ea commodo consequat.
+                      </p>
+                      <div className="pt-8 flex justify-center items-center">
+                        <Avatar />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-
-                <form>
-                  <p className="mb-4">Please login to your account</p>
-                  {/* <!--Username input--> */}
-                  <div className="relative mb-4" data-te-input-wrapper-init>
-                    <input
-                      type="text"
-                      className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                      id="exampleFormControlInput1"
-                      placeholder="Username" />
-                    <label
-                      htmlFor="exampleFormControlInput1"
-                      className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary-600 peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-                      >Email address
-                    </label>
-                  </div>
-
-                  {/* <!--Password input--> */}
-                  <div className="relative mb-4" data-te-input-wrapper-init>
-                    <input
-                      type="password"
-                      className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                      id="exampleFormControlInput11"
-                      placeholder="Password" />
-                    <label
-                      htmlFor="exampleFormControlInput11"
-                      className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary-600 peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-                      >Password
-                    </label>
-                  </div>
-
-                  {/* <!--Submit button--> */}
-                  <div className="mb-12 pb-1 pt-1 text-center">
-                    <button
-                      className="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
-                      type="button"
-                      data-te-ripple-init
-                      data-te-ripple-color="light"
-                      style=
-                       {{ background: "linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)"}}
-                      >
-                      Log in
-                    </button>
-
-                    {/* <!--Forgot password link--> */}
-                    <a href="#!">Forgot password?</a>
-                  </div>
-
-                  {/* <!--Register button--> */}
-                  <div className="flex items-center justify-between pb-6">
-                    <a onClick={() => navigate("/")} href="#" className="mb-0 mr-2">Already have an account?</a>
-                    <button
-                      type="button"
-                      className="inline-block rounded border-2 border-danger px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-danger transition duration-150 ease-in-out hover:border-danger-600 hover:bg-neutral-500 hover:bg-opacity-10 hover:text-danger-600 focus:border-danger-600 focus:text-danger-600 focus:outline-none focus:ring-0 active:border-danger-700 active:text-danger-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
-                      data-te-ripple-init
-                      data-te-ripple-color="light">
-                      Register
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-
-            {/* <!-- Right column container with background and description--> */}
-            <div
-              className="flex items-center rounded-b-lg lg:w-6/12 lg:rounded-r-lg lg:rounded-bl-none"
-              style={{background: "linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)"}}>
-              <div className="px-4 py-6 text-white md:mx-6 md:p-12">
-                <h4 className="mb-6 text-xl font-semibold">
-                  We are more than just a company
-                </h4>
-                <p className="text-sm">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing
-                  elit, sed do eiusmod tempor incididunt ut labore et
-                  dolore magna aliqua. Ut enim ad minim veniam, quis
-                  nostrud exercitation ullamco laboris nisi ut aliquip ex
-                  ea commodo consequat.
-                </p>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
-  </div>
-</section>
-    </div>
-  )
-}
+  );
+};
 
-export default Auth
+export default Auth;

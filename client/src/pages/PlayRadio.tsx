@@ -1,13 +1,19 @@
 import { useState } from "react";
 import ladyMusic from "../assets/ladyMusic.png";
-import { Navbar } from "../components/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import TipModal from "../components/TipModal";
 import { useLocation } from "react-router-dom";
 
-const SongDetails = () => {
+interface SongDetailsProps {
+  login: boolean,
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
+  subscribe: boolean,
+  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const SongDetails: React.FC<SongDetailsProps> = ({login, setLogin, subscribe ,setSubscribe}) => {
   const [like, setLike] = useState(false);
   const location = useLocation();
   const genre = location.state?.id || 'No genre Selected';
@@ -15,8 +21,6 @@ const SongDetails = () => {
 
   return (
     <div className="h-screen bg-[#7CA4AE] ">
-      <Navbar />
-
       <div className="bg-[#7CA4AE] font-sans grid place-items-center py-12">
         <div className="bg-gray-800 md:grid md:grid-cols-2 rounded-md overflow-hidden mx-2 ">
 
