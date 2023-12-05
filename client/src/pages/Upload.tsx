@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { UploadForm } from "../components/UploadForm";
 import { RevenueForm } from "../components/RevenueForm";
-import Footer from "../components/Footer";
 
 interface UploadProps {
   login: boolean,
@@ -53,7 +52,6 @@ const Upload: React.FC<UploadProps> = ({ login, setLogin, subscribe, setSubscrib
           </div>
         </form>
       </div>
-      <Footer />
     </div>
   );
 };

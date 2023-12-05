@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -29,7 +30,6 @@ const columns: readonly Column[] = [
     id: "amount",
     label: "Amount (in APT)",
     minWidth: 170,
-    align: "right",
     format: (value: number) => value.toLocaleString("en-US"),
   },
   {
@@ -41,7 +41,7 @@ const columns: readonly Column[] = [
   },
 ];
 
-interface Data {
+interface Transaction {
   id: number;
   sender: string;
   reciever: string;
@@ -55,27 +55,11 @@ function createData(
   reciever: string,
   amount: number,
   timestamp: number
-): Data {
+): Transaction {
   return { id, sender, reciever, amount, timestamp };
 }
 
-const rows = [
-  createData(1, "India", "IN", 1324171354, 3287263),
-  createData(2, "China", "CN", 1403500365, 9596961),
-  createData(3, "Italy", "IT", 60483973, 301340),
-  createData(4, "United States", "US", 327167434, 9833520),
-  createData(5, "Canada", "CA", 37602103, 9984670),
-  createData(6, "Australia", "AU", 25475400, 7692024),
-  createData(7, "Germany", "DE", 83019200, 357578),
-  createData(8, "Ireland", "IE", 4857000, 70273),
-  createData(9, "Mexico", "MX", 126577691, 1972550),
-  createData(10, "Japan", "JP", 126317000, 377973),
-  createData(11, "France", "FR", 67022000, 640679),
-  createData(12, "United Kingdom", "GB", 67545757, 242495),
-  createData(13, "Russia", "RU", 146793744, 17098246),
-  createData(14, "Nigeria", "NG", 200962417, 923768),
-  createData(15, "Brazil", "BR", 210147125, 8515767),
-];
+
 
 interface TableProps {
   address: string;
@@ -83,6 +67,61 @@ interface TableProps {
 }
 
 export default function StickyHeadTable({ address, publicKey }: TableProps) {
+
+
+  
+  const [transactionDetails, setTransactionDetails] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        const url = 'https://fullnode.devnet.aptoslabs.com/v1/accounts/0xbebe574b455ce6b3ce909b61d856038c25ada16e777521982811c43786e4ec54/transactions?limit=10';
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            console.log(data);
+
+            // Extracting required transaction details from the response array
+            const details = data.map((transaction: any) => {
+                const {
+                    version,
+                    type,
+                    sender,
+                    timestamp,
+                    payload: {
+                        function: transactionType,
+                        arguments: [amount],
+                    },
+                    max_gas_amount,
+                    gas_unit_price,
+                } = transaction;
+
+                // Converting gas to APT
+                const gasInAPT = Number(max_gas_amount) * Number(gas_unit_price) * (0.00000001);
+
+                // Building the final transaction object with required details
+                return {
+                    version,
+                    type,
+                    sender,
+                    timestamp,
+                    transactionType,
+                    amount,
+                    gasInAPT
+                };
+            });
+
+            setTransactionDetails(details);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    fetchData();
+}, []);
+
+
+
   console.log(address, publicKey);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -118,18 +157,18 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {transactionDetails
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((transaction, index) => {
                 return (
                   <TableRow
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={row.reciever}
+                    key={transaction.reciever}
                   >
                     {columns.map((column) => {
-                      const value = row[column.id];
+                      const value = transaction[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {column.format && typeof value === "number"
@@ -147,7 +186,7 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={transactionDetails.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
