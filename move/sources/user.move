@@ -8,6 +8,17 @@ module addr_on_chain_radio::user{
     use 0x1::aptos_coin::AptosCoin; 
     use 0x1::aptos_account;
 
+    #[test_only]
+    use std::string;
+    #[test_only]
+    use std::debug::print;
+    #[test_only]
+    use 0x1::aptos_coin;
+    #[test_only]
+    use std::timestamp;
+    #[test_only]
+    use aptos_framework::account;
+
     //-----To be moved to community module-----//
     const Premium_fee: u64 = 1000;
     const Premium_artist_cut_percentage: u64 = 60;
@@ -100,16 +111,10 @@ module addr_on_chain_radio::user{
         acc.bio.about = _about;
     }
 
-    #[test_only]
-    use std::string;
-    #[test_only]
-    use std::debug::print;
-    #[test_only]
-    use 0x1::aptos_coin;
-    #[test_only]
-    use std::timestamp;
-    #[test_only]
-    use aptos_framework::account;
+    #[view]
+    public fun check_acc_exists(_address: address): bool {
+        return exists<Account>(_address)
+    }
 
     #[test(acc1 = @0x123, aptos_framework = @0x1)]
 

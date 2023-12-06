@@ -7,8 +7,11 @@ authors = []
 addr_on_chain_radio = "9f5a1acdaeb54a53e78b5fe9f1045884145da9ed850016d8c2a4806ffb1532bf"
 admin = "d0acc1f7cee58e2fdb626ffb93e50c6aa11d0284b37559f630a207ec2ab77f01"
 addr_songStore = "74da080bf55797f1762ed74445faf17cc9f045b39a6a4d3defd8f6d00246dea1"
+addr_community = "9338dc146afa3e43dd60283eb5d5fca0d062acc6132c5d91aa5c1705b45ceee7"
 
 [dev-addresses]
 
-[dependencies]
-AptosFramework = { local = "../framework/aptos-framework" }
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"

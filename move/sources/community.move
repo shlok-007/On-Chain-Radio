@@ -77,19 +77,6 @@ module addr_community::community {
         voters: vector<address>
     }
 
-    // public fun invalid_argument(r: u64): u64 {  canonical(INVALID_ARGUMENT, r) }
-    // public fun out_of_range(r: u64): u64 {  canonical(OUT_OF_RANGE, r) }
-    // public fun invalid_state(r: u64): u64 {  canonical(INVALID_STATE, r) }
-    // public fun unauthenticated(r: u64): u64 { canonical(UNAUTHENTICATED, r) }
-    // public fun permission_denied(r: u64): u64 { canonical(PERMISSION_DENIED, r) }
-    // public fun not_found(r: u64): u64 { canonical(NOT_FOUND, r) }
-    // public fun aborted(r: u64): u64 { canonical(ABORTED, r) }
-    // public fun already_exists(r: u64): u64 { canonical(ALREADY_EXISTS, r) }
-    // public fun resource_exhausted(r: u64): u64 {  canonical(RESOURCE_EXHAUSTED, r) }
-    // public fun internal(r: u64): u64 {  canonical(INTERNAL, r) }
-    // public fun not_implemented(r: u64): u64 {  canonical(NOT_IMPLEMENTED, r) }
-    // public fun unavailable(r: u64): u64 { canonical(UNAVAILABLE, r) }
-
     public entry fun create_poll (
         proposed_value: u64,
         justification: String,
@@ -261,6 +248,11 @@ module addr_community::community {
         else {
             assert!(false, INVALID_POLL_TYPE);
         };
+    }
+
+    #[view]
+    public fun get_report_threshold(): u64 acquires CommunityParams {
+        return borrow_global<CommunityParams>(@addr_community).report_threshold
     }
 
     #[test(comm_acc = @0x7c6874c9aec6b7393e3575f40787bdfc7bd5f56c000135332730edc355bad22a)]

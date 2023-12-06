@@ -1,102 +1,102 @@
-module addr_on_chain_radio::song{
+// module addr_on_chain_radio::song{
 
-    use std::string::{String, utf8};
-    use std::signer;
-    use aptos_std::table::{Self, Table};
-    use std::vector;
-    use 0x1::coin;
-    use 0x1::aptos_coin::AptosCoin; 
-    use 0x1::aptos_account;
+//     use std::string::{String, utf8};
+//     use std::signer;
+//     use aptos_std::table::{Self, Table};
+//     use std::vector;
+//     use 0x1::coin;
+//     use 0x1::aptos_coin::AptosCoin; 
+//     use 0x1::aptos_account;
 
-    struct Song has store {
-        artist_wallet_address: address,
-        title: String,
-        ipfs_hash: String,
-        total_tips: u64,
-        duration: u16,
-        premium: bool,
-        genre: String,
-        reports: u64,
-    }
+//     struct Song has store {
+//         artist_wallet_address: address,
+//         title: String,
+//         ipfs_hash: String,
+//         total_tips: u64,
+//         duration: u16,
+//         premium: bool,
+//         genre: String,
+//         reports: u64,
+//     }
 
- struct UserProfile has store, drop, copy {
-    user: address,
-    listened_tracks: vector<u64>,
-}
-struct Artist has store, drop, copy{
-    address: address,
-    authorized: bool,
-}
-struct Tip has store, drop, copy{
-    sender: address,
-    amount: u64,
-}
-//event Tipped(artist: address, user: address, amount: u64);
-public struct TipDistributionEvent {
-    sender: address,
-    artist: address,
-    amount: u64,
-}
-//sets
-//public mutable set<address> AuthorizedUsers;
-//public mutable set<address> AuthorizedArtists;
-public fun upload_Song(title: vector<u8>, content: vector<u8>) {
-    let artist: address = signer();
-    let id: u64 = AptosCrypto::random_u64(); 
-    let song = Song {
-        id: id,
-        artist: artist,
-        title: title,
-        content: content,
-        tip_pool:0,
-    };
-    move_to<Song>(artist,song);
-}
-public fun listen_Song(user: &signer, track_id: u64) {
-        let user_address = signer::address_of(user);
-        // song from stor
-        let track = move_from<Song>(id);
-        // Add to user listen tracks
-        let user_profile = move_from_opt<UserProfile>(user_address);
-        if (user_profile)
-        {
-            let v=user_profile.listened_tracks;
-            vector::push_back(&mut v,track);
-            move_to<UserProfile>(user_address, user_profile);
-        } 
-        else {
-            // If !user profile, create a new
-            let new_profile = UserProfile {
-                user: user_address,
-                listened_tracks: track,
-            };
-            move_to<UserProfile>(user_address, new_profile);
-        }
-    }
-    public fun authorizeArtist(artist: address, authorized: bool) {
-        let artistResource = &mut Artist{address: artist, authorized: authorized};
-        move_to_sender(artistResource);
-    }
-    public fun tip(sender: address, composer: address, singer: address, band: address, amount: u64) {
-        let composerResource = borrow_global_mut<Artist>(composer);
-        let singerResource = borrow_global_mut<Artist>(singer);
-        let bandResource = borrow_global_mut<Artist>(band);
-        if(!composerResource.authorized)
-        {
-          return 0;
-        }
-        else if(!singerResource.authorized) 
-        {
-            return 0;
-        }
-        else if(!bandResource.authorized)
-        {
-            return 0;
-        }
-        else
-        {
-        let total_amount = Aptos::coin_balance_of<CoinType>(sender);
-        assert(total_amount >= amount, 0x0);
+//  struct UserProfile has store, drop, copy {
+//     user: address,
+//     listened_tracks: vector<u64>,
+// }
+// struct Artist has store, drop, copy{
+//     address: address,
+//     authorized: bool,
+// }
+// struct Tip has store, drop, copy{
+//     sender: address,
+//     amount: u64,
+// }
+// //event Tipped(artist: address, user: address, amount: u64);
+// public struct TipDistributionEvent {
+//     sender: address,
+//     artist: address,
+//     amount: u64,
+// }
+// //sets
+// //public mutable set<address> AuthorizedUsers;
+// //public mutable set<address> AuthorizedArtists;
+// public fun upload_Song(title: vector<u8>, content: vector<u8>) {
+//     let artist: address = signer();
+//     let id: u64 = AptosCrypto::random_u64(); 
+//     let song = Song {
+//         id: id,
+//         artist: artist,
+//         title: title,
+//         content: content,
+//         tip_pool:0,
+//     };
+//     move_to<Song>(artist,song);
+// }
+// public fun listen_Song(user: &signer, track_id: u64) {
+//         let user_address = signer::address_of(user);
+//         // song from stor
+//         let track = move_from<Song>(id);
+//         // Add to user listen tracks
+//         let user_profile = move_from_opt<UserProfile>(user_address);
+//         if (user_profile)
+//         {
+//             let v=user_profile.listened_tracks;
+//             vector::push_back(&mut v,track);
+//             move_to<UserProfile>(user_address, user_profile);
+//         } 
+//         else {
+//             // If !user profile, create a new
+//             let new_profile = UserProfile {
+//                 user: user_address,
+//                 listened_tracks: track,
+//             };
+//             move_to<UserProfile>(user_address, new_profile);
+//         }
+//     }
+//     public fun authorizeArtist(artist: address, authorized: bool) {
+//         let artistResource = &mut Artist{address: artist, authorized: authorized};
+//         move_to_sender(artistResource);
+//     }
+//     public fun tip(sender: address, composer: address, singer: address, band: address, amount: u64) {
+//         let composerResource = borrow_global_mut<Artist>(composer);
+//         let singerResource = borrow_global_mut<Artist>(singer);
+//         let bandResource = borrow_global_mut<Artist>(band);
+//         if(!composerResource.authorized)
+//         {
+//           return 0;
+//         }
+//         else if(!singerResource.authorized) 
+//         {
+//             return 0;
+//         }
+//         else if(!bandResource.authorized)
+//         {
+//             return 0;
+//         }
+//         else
+//         {
+//         let total_amount = Aptos::coin_balance_of<CoinType>(sender);
+//         assert(total_amount >= amount, 0x0);
     
 //         //(25:40:35 distri)
 //         let composer_share = (amount * 25) / 100;
