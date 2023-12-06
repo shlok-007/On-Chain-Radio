@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Path: src/App.css */
+
+@layer utilities {
+    .scroll-hidden::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@layer components {
+    .control-button {
+        @apply
+        bg-[#1b1b1b] rounded-full p-4
+        hover:brightness-125 ring-[#7CA4AE]/30
+        transition duration-150
+    }
+}
+
+.slider {
+    @apply
+    absolute top-0 left-0 
+    appearance-none w-full h-2 transition rounded
+    bg-transparent outline-none
+}
+
+.slider::-webkit-slider-thumb {
+    @apply
+    appearance-none
+    w-4 h-4 
+    active:h-5 active:w-5
+    active:ring-8 ring-[#7CA4AE]/30
+    rounded-full bg-[#7CA4AE] cursor-pointer
+    transition-all duration-150
+}
