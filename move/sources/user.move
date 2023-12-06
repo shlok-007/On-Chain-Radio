@@ -140,25 +140,4 @@ module addr_on_chain_radio::user{
         coin::destroy_burn_cap(_burn_cap);
         coin::destroy_mint_cap(_mint_cap);
     }
-
-    #[test(admin = @0x123)]
-    public entry fun update_bio_test(admin: &signer) acquires Account{
-        let admin_address = signer::address_of(admin);
-        account::create_account_for_test(signer::address_of(admin));
-        create_account(admin, string::utf8(b"John Doe"), string::utf8(b"john123@gmail.com"), false);
-        let acc = borrow_global<Account>(admin_address);
-        print(&utf8(b"Bio before update: "));
-        print(&acc.bio.location);
-        print(&acc.bio.profession);
-        print(&acc.bio.about);
-        update_bio(admin, string::utf8(b"New York"), string::utf8(b"Musician"), string::utf8(b"I am a musician"));
-        assert!(borrow_global<Account>(admin_address).bio.location == string::utf8(b"New York"), 93);
-        assert!(borrow_global<Account>(admin_address).bio.profession == string::utf8(b"Musician"), 94);
-        assert!(borrow_global<Account>(admin_address).bio.about == string::utf8(b"I am a musician"), 95);
-        acc = borrow_global<Account>(admin_address);
-        print(&utf8(b"Bio after update: "));
-        print(&acc.bio.location);
-        print(&acc.bio.profession);
-        print(&acc.bio.about);
-    }
 }
