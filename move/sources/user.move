@@ -7,6 +7,7 @@ module addr_on_chain_radio::user{
     use 0x1::coin;
     use 0x1::aptos_coin::AptosCoin; 
     use 0x1::aptos_account;
+    use addr_res_acc_ocr::community;
 
     #[test_only]
     use std::string;
@@ -18,11 +19,6 @@ module addr_on_chain_radio::user{
     use std::timestamp;
     #[test_only]
     use aptos_framework::account;
-
-    //-----To be moved to community module-----//
-    const Premium_fee: u64 = 1000;
-    const Premium_artist_cut_percentage: u64 = 60;
-    //----------------------------------------//
 
     const NO_ACCOUNT: u64 = 0;
     const ALREADY_SUBSCRIBED: u64 = 1;
@@ -78,21 +74,22 @@ module addr_on_chain_radio::user{
 
     public entry fun subscribe_to_premium(account: &signer) acquires Account{
         let signer_address = signer::address_of(account);
+        let premium_price = community::get_premium_price();
+        let premium_artist_cut_percentage : u64 = (community::get_artist_premium_cut() as u64);
         assert!(exists<Account>(signer_address), NO_ACCOUNT);
         let acc = borrow_global_mut<Account>(signer_address);
         assert!(!acc.premium, ALREADY_SUBSCRIBED);
         let acc_balance = coin::balance<AptosCoin>(signer_address);
-        assert!(acc_balance >= Premium_fee, INSUFFICIENT_FUNDS);
+        assert!(acc_balance >= premium_price, INSUFFICIENT_FUNDS);
 
-        let admin_cut = Premium_fee - Premium_fee*Premium_artist_cut_percentage/100;
+        let admin_cut = premium_price - premium_price*premium_artist_cut_percentage/100;
         aptos_account::transfer(account, @admin, admin_cut);
 
         let i = 0;
-        //-------To be fetched from SongStore module-------//
-        let premium_artists: vector<address> = vector[@0x10, @0x11, @0x12, @0x13, @0x14, @0x15];
+        let premium_artists: vector<address> = addr_res_acc_ocr::songStore::get_premium_artists_list();
         let num_premium_artists: u64 = vector::length(&premium_artists);
-        let per_artist_cut: u64 = (Premium_artist_cut_percentage*Premium_fee)/(100*num_premium_artists);
-        //------------------------------------------------//
+        let per_artist_cut: u64 = (premium_artist_cut_percentage*premium_price)/(100*num_premium_artists);
+
         while(i < num_premium_artists){
             let artist_address = *vector::borrow(&premium_artists, i);
             aptos_account::transfer(account, artist_address, per_artist_cut);
@@ -132,7 +129,8 @@ module addr_on_chain_radio::user{
         coin::register<AptosCoin>(&acc);
 
         let customer_address: address = signer::address_of(acc1);
-        aptos_coin::mint(aptos_framework, customer_address, Premium_fee+20);
+        let premium_price = community::get_premium_price();
+        aptos_coin::mint(aptos_framework, customer_address, premium_price+20);
         create_account(acc1, string::utf8(b"John Doe"), string::utf8(b"john123@gmail.com"), false);
         assert!(exists<Account>(customer_address), 90);
         print(&utf8(b"Balance before subscription: "));
