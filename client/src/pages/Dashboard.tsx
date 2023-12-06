@@ -46,10 +46,11 @@ function a11yProps(index: number) {
 interface DashboardProps {
   address: string;
   publicKey: string | string[];
+  startingPage: any
 }
 
-export default function Dashboard({address,publicKey}: DashboardProps) {
-  const [value, setValue] = React.useState(0);
+export default function Dashboard({address,publicKey,startingPage}: DashboardProps) {
+  const [value, setValue] = React.useState(startingPage);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

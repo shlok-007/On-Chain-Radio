@@ -13,6 +13,7 @@ import LearnMore from './pages/LearnMore';
 import { Navbar } from './components/Navbar';
 import Footer from './components/Footer';
 import Test from './pages/Test';
+import { Community } from './pages/Community';
 
 function App() {
   const { wallet,account } = useWallet();
@@ -31,7 +32,7 @@ function App() {
         setPublicKey(account.publicKey);
       }  
     }else{
-      setLogin(false);
+      // setLogin(false);
     }
   }, [wallet]);
   
@@ -44,12 +45,13 @@ function App() {
       <Navbar login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />
       <Routes>
         <Route path='/' element={<Home login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />} />
+        <Route path='/community' element={<Community />} />
         <Route path='/signup' element={<Auth address={address} publicKey={publicKey}/>} />
         <Route path='/uploadsongs' element={<Upload login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />} />
-        <Route path='/dashboard' element={<Dashboard address={address} publicKey={publicKey}  />} />
+        <Route path='/dashboard' element={<Dashboard address={address} publicKey={publicKey} startingPage={0} />} />
         <Route path='/subscribe' element={<Subscribe address={address} publicKey={publicKey} />} />
         <Route path='/playsongs' element={<SongDetails login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe}  />} />
-        <Route path='/profile' element={<Dashboard address={address} publicKey={publicKey}/>} />
+        <Route path='/profile' element={<Dashboard address={address} publicKey={publicKey} startingPage={2}/>} />
         <Route path='/learn-more' element={<LearnMore />} />
         <Route path='/test' element={<Test/>} />
       </Routes>

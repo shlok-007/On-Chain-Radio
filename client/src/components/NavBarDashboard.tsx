@@ -5,6 +5,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import HistoryIcon from "@mui/icons-material/History";
 
+interface NavBarDashboardProps {
+  indexProp: Number
+}
+
 const navLinks = [
   {
     name: "Dashboard",
@@ -33,7 +37,7 @@ const navLinks = [
   },
 ];
 
-const NavBarDashboard = () => {
+const NavBarDashboard: React.FC<NavBarDashboardProps> = ({ indexProp }) => {
   const [activeNavIndex, setActiveNavIndex] = useState(0);
 
   const handleclick = (index: number) => {
