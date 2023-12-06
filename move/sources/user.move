@@ -17,7 +17,7 @@ module addr_on_chain_radio::user{
     const ALREADY_SUBSCRIBED: u64 = 1;
     const INSUFFICIENT_FUNDS: u64 = 2;
     
-    struct Account has key,store {
+    struct Account has key {
         wallet_address: address,
         name: String,
         email: String,
