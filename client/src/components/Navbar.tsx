@@ -121,13 +121,13 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                     <a
                       href=""
                       className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                      onClick={() => navigate("/dashboard")}
+                      onClick={() => navigate("/dashboard", {state:{username: "user"}})}
                     >
                       Dashboard
                     </a>
                   </li>
                 }
-                {
+                {/* {
                   login &&
                   <li className="my-4">
                     <a
@@ -138,14 +138,14 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                       Upload
                     </a>
                   </li>
-                }
+                } */}
                 {
                   login &&
                   <li className="my-4">
                     <a
                       href=""
                       className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                      onClick={() => navigate("/profile")}
+                      onClick={() => navigate("/profile", {state: {username: "user"}})}
                     >
                       Profile
                     </a>

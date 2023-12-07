@@ -16,25 +16,24 @@ import Test from './pages/Test';
 import { Community } from './pages/Community';
 
 function App() {
+  // initial values of login ad subscribe should be false
   const { wallet,account } = useWallet();
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState(true);
   const [subscribe, setSubscribe] = useState(false);
   const [address, setAddress] = useState('');
   const [publicKey, setPublicKey] = useState<string | string[]>([]);
 
-  // useEffect(() => {
-  //   if (wallet) {
-  //     setLogin(true);
-  //     if (account?.address) {
-  //       setAddress(account.address);
-  //     }
-  //     if (account?.publicKey) {
-  //       setPublicKey(account.publicKey);
-  //     }  
-  //   }else{
-  //      setLogin(false);
-  //   }
-  // }, [wallet]);
+  useEffect(() => {
+    if (wallet) {
+      setLogin(true);
+      if (account?.address) {
+        setAddress(account.address);
+      }
+      if (account?.publicKey) {
+        setPublicKey(account.publicKey);
+      }  
+    }
+  }, [wallet]);
   
 
   // address is the wallet address

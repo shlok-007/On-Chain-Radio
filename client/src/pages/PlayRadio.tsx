@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import TipModal from "../components/TipModal";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface SongDetailsProps {
   login: boolean,
@@ -14,6 +14,7 @@ interface SongDetailsProps {
 }
 
 const SongDetails: React.FC<SongDetailsProps> = ({login, setLogin, subscribe ,setSubscribe}) => {
+  const navigate = useNavigate();
   const [like, setLike] = useState(false);
   const location = useLocation();
   const genre = location.state?.id || 'No genre Selected';
@@ -39,9 +40,9 @@ const SongDetails: React.FC<SongDetailsProps> = ({login, setLogin, subscribe ,se
           <div className="text-center bg-black text-gray-200">
             <div className="px-10 py-12">
               {/* ----title-------- */}
-              <h1 className="text-3x font-bold text-[#7CA4AE]">
+              <a href="" onClick={() => navigate('/profile', {state:{username: "user"}})} className="text-3x font-bold text-[#7CA4AE]">
                 Melody (feat. Laura Brehm)
-              </h1>
+              </a>
               <h2 className="text-2xl font-bold mt-3">The Fat Rat</h2>
 
               {/* -----------------controls---------------- */}

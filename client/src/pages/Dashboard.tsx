@@ -78,7 +78,7 @@ export default function Dashboard({address,publicKey,startingPage}: DashboardPro
           <Tables address={address} publicKey={publicKey} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <Profile />
+          <Profile address={address} />
         </CustomTabPanel>
       </Box>
     </div>
