@@ -1,121 +1,157 @@
  module addr_on_chain_radio::song{
-   use std::string::{String, utf8};
-   // use addr_res_acc_ocr::songStore::Song;
-    //use addr_on_chain_radio::user::Bio;
-    //use addr_on_chain_radio::user::Account;
-    use std::signer;
+
+    use std::string::String;
+    use addr_on_chain_radio::songStore;
+    use addr_on_chain_radio::songStore::Song;
     use aptos_std::table::{Self, Table};
-    //use std::vector;
+    use addr_on_chain_radio::user::check_acc_exists;
+    use std::signer;
 
-    //use 0x1::aptos_account;
+    const NO_ARTIST: u64 = 200;
+    const ALREADY_REGISTERED: u64 = 201;
+    const NO_ACCOUNT: u64 = 202;
+    const UNAUTHORIZED: u64 = 203;
+    const SONG_DIDNT_CROSS_REPORT_THRESHOLD: u64 = 204;
 
-     #[test_only]
-    use std::account;
+    struct ArtistStore has key, store {
+        artist_address: address,
+        songs: Table<u64, Song>,
+        num_songs: u64
+    }
 
-    const NO_ARTIST: u64 = 0;
-    const ALREADY_REGISTERED: u64 = 1;
+    public entry fun register_artist(account: &signer) {
+        let artist_address = signer::address_of(account);
+        assert!(check_acc_exists(artist_address), NO_ACCOUNT);
+        assert!(!exists<ArtistStore>(artist_address), ALREADY_REGISTERED);
+        let new_artist_store = ArtistStore {
+            artist_address: artist_address,
+            songs: table::new<u64, Song>(),
+            num_songs: 0
+        };
+        move_to(account, new_artist_store);
+    }
 
-      struct Song has store, drop, copy {
-        song_store_ID: u64,
-        my_songs_ID: u64,
-        artist_wallet_address: address,
+    public entry fun upload_song(
+        artist_account: &signer,
         title: String,
         ipfs_hash: String,
-        total_tips: u64,
         duration: u8,
         premium: bool,
-        genre: String,
-        reports: u64,
-    }
+        genre: String
+        ) acquires ArtistStore {
 
-    struct Artist has key, store {
-        artist_address: address,
-        name: String,
-        //bio: Bio,
-        registered: bool,
-        songs: Table<u64, Song>,
-    }
-
-    public entry fun register_artist(account: &signer, _name: String,_registered:bool) {
-        let artist_address = signer::address_of(account);
-        //let is_user_registered: bool = exists<Account>(artist_address);
-        //assert!(is_user_registered, 200);
-        let new_artist = Artist {
-            artist_address: artist_address,
-            name: _name,
-            //bio: Bio {
-            //    location: utf8(b""),
-            //    profession: utf8(b""),
-            //    about: utf8(b"")
-            // },
-            registered: _registered,
-            songs: table::new()
-        };
-        move_to(account, new_artist);
-    }
-    // to interact with SongStore
-    public entry fun upload_song_artist(artist_account: &signer, song: Song) acquires Artist {
         let artist_address = signer::address_of(artist_account);
-        assert!(exists<Artist>(artist_address), NO_ARTIST);
-        let  artist = borrow_global_mut<Artist>(artist_address);
-        let _songID =song.song_store_ID + 1;
-        table::upsert(&mut artist.songs, _songID, song);
-        _songID=_songID+1;
+        assert!(check_acc_exists(artist_address), NO_ACCOUNT);
+        if(!exists<ArtistStore>(artist_address)){
+            register_artist(artist_account);
+        };
+        let artist_store = borrow_global_mut<ArtistStore>(artist_address);
+        let artist_store_ID = artist_store.num_songs;
+        let song = songStore::instantiate_song(artist_address, artist_store_ID, title, ipfs_hash, duration, premium, genre);
+        
+        song = songStore::add_song_to_songStore(artist_account, song);
+
+        table::upsert(&mut artist_store.songs, artist_store_ID, song);
+        artist_store.num_songs = artist_store.num_songs + 1;
     }
+
+    fun remove_song(artist_store_ID: u64, artist_songs: &mut Table<u64, Song>) {
+        table::remove(artist_songs, artist_store_ID);
+    }
+
+    public fun remove_song_by_artist(artist_account: &signer, artist_store_ID: u64) acquires ArtistStore {
+        let artist_address = signer::address_of(artist_account);
+        assert!(check_acc_exists(artist_address), NO_ACCOUNT);
+        let artist_store = borrow_global_mut<ArtistStore>(artist_address);
+        let song = *table::borrow(&artist_store.songs, artist_store_ID);
+        assert!(artist_address == songStore::get_song_artist_addr(&song), UNAUTHORIZED);
+        remove_song(artist_store_ID, &mut artist_store.songs);
+
+        songStore::remove_song(copy song);
+
+        artist_store.num_songs = artist_store.num_songs - 1;
+    }
+
+    fun remove_reported_song(artist_addr: address, artist_store_ID: u64) acquires ArtistStore {
+        let artist_store = borrow_global_mut<ArtistStore>(artist_addr);
+        remove_song(artist_store_ID, &mut artist_store.songs);
+        let song = *table::borrow(&artist_store.songs, artist_store_ID);
+        songStore::remove_song(copy song);
+        artist_store.num_songs = artist_store.num_songs - 1;
+    }
+
+    public fun report_song(reporter: &signer, artist_addr: address, artist_store_ID: u64) acquires ArtistStore {
+        let reporter_address = signer::address_of(reporter);
+        assert!(check_acc_exists(reporter_address), NO_ACCOUNT);
+        let artist_store = borrow_global_mut<ArtistStore>(artist_addr);
+        let song = table::borrow_mut(&mut artist_store.songs, artist_store_ID);
+        songStore::report_song(reporter, song);
+        if(songStore::get_song_reports(freeze(song)) > addr_on_chain_radio::community::get_report_threshold()){
+            remove_reported_song(artist_addr, artist_store_ID);
+        }
+    }
+
 
     #[test_only]
-    use std::string;
+    use std::string::utf8;
     #[test_only]
     use std::debug::print;
-    #[test_only]
-    use std::timestamp;
     #[test_only]
     use aptos_framework::account;
 
     #[test(artist_acc = @0x456)]
-    public entry fun test_artist_store(artist_acc: &signer) acquires Artist {
-        timestamp::set_time_has_started_for_testing(artist_acc);
-        timestamp::update_global_time_for_test_secs(10);
-        print(&utf8(b"Before time: "));
-        let _before_time = timestamp::now_seconds();
-        print(&_before_time);
-        let artist_address = signer::address_of(artist_acc);
-
-        //Register an artist
-        register_artist(artist_acc, string::utf8(b"Artist1"), false);
-        assert!(exists<Artist>(artist_address), 100);
-        let artist = borrow_global<Artist>(artist_address);
-        assert!(artist.registered, 101);  
+    public entry fun test_artist_init(artist_acc: &signer) {
+        let artist_acc_addr = signer::address_of(artist_acc);
+        account::create_account_for_test(artist_acc_addr);
+        assert!(!check_acc_exists(artist_acc_addr), 1);
+        addr_on_chain_radio::user::create_account(artist_acc, utf8(b"John Doe"), utf8(b"john@gmail.com"));
+        assert!(check_acc_exists(artist_acc_addr), 2);
+        assert!(!exists<ArtistStore>(artist_acc_addr), 3);
+        register_artist(artist_acc);
+        assert!(exists<ArtistStore>(artist_acc_addr), 4);
     }
-    // will need acquiring songstore when include
-    #[test(store_acc_artist = @0x456)]
-    public entry fun test_add_artist_song(store_acc_artist:&signer) {
-    let artist_address = signer::address_of(store_acc_artist);
-    assert!(exists<Artist>(artist_address), 100);
 
-    let song_name = string::utf8(b"MySong");
-    let premium = false;
-    let ipfs_hash = string::utf8(b"ipfs_hash");
-    let crew = vector[string::utf8(b"Member1"), string::utf8(b"Member2")];
-    let song = Song {
-        song_store_ID: 0,
-        my_songs_ID: 0,
-        artist_wallet_address: artist_address,
-        title: song_name,
-        ipfs_hash: ipfs_hash,
-        total_tips: 0,
-        duration: 50,
-        premium: premium,
-        genre: utf8(b""),
-        reports: 0,
-        crew_mem: crew
-    };
+    #[test(artist_acc = @0x456, store_acc = @addr_on_chain_radio)]
+    public entry fun test_upload_song(artist_acc: &signer, store_acc: &signer) acquires ArtistStore {
+        let artist_acc_addr = signer::address_of(artist_acc);
+        account::create_account_for_test(artist_acc_addr);
+        account::create_account_for_test(signer::address_of(store_acc));
+        addr_on_chain_radio::user::create_account(artist_acc, utf8(b"John Doe"), utf8(b"john@gmail.com"));
+        // addr_on_chain_radio::songStore::init_module(store_acc);
+        upload_song(artist_acc, utf8(b"Song1"), utf8(b"ipfs_hash1"), 3, false, utf8(b"Pop"));
+        upload_song(artist_acc, utf8(b"Song2"), utf8(b"ipfs_hash2"), 4, true, utf8(b"Rock"));
+        assert!(borrow_global<ArtistStore>(artist_acc_addr).num_songs == 2, 1);
+        assert!(songStore::get_song_title(table::borrow(&borrow_global<ArtistStore>(artist_acc_addr).songs , 0)) == utf8(b"Song1"), 2);
+        print(&borrow_global<ArtistStore>(artist_acc_addr).songs);
+    }
 
-    upload_song_artist(store_acc_artist,song);
-    //need the genre table from songstore
-    assert!(table::contains(&artist.songs, 0), 200);
-     }
+    #[test(artist_acc = @0x456)]
+    public entry fun test_remove_song(artist_acc: &signer) acquires ArtistStore {
+        let artist_acc_addr = signer::address_of(artist_acc);
+        account::create_account_for_test(artist_acc_addr);
+        addr_on_chain_radio::user::create_account(artist_acc, utf8(b"John Doe"), utf8(b"john@gmail.com"));
+        upload_song(artist_acc, utf8(b"Song1"), utf8(b"ipfs_hash1"), 3, false, utf8(b"Pop"));
+        upload_song(artist_acc, utf8(b"Song2"), utf8(b"ipfs_hash2"), 4, true, utf8(b"Rock"));
+        // let artist_store = borrow_global_mut<ArtistStore>(artist_acc_addr);
+        assert!(borrow_global<ArtistStore>(artist_acc_addr).num_songs == 2, 1);
+        remove_song_by_artist(artist_acc, 0);
+        assert!(borrow_global<ArtistStore>(artist_acc_addr).num_songs == 1, 2);
+    }
 
+    #[test(artist_acc = @0x456)]
+    public entry fun test_report_song(artist_acc: &signer) acquires ArtistStore {
+        let artist_acc_addr = signer::address_of(artist_acc);
+        account::create_account_for_test(artist_acc_addr);
+        addr_on_chain_radio::user::create_account(artist_acc, utf8(b"John Doe"), utf8(b"john@gmail.com"));
+        upload_song(artist_acc, utf8(b"Song1"), utf8(b"ipfs_hash1"), 3, false, utf8(b"Pop"));
+        upload_song(artist_acc, utf8(b"Song2"), utf8(b"ipfs_hash2"), 4, true, utf8(b"Rock"));
+
+        let reporter = account::create_account_for_test(@0x123);
+        addr_on_chain_radio::user::create_account(&reporter, utf8(b"Sunny"), utf8(b"sunny@gmail.com"));
+        report_song(&reporter, artist_acc_addr, 0);
+        assert!(songStore::get_song_reports(table::borrow(&borrow_global<ArtistStore>(artist_acc_addr).songs , 0)) == 1, 1);
+    }
+        
 }
 
 

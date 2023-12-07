@@ -7,7 +7,7 @@ module addr_on_chain_radio::user{
     use 0x1::coin;
     use 0x1::aptos_coin::AptosCoin; 
     use 0x1::aptos_account;
-    use addr_res_acc_ocr::community;
+    use addr_on_chain_radio::community;
 
     #[test_only]
     use std::string;
@@ -20,9 +20,10 @@ module addr_on_chain_radio::user{
     #[test_only]
     use aptos_framework::account;
 
-    const NO_ACCOUNT: u64 = 0;
-    const ALREADY_SUBSCRIBED: u64 = 1;
-    const INSUFFICIENT_FUNDS: u64 = 2;
+    const ACC_ALREADY_EXISTS: u64 = 100;
+    const ALREADY_SUBSCRIBED: u64 = 101;
+    const INSUFFICIENT_FUNDS: u64 = 102;
+    const NO_ACCOUNT: u64 = 103;
     
     struct Account has key, store {
         wallet_address: address,
@@ -52,8 +53,9 @@ module addr_on_chain_radio::user{
         about: String
     }
 
-    public entry fun create_account(account: &signer, _name: String, _email: String, _premium: bool){
+    public entry fun create_account(account: &signer, _name: String, _email: String){
         let _wallet_address = signer::address_of(account);
+        assert!(!exists<Account>(_wallet_address), ACC_ALREADY_EXISTS);
         let new_account = Account{
             wallet_address: _wallet_address,
             name: _name,
@@ -63,7 +65,7 @@ module addr_on_chain_radio::user{
                 profession: utf8(b""),
                 about: utf8(b"")
             },
-            premium: _premium,
+            premium: false,
             tips_given: TipsGiven{
                 num_tips: 0,
                 tips: table::new()
@@ -86,7 +88,7 @@ module addr_on_chain_radio::user{
         aptos_account::transfer(account, @admin, admin_cut);
 
         let i = 0;
-        let premium_artists: vector<address> = addr_res_acc_ocr::songStore::get_premium_artists_list();
+        let premium_artists: vector<address> = addr_on_chain_radio::songStore::get_premium_artists_list();
         let num_premium_artists: u64 = vector::length(&premium_artists);
         let per_artist_cut: u64 = (premium_artist_cut_percentage*premium_price)/(100*num_premium_artists);
 
@@ -131,7 +133,7 @@ module addr_on_chain_radio::user{
         let customer_address: address = signer::address_of(acc1);
         let premium_price = community::get_premium_price();
         aptos_coin::mint(aptos_framework, customer_address, premium_price+20);
-        create_account(acc1, string::utf8(b"John Doe"), string::utf8(b"john123@gmail.com"), false);
+        create_account(acc1, string::utf8(b"John Doe"), string::utf8(b"john123@gmail.com"));
         assert!(exists<Account>(customer_address), 90);
         print(&utf8(b"Balance before subscription: "));
         print(&coin::balance<AptosCoin>(customer_address));
@@ -153,7 +155,7 @@ module addr_on_chain_radio::user{
     public entry fun update_bio_test(test_acc: &signer) acquires Account{
         let test_acc_address = signer::address_of(test_acc);
         account::create_account_for_test(signer::address_of(test_acc));
-        create_account(test_acc, string::utf8(b"John Doe"), string::utf8(b"john123@gmail.com"), false);
+        create_account(test_acc, string::utf8(b"John Doe"), string::utf8(b"john123@gmail.com"));
         let acc = borrow_global<Account>(test_acc_address);
         print(&utf8(b"Bio before update: "));
         print(&acc.bio.location);

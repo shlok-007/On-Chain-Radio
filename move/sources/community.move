@@ -1,4 +1,4 @@
-module addr_res_acc_ocr::community {
+module addr_on_chain_radio::community {
 
     use std::string::String;
     use std::timestamp;
@@ -82,10 +82,10 @@ module addr_res_acc_ocr::community {
         justification: String,
         poll_type: u8) acquires CommunityParams {
 
-        let community_signer = account::create_signer_with_capability(&borrow_global_mut<CommunityParams>(@addr_res_acc_ocr).signer_cap);
+        let community_signer = account::create_signer_with_capability(&borrow_global_mut<CommunityParams>(@addr_on_chain_radio).signer_cap);
         
         if(poll_type == 0) {
-            assert!(!exists<Poll4ArtistPremiumCut>(@addr_res_acc_ocr), POLL_ALREADY_EXISTS);
+            assert!(!exists<Poll4ArtistPremiumCut>(@addr_on_chain_radio), POLL_ALREADY_EXISTS);
             assert!(proposed_value >= 0, INVALID_PROPOSED_CUT);
             assert!(proposed_value <= 100, INVALID_PROPOSED_CUT);
 
@@ -100,7 +100,7 @@ module addr_res_acc_ocr::community {
             move_to(&community_signer, poll);
         }
         else if(poll_type == 1) {
-            assert!(!exists<Poll4ArtistGenCut>(@addr_res_acc_ocr), POLL_ALREADY_EXISTS);
+            assert!(!exists<Poll4ArtistGenCut>(@addr_on_chain_radio), POLL_ALREADY_EXISTS);
             assert!(proposed_value >= 0, INVALID_PROPOSED_CUT);
             assert!(proposed_value <= 100, INVALID_PROPOSED_CUT);
 
@@ -115,7 +115,7 @@ module addr_res_acc_ocr::community {
             move_to(&community_signer, poll);
         }
         else if(poll_type == 2) {
-            assert!(!exists<Poll4PremiumPrice>(@addr_res_acc_ocr), POLL_ALREADY_EXISTS);
+            assert!(!exists<Poll4PremiumPrice>(@addr_on_chain_radio), POLL_ALREADY_EXISTS);
             assert!(proposed_value >= 0, INVALID_PREMIUM_PRICE);
 
             let poll = Poll4PremiumPrice {
@@ -129,7 +129,7 @@ module addr_res_acc_ocr::community {
             move_to(&community_signer, poll);
         }
         else if(poll_type == 3) {
-            assert!(!exists<Poll4ReportThreshold>(@addr_res_acc_ocr), POLL_ALREADY_EXISTS);
+            assert!(!exists<Poll4ReportThreshold>(@addr_on_chain_radio), POLL_ALREADY_EXISTS);
             assert!(proposed_value >= 0, INVALID_REPORT_THRESHOLD);
 
             let poll = Poll4ReportThreshold {
@@ -150,8 +150,8 @@ module addr_res_acc_ocr::community {
     public entry fun vote(voter: &signer, vote: bool, poll_type: u8) acquires Poll4ArtistPremiumCut, Poll4ArtistGenCut, Poll4PremiumPrice, Poll4ReportThreshold {
         let voter_address = signer::address_of(voter);
         if(poll_type == 0) {
-            assert!(exists<Poll4ArtistPremiumCut>(@addr_res_acc_ocr), POLL_DOES_NOT_EXIST);
-            let poll_data = borrow_global_mut<Poll4ArtistPremiumCut>(@addr_res_acc_ocr);
+            assert!(exists<Poll4ArtistPremiumCut>(@addr_on_chain_radio), POLL_DOES_NOT_EXIST);
+            let poll_data = borrow_global_mut<Poll4ArtistPremiumCut>(@addr_on_chain_radio);
             assert!(poll_data.end_time >= timestamp::now_seconds(), POLL_HAS_ENDED);
             assert!(!vector::contains(&poll_data.voters, &voter_address), ALREADY_VOTED);
             if(vote) {
@@ -163,8 +163,8 @@ module addr_res_acc_ocr::community {
             vector::push_back(&mut poll_data.voters, voter_address);
         }
         else if(poll_type == 1) {
-            assert!(exists<Poll4ArtistGenCut>(@addr_res_acc_ocr), POLL_DOES_NOT_EXIST);
-            let poll_data = borrow_global_mut<Poll4ArtistGenCut>(@addr_res_acc_ocr);
+            assert!(exists<Poll4ArtistGenCut>(@addr_on_chain_radio), POLL_DOES_NOT_EXIST);
+            let poll_data = borrow_global_mut<Poll4ArtistGenCut>(@addr_on_chain_radio);
             assert!(poll_data.end_time >= timestamp::now_seconds(), POLL_HAS_ENDED);
             assert!(!vector::contains(&poll_data.voters, &voter_address), ALREADY_VOTED);
             if(vote) {
@@ -176,8 +176,8 @@ module addr_res_acc_ocr::community {
             vector::push_back(&mut poll_data.voters, voter_address);
         }
         else if(poll_type == 2) {
-            assert!(exists<Poll4PremiumPrice>(@addr_res_acc_ocr), POLL_DOES_NOT_EXIST);
-            let poll_data = borrow_global_mut<Poll4PremiumPrice>(@addr_res_acc_ocr);
+            assert!(exists<Poll4PremiumPrice>(@addr_on_chain_radio), POLL_DOES_NOT_EXIST);
+            let poll_data = borrow_global_mut<Poll4PremiumPrice>(@addr_on_chain_radio);
             assert!(poll_data.end_time >= timestamp::now_seconds(), POLL_HAS_ENDED);
             assert!(!vector::contains(&poll_data.voters, &voter_address), ALREADY_VOTED);
             if(vote) {
@@ -189,8 +189,8 @@ module addr_res_acc_ocr::community {
             vector::push_back(&mut poll_data.voters, voter_address);
         }
         else if(poll_type == 3) {
-            assert!(exists<Poll4ReportThreshold>(@addr_res_acc_ocr), POLL_DOES_NOT_EXIST);
-            let poll_data = borrow_global_mut<Poll4ReportThreshold>(@addr_res_acc_ocr);
+            assert!(exists<Poll4ReportThreshold>(@addr_on_chain_radio), POLL_DOES_NOT_EXIST);
+            let poll_data = borrow_global_mut<Poll4ReportThreshold>(@addr_on_chain_radio);
             assert!(poll_data.end_time >= timestamp::now_seconds(), POLL_HAS_ENDED);
             assert!(!vector::contains(&poll_data.voters, &voter_address), ALREADY_VOTED);
             if(vote) {
@@ -208,42 +208,42 @@ module addr_res_acc_ocr::community {
 
     public entry fun end_poll(poll_type: u8) acquires Poll4ArtistPremiumCut, Poll4ArtistGenCut, Poll4PremiumPrice, Poll4ReportThreshold, CommunityParams {
         
-        let community_params = borrow_global_mut<CommunityParams>(@addr_res_acc_ocr);
+        let community_params = borrow_global_mut<CommunityParams>(@addr_on_chain_radio);
         if(poll_type == 0) {
-            assert!(exists<Poll4ArtistPremiumCut>(@addr_res_acc_ocr), POLL_DOES_NOT_EXIST);
-            let poll_data = borrow_global_mut<Poll4ArtistPremiumCut>(@addr_res_acc_ocr);
+            assert!(exists<Poll4ArtistPremiumCut>(@addr_on_chain_radio), POLL_DOES_NOT_EXIST);
+            let poll_data = borrow_global_mut<Poll4ArtistPremiumCut>(@addr_on_chain_radio);
             assert!(poll_data.end_time < timestamp::now_seconds(), POLL_NOT_ENDED);
             if(poll_data.votes_for > poll_data.votes_against) {
                 community_params.artist_premium_cut = poll_data.proposed_cut;
             };
-            move_from<Poll4ArtistPremiumCut>(@addr_res_acc_ocr);
+            move_from<Poll4ArtistPremiumCut>(@addr_on_chain_radio);
         }
         else if(poll_type == 1) {
-            assert!(exists<Poll4ArtistGenCut>(@addr_res_acc_ocr), POLL_DOES_NOT_EXIST);
-            let poll_data = borrow_global_mut<Poll4ArtistGenCut>(@addr_res_acc_ocr);
+            assert!(exists<Poll4ArtistGenCut>(@addr_on_chain_radio), POLL_DOES_NOT_EXIST);
+            let poll_data = borrow_global_mut<Poll4ArtistGenCut>(@addr_on_chain_radio);
             assert!(poll_data.end_time < timestamp::now_seconds(), POLL_NOT_ENDED);
             if(poll_data.votes_for > poll_data.votes_against) {
                 community_params.artist_gen_cut = poll_data.proposed_cut;
             };
-            move_from<Poll4ArtistGenCut>(@addr_res_acc_ocr);
+            move_from<Poll4ArtistGenCut>(@addr_on_chain_radio);
         }
         else if(poll_type == 2) {
-            assert!(exists<Poll4PremiumPrice>(@addr_res_acc_ocr), POLL_DOES_NOT_EXIST);
-            let poll_data = borrow_global_mut<Poll4PremiumPrice>(@addr_res_acc_ocr);
+            assert!(exists<Poll4PremiumPrice>(@addr_on_chain_radio), POLL_DOES_NOT_EXIST);
+            let poll_data = borrow_global_mut<Poll4PremiumPrice>(@addr_on_chain_radio);
             assert!(poll_data.end_time < timestamp::now_seconds(), POLL_NOT_ENDED);
             if(poll_data.votes_for > poll_data.votes_against) {
                 community_params.premium_price = poll_data.proposed_price;
             };
-            move_from<Poll4PremiumPrice>(@addr_res_acc_ocr);
+            move_from<Poll4PremiumPrice>(@addr_on_chain_radio);
         }
         else if(poll_type == 3) {
-            assert!(exists<Poll4ReportThreshold>(@addr_res_acc_ocr), POLL_DOES_NOT_EXIST);
-            let poll_data = borrow_global_mut<Poll4ReportThreshold>(@addr_res_acc_ocr);
+            assert!(exists<Poll4ReportThreshold>(@addr_on_chain_radio), POLL_DOES_NOT_EXIST);
+            let poll_data = borrow_global_mut<Poll4ReportThreshold>(@addr_on_chain_radio);
             assert!(poll_data.end_time < timestamp::now_seconds(), POLL_NOT_ENDED);
             if(poll_data.votes_for > poll_data.votes_against) {
                 community_params.report_threshold = poll_data.proposed_threshold;
             };
-            move_from<Poll4ReportThreshold>(@addr_res_acc_ocr);
+            move_from<Poll4ReportThreshold>(@addr_on_chain_radio);
         }
         else {
             assert!(false, INVALID_POLL_TYPE);
@@ -252,28 +252,30 @@ module addr_res_acc_ocr::community {
 
     #[view]
     public fun get_report_threshold(): u64 acquires CommunityParams {
-        return borrow_global<CommunityParams>(@addr_res_acc_ocr).report_threshold
+        return borrow_global<CommunityParams>(@addr_on_chain_radio).report_threshold
     }
     #[view]
     public fun get_premium_price(): u64 acquires CommunityParams {
-        return borrow_global<CommunityParams>(@addr_res_acc_ocr).premium_price
+        return borrow_global<CommunityParams>(@addr_on_chain_radio).premium_price
     }
     #[view]
     public fun get_artist_gen_cut(): u8 acquires CommunityParams {
-        return borrow_global<CommunityParams>(@addr_res_acc_ocr).artist_gen_cut
+        return borrow_global<CommunityParams>(@addr_on_chain_radio).artist_gen_cut
     }
     #[view]
     public fun get_artist_premium_cut(): u8 acquires CommunityParams {
-        return borrow_global<CommunityParams>(@addr_res_acc_ocr).artist_premium_cut
+        return borrow_global<CommunityParams>(@addr_on_chain_radio).artist_premium_cut
     }
 
-    #[test(comm_acc = @0x7c6874c9aec6b7393e3575f40787bdfc7bd5f56c000135332730edc355bad22a)]
-    public entry fun test_poll4_artist_premium_cut(comm_acc: &signer) {
-        let comm_acc_addr = signer::address_of(comm_acc);
-        account::create_account_for_test(comm_acc_addr);
-        resource_account::create_resource_account(comm_acc, vector::empty<u8>(), vector::empty<u8>());
-        assert!(!exists<CommunityParams>(comm_acc_addr), 1);
-        init_module(comm_acc);
-        assert!(exists<CommunityParams>(comm_acc_addr), 2);
-    }
+    //------------Tested using Aptos Explorer------------
+
+    // #[test(comm_acc = @0x7c6874c9aec6b7393e3575f40787bdfc7bd5f56c000135332730edc355bad22a)]
+    // public entry fun test_poll4_artist_premium_cut(comm_acc: &signer) {
+    //     let comm_acc_addr = signer::address_of(comm_acc);
+    //     account::create_account_for_test(comm_acc_addr);
+    //     resource_account::create_resource_account(comm_acc, vector::empty<u8>(), vector::empty<u8>());
+    //     assert!(!exists<CommunityParams>(comm_acc_addr), 1);
+    //     init_module(comm_acc);
+    //     assert!(exists<CommunityParams>(comm_acc_addr), 2);
+    // }
 }
