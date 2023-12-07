@@ -17,24 +17,24 @@ import { Community } from './pages/Community';
 
 function App() {
   const { wallet,account } = useWallet();
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(false);
   const [subscribe, setSubscribe] = useState(false);
   const [address, setAddress] = useState('');
   const [publicKey, setPublicKey] = useState<string | string[]>([]);
 
-  useEffect(() => {
-    if (wallet) {
-      setLogin(true);
-      if (account?.address) {
-        setAddress(account.address);
-      }
-      if (account?.publicKey) {
-        setPublicKey(account.publicKey);
-      }  
-    }else{
-      // setLogin(false);
-    }
-  }, [wallet]);
+  // useEffect(() => {
+  //   if (wallet) {
+  //     setLogin(true);
+  //     if (account?.address) {
+  //       setAddress(account.address);
+  //     }
+  //     if (account?.publicKey) {
+  //       setPublicKey(account.publicKey);
+  //     }  
+  //   }else{
+  //      setLogin(false);
+  //   }
+  // }, [wallet]);
   
 
   // address is the wallet address
@@ -46,7 +46,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />} />
         <Route path='/community' element={<Community />} />
-        <Route path='/signup' element={<Auth address={address} publicKey={publicKey}/>} />
+        <Route path='/signup' element={<Auth login={login} setLogin={setLogin} address={address} publicKey={publicKey}/>} />
         <Route path='/uploadsongs' element={<Upload login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />} />
         <Route path='/dashboard' element={<Dashboard address={address} publicKey={publicKey} startingPage={0} />} />
         <Route path='/subscribe' element={<Subscribe address={address} publicKey={publicKey} />} />

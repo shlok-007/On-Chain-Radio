@@ -12,7 +12,9 @@ const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
 
 interface AuthProps {
   address: string,
-  publicKey: string | string[]
+  publicKey: string | string[],
+  login: boolean,
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 declare global {
@@ -23,7 +25,7 @@ declare global {
 }
 
 
-const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
+const Auth: React.FC<AuthProps> = ({ address, publicKey, login, setLogin }: AuthProps) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -47,6 +49,8 @@ const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
       
       const result = await window.aptos.signAndSubmitTransaction(transaction);
       console.log(result);
+      setLogin(true);
+      navigate('/')
       // if the transaction was successful then navigate to home page
     } catch (error) {
       console.error("Failed to connect wallet", error);
