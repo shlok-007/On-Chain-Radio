@@ -2,12 +2,12 @@ module addr_on_chain_radio::user{
 
     use std::string::{String, utf8};
     use std::signer;
-    use aptos_std::table::{Self, Table};
     use std::vector;
     use 0x1::coin;
     use 0x1::aptos_coin::AptosCoin; 
     use 0x1::aptos_account;
     use addr_on_chain_radio::community;
+    use std::timestamp;
 
     #[test_only]
     use std::string;
@@ -24,30 +24,19 @@ module addr_on_chain_radio::user{
     const ALREADY_SUBSCRIBED: u64 = 101;
     const INSUFFICIENT_FUNDS: u64 = 102;
     const NO_ACCOUNT: u64 = 103;
+
+    const SUBSCRIPTION_DURATION: u64 = 2592000; // 30 days in seconds
     
-    struct Account has key, store {
+    struct Account has key, store, drop {
         wallet_address: address,
         name: String,
         email: String,
         bio: Bio,
         premium: bool,
-        tips_given: TipsGiven
+        subscription_expiry: u64
     }
 
-    struct TipsGiven has store {
-        num_tips: u64,
-        tips: Table<u64, TipGiven>
-    }
-
-    struct TipGiven has store {
-        artist_name: String,
-        artist_address: address,
-        song_title: String,
-        tip_amount: u64,
-        tip_date: String
-    }
-
-    struct Bio has store {
+    struct Bio has store, drop {
         location: String,
         profession: String,
         about: String
@@ -66,10 +55,7 @@ module addr_on_chain_radio::user{
                 about: utf8(b"")
             },
             premium: false,
-            tips_given: TipsGiven{
-                num_tips: 0,
-                tips: table::new()
-            }
+            subscription_expiry: 0
         };
         move_to(account, new_account);
     }
@@ -104,6 +90,15 @@ module addr_on_chain_radio::user{
         };
 
         acc.premium = true;
+        acc.subscription_expiry = timestamp::now_seconds() + SUBSCRIPTION_DURATION;
+    }
+
+    public entry fun validate_subscription(account: &signer) acquires Account{
+        let signer_address = signer::address_of(account);
+        assert!(exists<Account>(signer_address), NO_ACCOUNT);
+        let acc = borrow_global_mut<Account>(signer_address);
+        assert!(acc.subscription_expiry < timestamp::now_seconds(), ALREADY_SUBSCRIBED);
+        acc.premium = false;
     }
 
     public entry fun update_bio(account: &signer, _location: String, _profession: String, _about: String) acquires Account {
@@ -113,6 +108,12 @@ module addr_on_chain_radio::user{
         acc.bio.location = _location;
         acc.bio.profession = _profession;
         acc.bio.about = _about;
+    }
+
+    public entry fun remove_account(account: &signer) acquires Account {
+        let signer_address = signer::address_of(account);
+        assert!(exists<Account>(signer_address), NO_ACCOUNT);
+        move_from<Account>(signer_address);
     }
 
     #[view]

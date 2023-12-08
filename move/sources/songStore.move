@@ -301,7 +301,7 @@ module addr_on_chain_radio::songStore {
         };
     }
 
-    public fun tip_song(tipper: &signer, song_store_ID: u64, genre: String, premium: bool, tip_amount: u64) acquires SongStore {
+    public entry fun tip_song(tipper: &signer, song_store_ID: u64, genre: String, premium: bool, tip_amount: u64) acquires SongStore {
         let song_store = borrow_global_mut<SongStore>(@addr_on_chain_radio);
         let song_library: &mut SongLibrary;
         if(premium) {

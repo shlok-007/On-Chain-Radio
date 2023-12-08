@@ -63,7 +63,7 @@
         table::remove(artist_songs, artist_store_ID);
     }
 
-    public fun remove_song_by_artist(artist_account: &signer, artist_store_ID: u64) acquires ArtistStore {
+    public entry fun remove_song_by_artist(artist_account: &signer, artist_store_ID: u64) acquires ArtistStore {
         let artist_address = signer::address_of(artist_account);
         assert!(check_acc_exists(artist_address), NO_ACCOUNT);
         let artist_store = borrow_global_mut<ArtistStore>(artist_address);
@@ -84,7 +84,7 @@
         artist_store.num_songs = artist_store.num_songs - 1;
     }
 
-    public fun report_song(reporter: &signer, artist_addr: address, artist_store_ID: u64) acquires ArtistStore {
+    public entry fun report_song(reporter: &signer, artist_addr: address, artist_store_ID: u64) acquires ArtistStore {
         let reporter_address = signer::address_of(reporter);
         assert!(check_acc_exists(reporter_address), NO_ACCOUNT);
         let artist_store = borrow_global_mut<ArtistStore>(artist_addr);
