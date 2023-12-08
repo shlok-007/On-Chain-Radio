@@ -15,15 +15,15 @@ const Upload: React.FC<UploadProps> = ({}) => {
     }
 };
 
-const testPinataConnection = async() => {
-  try {
-    const url =`${pinataConfig.root}/data/testAuthentication`
-    const res = await axios.get(url, {headers: pinataConfig.headers});
-    console.log(res.data);
-  } catch (error) {
-    console.log(error)
-  }
-}
+// const testPinataConnection = async() => {
+//   try {
+//     const url =`${pinataConfig.root}/data/testAuthentication`
+//     const res = await axios.get(url, {headers: pinataConfig.headers});
+//     console.log(res.data);
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 
 // useEffect(() => {
 //   testPinataConnection()
