@@ -1,6 +1,85 @@
 import React from "react";
+import { useState,useEffect } from "react";
+import axios from 'axios';
 
 const UploadForm: React.FC = () => {
+    const [pinnedFiles, setPinnedFiles] = useState([]);
+    const [file, setFile] = useState<File | null>(null);
+    const pinataConfig = {
+        root: 'https://api.pinata.cloud',
+        headers: { 
+          'pinata_api_key': process.env.REACT_APP_PINATA_API_KEY,
+          'pinata_secret_api_key': process.env.REACT_APP_PINATA_API_SECRET
+        }
+    };
+    
+    const testPinataConnection = async() => {
+      try {
+        const url =`${pinataConfig.root}/data/testAuthentication`
+        const res = await axios.get(url, {headers: pinataConfig.headers});
+        console.log(res.data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const queryPinataFiles = async () => {
+        try {
+          const url = `${pinataConfig.root}/data/pinList?status=pinned`;
+          const response = await axios.get(url, pinataConfig);
+          //console.log(response.data.rows)
+          setPinnedFiles(response.data.rows);
+        } catch (error) {
+          console.log(error)
+        }
+      };
+
+    const handleclick = async () => {
+        try {
+          //console.log(file);
+          if (file) {
+            const formData = new FormData();
+            console.log(file)
+            formData.append('file', file);
+            const pinataBody = {
+              options: {
+                cidVersion: 1,
+              },
+              metadata: {
+                name: file.name,
+              }
+            }
+            formData.append('pinataOptions', JSON.stringify(pinataBody.options));
+            formData.append('pinataMetadata', JSON.stringify(pinataBody.metadata));
+            const url = `${pinataConfig.root}/pinning/pinFileToIPFS`;
+            const response = await axios({
+              method: 'post',
+              url: url,
+              data: formData,
+              headers: pinataConfig.headers
+            })
+            console.log(response.data)
+            queryPinataFiles();
+          } else {
+            alert('select file first')
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+      const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = e.target.files?.[0];
+        console.log(selectedFile);
+        if (selectedFile) {
+            setFile(selectedFile);
+        }
+    };
+
+    // useEffect(() => {
+    //   testPinataConnection()
+    // });
+
     return (
         <div>
             <div className="grid md:grid-cols-2 sm:grid-cols-1">
@@ -35,10 +114,10 @@ const UploadForm: React.FC = () => {
                         <svg className="text-indigo-500 w-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                         <div className="input_field flex flex-col w-max mx-auto text-center">
                             <label>
-                                <input className="text-sm cursor-pointer w-36 hidden" type="file" multiple accept="image/*" />
-                                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500">Select</div>
+                                <input className="text-sm cursor-pointer w-36 hidden" type="file" multiple accept="image/*"  onChange={handleFileChange} />
+                                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500" onClick={handleclick}>Select</div>
                             </label>
-                            <div className="title text-indigo-500 uppercase">or drop image here</div>
+                            <div className="title text-indigo-500 uppercase" >or drop image here</div>
                         </div>
                     </div>
                 </div>
@@ -47,8 +126,8 @@ const UploadForm: React.FC = () => {
                         <svg className="text-indigo-500 w-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                         <div className="input_field flex flex-col w-max mx-auto text-center">
                             <label>
-                                <input className="text-sm cursor-pointer w-36 hidden" type="file" multiple accept="audio/*" />
-                                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500">Select</div>
+                                <input className="text-sm cursor-pointer w-36 hidden" type="file" multiple accept="audio/*" onChange={handleFileChange}/>
+                                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500" onClick={handleclick}>Select</div>
                             </label>
                             <div className="title text-indigo-500 uppercase">or drop song here</div>
                         </div>

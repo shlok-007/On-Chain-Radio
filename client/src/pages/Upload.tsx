@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { UploadForm } from "../components/UploadForm";
 import { RevenueForm } from "../components/RevenueForm";
+import axios from 'axios';
 
 interface UploadProps {
   login: boolean,
@@ -10,6 +11,28 @@ interface UploadProps {
 }
 
 const Upload: React.FC<UploadProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
+  const pinataConfig = {
+    root: 'https://api.pinata.cloud',
+    headers: { 
+      'pinata_api_key': process.env.REACT_APP_PINATA_API_KEY,
+      'pinata_secret_api_key': process.env.REACT_APP_PINATA_API_SECRET
+    }
+};
+
+const testPinataConnection = async() => {
+  try {
+    const url =`${pinataConfig.root}/data/testAuthentication`
+    const res = await axios.get(url, {headers: pinataConfig.headers});
+    console.log(res.data);
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// useEffect(() => {
+//   testPinataConnection()
+// });
+  
   const [revenue, setRevenue] = useState([<RevenueForm />]);
   const addPerson: React.MouseEventHandler<HTMLButtonElement> = () => {
     setRevenue((pre) => {
