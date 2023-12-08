@@ -4,6 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
+addr_on_chain_radio = "9f5a1acdaeb54a53e78b5fe9f1045884145da9ed850016d8c2a4806ffb1532bf"
 admin = "d0acc1f7cee58e2fdb626ffb93e50c6aa11d0284b37559f630a207ec2ab77f01"
 
 [dev-addresses]

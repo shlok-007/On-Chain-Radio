@@ -37,7 +37,11 @@
         ipfs_hash: String,
         duration: u8,
         premium: bool,
-        genre: String
+        genre: String,
+        vocalist: String,
+        lyricist: String,
+        musician: String,
+        audio_engineer: String
         ) acquires ArtistStore {
 
         let artist_address = signer::address_of(artist_account);
@@ -47,7 +51,7 @@
         };
         let artist_store = borrow_global_mut<ArtistStore>(artist_address);
         let artist_store_ID = artist_store.num_songs;
-        let song = songStore::instantiate_song(artist_address, artist_store_ID, title, ipfs_hash, duration, premium, genre);
+        let song = songStore::instantiate_song(artist_address, artist_store_ID, title, ipfs_hash, duration, premium, genre, vocalist, lyricist, musician, audio_engineer);
         
         song = songStore::add_song_to_songStore(artist_account, song);
 
@@ -118,8 +122,8 @@
         account::create_account_for_test(signer::address_of(store_acc));
         addr_on_chain_radio::user::create_account(artist_acc, utf8(b"John Doe"), utf8(b"john@gmail.com"));
         // addr_on_chain_radio::songStore::init_module(store_acc);
-        upload_song(artist_acc, utf8(b"Song1"), utf8(b"ipfs_hash1"), 3, false, utf8(b"Pop"));
-        upload_song(artist_acc, utf8(b"Song2"), utf8(b"ipfs_hash2"), 4, true, utf8(b"Rock"));
+        upload_song(artist_acc, utf8(b"Song1"), utf8(b"ipfs_hash1"), 3, false, utf8(b"Pop"), utf8(b"vocalist1"), utf8(b"lyricist1"), utf8(b"musician1"), utf8(b"audio_engineer1"));
+        upload_song(artist_acc, utf8(b"Song2"), utf8(b"ipfs_hash2"), 4, true, utf8(b"Rock"), utf8(b"vocalist2"), utf8(b"lyricist2"), utf8(b"musician2"), utf8(b"audio_engineer2"));
         assert!(borrow_global<ArtistStore>(artist_acc_addr).num_songs == 2, 1);
         assert!(songStore::get_song_title(table::borrow(&borrow_global<ArtistStore>(artist_acc_addr).songs , 0)) == utf8(b"Song1"), 2);
         print(&borrow_global<ArtistStore>(artist_acc_addr).songs);
@@ -130,8 +134,8 @@
         let artist_acc_addr = signer::address_of(artist_acc);
         account::create_account_for_test(artist_acc_addr);
         addr_on_chain_radio::user::create_account(artist_acc, utf8(b"John Doe"), utf8(b"john@gmail.com"));
-        upload_song(artist_acc, utf8(b"Song1"), utf8(b"ipfs_hash1"), 3, false, utf8(b"Pop"));
-        upload_song(artist_acc, utf8(b"Song2"), utf8(b"ipfs_hash2"), 4, true, utf8(b"Rock"));
+        upload_song(artist_acc, utf8(b"Song1"), utf8(b"ipfs_hash1"), 3, false, utf8(b"Pop"), utf8(b"vocalist1"), utf8(b"lyricist1"), utf8(b"musician1"), utf8(b"audio_engineer1"));
+        upload_song(artist_acc, utf8(b"Song2"), utf8(b"ipfs_hash2"), 4, true, utf8(b"Rock"), utf8(b"vocalist2"), utf8(b"lyricist2"), utf8(b"musician2"), utf8(b"audio_engineer2"));
         // let artist_store = borrow_global_mut<ArtistStore>(artist_acc_addr);
         assert!(borrow_global<ArtistStore>(artist_acc_addr).num_songs == 2, 1);
         remove_song_by_artist(artist_acc, 0);
@@ -143,8 +147,8 @@
         let artist_acc_addr = signer::address_of(artist_acc);
         account::create_account_for_test(artist_acc_addr);
         addr_on_chain_radio::user::create_account(artist_acc, utf8(b"John Doe"), utf8(b"john@gmail.com"));
-        upload_song(artist_acc, utf8(b"Song1"), utf8(b"ipfs_hash1"), 3, false, utf8(b"Pop"));
-        upload_song(artist_acc, utf8(b"Song2"), utf8(b"ipfs_hash2"), 4, true, utf8(b"Rock"));
+        upload_song(artist_acc, utf8(b"Song1"), utf8(b"ipfs_hash1"), 3, false, utf8(b"Pop"), utf8(b"vocalist1"), utf8(b"lyricist1"), utf8(b"musician1"), utf8(b"audio_engineer1"));
+        upload_song(artist_acc, utf8(b"Song2"), utf8(b"ipfs_hash2"), 4, true, utf8(b"Rock"), utf8(b"vocalist2"), utf8(b"lyricist2"), utf8(b"musician2"), utf8(b"audio_engineer2"));
 
         let reporter = account::create_account_for_test(@0x123);
         addr_on_chain_radio::user::create_account(&reporter, utf8(b"Sunny"), utf8(b"sunny@gmail.com"));
