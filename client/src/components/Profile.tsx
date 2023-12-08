@@ -13,7 +13,7 @@ const Profile: React.FC<ProfileProps> = ({address}) => {
   console.log(username);
   const [editAccess, setEditAccess] = useState(username === address) // replace the "user" string with address of the artist
   return (
-    <main className="profile-page md:py-10">
+    <main className="profile-page md:py-10 text-black">
       <section className="relative block h-[500px]">
         <div
           className="absolute top-0 w-full h-full bg-center bg-cover"
@@ -137,10 +137,10 @@ const Profile: React.FC<ProfileProps> = ({address}) => {
 
       {/* ---------------------------Music cards------------------------- */}
 
-      <section className="text-gray-600 body-font">
+      <section className="text-gray-600 body-font text-white">
         <div className="container px-5 py-10 mx-auto">
           <div className="flex flex-col text-center w-full mb-20">
-            <h1 className="text-2xl font-medium title-font mb-4 text-gray-900">
+            <h1 className="text-4xl text-white font-medium title-font mb-4 text-gray-900">
               Songs
             </h1>
             <p className="lg:w-2/3 mx-auto leading-relaxed text-base">
@@ -160,10 +160,10 @@ const Profile: React.FC<ProfileProps> = ({address}) => {
                   src="https://dummyimage.com/200x200"
                 />
                 <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-gray-900">
+                  <h2 className="title-font font-medium text-lg text-white">
                     Alper Kamu
                   </h2>
-                  <h3 className="text-gray-500 mb-3">UI Developer</h3>
+                  <h3 className="text-gray-400 mb-3">Album Song</h3>
                 </div>
               </div>
             </div>
@@ -177,10 +177,10 @@ const Profile: React.FC<ProfileProps> = ({address}) => {
                   src="https://dummyimage.com/201x201"
                 />
                 <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-gray-900">
+                  <h2 className="title-font font-medium text-lg text-white">
                     Holden Caulfield
                   </h2>
-                  <h3 className="text-gray-500 mb-3">UI Developer</h3>
+                  <h3 className="text-gray-400 mb-3">Album Song</h3>
                 </div>
               </div>
             </div>
@@ -194,10 +194,10 @@ const Profile: React.FC<ProfileProps> = ({address}) => {
                   src="https://dummyimage.com/202x202"
                 />
                 <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-gray-900">
+                  <h2 className="title-font font-medium text-lg text-white">
                     Atticus Finch
                   </h2>
-                  <h3 className="text-gray-500 mb-3">UI Developer</h3>
+                  <h3 className="text-gray-400 mb-3">Album Song</h3>
                 </div>
               </div>
             </div>
@@ -211,10 +211,10 @@ const Profile: React.FC<ProfileProps> = ({address}) => {
                   src="https://dummyimage.com/203x203"
                 />
                 <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-gray-900">
+                  <h2 className="title-font font-medium text-lg text-white">
                     Henry Letham
                   </h2>
-                  <h3 className="text-gray-500 mb-3">UI Developer</h3>
+                  <h3 className="text-gray-400 mb-3">Album Song</h3>
                 </div>
               </div>
             </div>
