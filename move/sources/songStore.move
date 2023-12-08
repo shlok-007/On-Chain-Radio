@@ -29,8 +29,8 @@ module addr_on_chain_radio::songStore {
         artist_wallet_address: address,
         title: String,
         ipfs_hash: String,
+        ipfs_hash_cover_img: String,
         total_tips: u64,
-        duration: u8,
         premium: bool,
         genre: String,
         vocalist: String,
@@ -326,7 +326,7 @@ module addr_on_chain_radio::songStore {
         artist_store_ID: u64,
         title: String,
         ipfs_hash: String,
-        duration: u8,
+        ipfs_hash_cover_img: String,
         premium: bool,
         genre: String,
         vocalist: String,
@@ -340,8 +340,8 @@ module addr_on_chain_radio::songStore {
             artist_wallet_address: artist_acc_addr,
             title: title,
             ipfs_hash: ipfs_hash,
+            ipfs_hash_cover_img: ipfs_hash_cover_img,
             total_tips: 0,
-            duration: duration,
             premium: premium,
             genre: genre,
             reports: 0,
@@ -393,10 +393,10 @@ module addr_on_chain_radio::songStore {
 
         let artist1_addr = @0x6879;
         let artist1 = account::create_account_for_test(artist1_addr);
-        let song1 = instantiate_song(artist1_addr, 0, utf8(b"song1"), utf8(b"ipfs_hash1"), 90, false, utf8(b"Rock"), utf8(b"vocalist1"), utf8(b"lyricist1"), utf8(b"musician1"), utf8(b"audio_engineer1"));
+        let song1 = instantiate_song(artist1_addr, 0, utf8(b"song1"), utf8(b"ipfs_hash1"), utf8(b"ipfs_hash_cvr_img"), false, utf8(b"Rock"), utf8(b"vocalist1"), utf8(b"lyricist1"), utf8(b"musician1"), utf8(b"audio_engineer1"));
         let artist2_addr = @0x6878;
         let artist2 = account::create_account_for_test(artist2_addr);
-        let song2 = instantiate_song(artist2_addr, 0, utf8(b"song2"), utf8(b"ipfs_hash2"), 90, false, utf8(b"Rock"), utf8(b"vocalist2"), utf8(b"lyricist2"), utf8(b"musician2"), utf8(b"audio_engineer2"));
+        let song2 = instantiate_song(artist2_addr, 0, utf8(b"song2"), utf8(b"ipfs_hash2"), utf8(b"ipfs_hash_cvr_img"), false, utf8(b"Rock"), utf8(b"vocalist2"), utf8(b"lyricist2"), utf8(b"musician2"), utf8(b"audio_engineer2"));
 
         add_song_to_songStore(&artist1, song1);
         assert!(table::borrow(&table::borrow(&borrow_global<SongStore>(store_acc_addr).free_songs.songs, utf8(b"Rock")).songs, 0).title == utf8(b"song1"), 2);
@@ -432,7 +432,7 @@ module addr_on_chain_radio::songStore {
 
     //     let artist1_addr = @0x6879;
     //     let artist1 = account::create_account_for_test(artist1_addr);
-    //     let song1 = instantiate_song(artist1_addr, 0, utf8(b"song1"), utf8(b"ipfs_hash1"), 90, false, utf8(b"Rock"), utf8(b"vocalist1"), utf8(b"lyricist1"), utf8(b"musician1"), utf8(b"audio_engineer1"));
+    //     let song1 = instantiate_song(artist1_addr, 0, utf8(b"song1"), utf8(b"ipfs_hash1"), utf8(b"ipfs_hash_cvr_img"), false, utf8(b"Rock"), utf8(b"vocalist1"), utf8(b"lyricist1"), utf8(b"musician1"), utf8(b"audio_engineer1"));
 
     //     add_song_to_songStore(&artist1, song1);
     //     assert!(table::borrow(&table::borrow(&borrow_global<SongStore>(store_acc_addr).free_songs.songs, utf8(b"Rock")).songs, 0).title == utf8(b"song1"), 2);
@@ -464,7 +464,7 @@ module addr_on_chain_radio::songStore {
         aptos_coin::mint(aptos_framework, @0x6878, 200);
         aptos_coin::mint(aptos_framework, @admin, 200);
 
-        let song = instantiate_song(signer::address_of(&artist), 0, utf8(b"song1"), utf8(b"ipfs_hash1"), 90, false, utf8(b"Rock"), utf8(b"vocalist1"), utf8(b"lyricist1"), utf8(b"musician1"), utf8(b"audio_engineer1"));
+        let song = instantiate_song(signer::address_of(&artist), 0, utf8(b"song1"), utf8(b"ipfs_hash1"), utf8(b"ipfs_hash_cvr_img"), false, utf8(b"Rock"), utf8(b"vocalist1"), utf8(b"lyricist1"), utf8(b"musician1"), utf8(b"audio_engineer1"));
         add_song_to_songStore(&artist, song);
         tip_song(&tipper, 0, utf8(b"Rock"), false, 100);
         assert!(coin::balance<AptosCoin>(signer::address_of(&artist)) == 280, 1);
