@@ -7,6 +7,7 @@ import Avatar from "../components/Avatar";
 import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
 import { AptosClient, Types } from 'aptos';
 import { PetraWallet } from "petra-plugin-wallet-adapter";
+import { Provider, Network } from "aptos";
 
 const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
 
@@ -24,12 +25,42 @@ declare global {
 
 
 const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
+  const provider = new Provider(Network.TESTNET);
+  const { account, signAndSubmitTransaction } = useWallet();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
+  const [Login,setLogin]=useState(false);
+  const [hasaccount,setHasaccount]=useState(false);
   const { wallet, connected, isLoading } = useWallet();
   const Petra = new PetraWallet();
+ 
+
+  const fetchAcc = async () => {
+    if (!account)
+     return [];
+    // change this to be your module account address
+    const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
+    try {
+      const checkaccount = await provider.getAccountResource(
+        account.address,
+        `${moduleAddress}::user::Account`
+      );
+      setHasaccount(true);
+    } catch (error) {
+      setHasaccount(false);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchAcc();
+    if(hasaccount)
+    navigate('/');
+    else 
+    navigate('/signup');
+  }, [account?.address]);
 
   const handleAccountCreation = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,19 +68,25 @@ const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
       alert("Please connect your wallet");
       return;
     }
+    const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
     try {
-      const transaction = {
+      console.log(address);
+      const payload = {
         type: "entry_function_payload",
-        function: `${address}::user::create_account`,
-        arguments: [username, email, false],
+        function: `${moduleAddress}::user::create_account`,
+        arguments: [username, email],
         type_arguments: [],
       };
-      
-      const result = await window.aptos.signAndSubmitTransaction(transaction);
-      console.log(result);
+    // sign and submit transaction to chain
+    await window.aptos.signAndSubmitTransaction(payload);
+    // wait for transaction
+    //await provider.waitForTransaction(response.hash);
+    setLogin(true);
       // if the transaction was successful then navigate to home page
+      navigate('/');
     } catch (error) {
       console.error("Failed to connect wallet", error);
+      setLogin(false);
     }
   };
 

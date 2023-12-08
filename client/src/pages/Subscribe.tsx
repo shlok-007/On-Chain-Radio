@@ -17,12 +17,19 @@ const Subscribe: React.FC<SubscribeProps> = ({ address, publicKey }: SubscribePr
       alert("Please connect your wallet");
       return;
     }
-    const transaction = {
-      type: "entry_function_payload",
-      function: `${address}::user::subscribe_to_premium`,
-    };
-    console.log(plan);
-    // left
+    const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
+    try {
+      //console.log(address);
+      const payload = {
+        type: "entry_function_payload",
+        function: `${moduleAddress}::user::subscribe_to_premium`,
+        arguments: [],
+        type_arguments: [],
+      };
+    await window.aptos.signAndSubmitTransaction(payload);
+    } catch (error) {
+      console.error("Failed to connect wallet", error);
+    }
   }
   
 
@@ -220,7 +227,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ address, publicKey }: SubscribePr
                   </span>
                   Mixtape chillwave tumeric
                 </p>
-                <button className="flex items-center justify-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded onClick={()=>handleTransaction(1)">
+                <button className="flex items-center justify-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded" onClick={()=>handleTransaction(1)}>
                   Subscribe
                 </button>
                 <p className="text-xs text-gray-500 mt-3">
