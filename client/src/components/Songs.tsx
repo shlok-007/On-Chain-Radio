@@ -1,15 +1,14 @@
 import React from "react";
 import FreeCard from "./FreeCard";
 import PremiumCard from "./PremiumCard";
+import { useAccountContext } from "../utils/context";
 
 interface SongsProps {
-  login: boolean,
-  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
-  subscribe: boolean,
-  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Songs: React.FC<SongsProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
+const Songs: React.FC<SongsProps> = ({  }) => {
+  let login = useAccountContext() !== null;
+
   return (
     <div>
 
@@ -22,10 +21,10 @@ const Songs: React.FC<SongsProps> = ({ login, setLogin, subscribe, setSubscribe 
             </h1>
             <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {/* <!-- FREE CARD  --> */}
-              <FreeCard login={login} setLogin={setLogin} genre="Jazz" />
-              <FreeCard login={login} setLogin={setLogin} genre="Pop" />
-              <FreeCard login={login} setLogin={setLogin} genre="Country" />
-              <FreeCard login={login} setLogin={setLogin} genre="Classical" />
+              <FreeCard genre="Jazz" />
+              <FreeCard genre="Pop" />
+              <FreeCard genre="Country" />
+              <FreeCard genre="Classical" />
               {/* <!-- END OF FREE CARD  --> */}
             </section>
           </div>
@@ -39,10 +38,10 @@ const Songs: React.FC<SongsProps> = ({ login, setLogin, subscribe, setSubscribe 
           </h1>
           <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {/* <!-- FREE CARD  --> */}
-            <FreeCard login={login} setLogin={setLogin} genre="Jazz" />
-            <FreeCard login={login} setLogin={setLogin} genre="Pop" />
-            <FreeCard login={login} setLogin={setLogin} genre="Country" />
-            <FreeCard login={login} setLogin={setLogin} genre="Classical" />
+            <FreeCard genre="Jazz" />
+            <FreeCard genre="Pop" />
+            <FreeCard genre="Country" />
+            <FreeCard genre="Classical" />
             {/* <!-- END OF FREE CARD  --> */}
           </section>
         </div>
@@ -56,10 +55,10 @@ const Songs: React.FC<SongsProps> = ({ login, setLogin, subscribe, setSubscribe 
             </h1>
             <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {/* <!-- FREE CARD  --> */}
-              <PremiumCard login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} genre="Jazz" />
-              <PremiumCard login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} genre="Pop" />
-              <PremiumCard login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} genre="Country" />
-              <PremiumCard login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} genre="Classical" />
+              <PremiumCard genre="Jazz" />
+              <PremiumCard genre="Pop" />
+              <PremiumCard genre="Country" />
+              <PremiumCard genre="Classical" />
               {/* <!-- END OF FREE CARD  --> */}
             </section>
           </div>

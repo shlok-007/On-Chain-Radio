@@ -2,20 +2,20 @@ import React from "react";
 import { Hero } from "../components/Hero";
 import { Songs } from "../components/Songs";
 import Footer from "../components/Footer";
+import { useAccountContext } from "../utils/context";
+import { Account } from "../utils/types";
 
 interface HomeProps {
-    login: boolean,
-    setLogin: React.Dispatch<React.SetStateAction<boolean>>,
-    subscribe: boolean,
-    setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+    onLoginSuccess: (account:Account) => void,
 }
 
-const Home: React.FC<HomeProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
+const Home: React.FC<HomeProps> = ({onLoginSuccess}) => {
+    const login = useAccountContext() !== null ;
     return (
         <div>
-            <Hero login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />
+            <Hero onLoginSuccess={onLoginSuccess}/>
             <section id="exploresongs">
-                <Songs login={login} setLogin={setLogin} subscribe={subscribe} setSubscribe={setSubscribe} />
+                <Songs/>
             </section>
         </div>
     )

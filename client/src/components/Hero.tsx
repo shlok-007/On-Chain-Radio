@@ -5,24 +5,21 @@ import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { Link } from "react-router-dom";
 import { HashLink } from 'react-router-hash-link';
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { useAccountContext } from "../utils/context";
+import { Account } from "../utils/types";
+import getUserAccount from "../utils/getUserAccount";
+import { useNavigate } from "react-router-dom";
 
 interface HeroProps {
-  login?: boolean,
-  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
-  subscribe: boolean,
-  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+  onLoginSuccess: (account:Account) => void,
 }
 
-const Hero: React.FC<HeroProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
+const Hero: React.FC<HeroProps> = ({onLoginSuccess}) => {
 
   const [isModalOpen, setModalOpen] = useState(false);
-  const { wallet, isLoading } = useWallet();
-
-  useEffect(() => {
-    if (wallet) {
-      setLogin(true);
-    }
-  }, [wallet]);
+  const { account } = useWallet();
+  const login = useAccountContext() !== null;
+  const navigate = useNavigate();
 
   const handleConnectWallet = async () => {
     try {
@@ -31,6 +28,15 @@ const Hero: React.FC<HeroProps> = ({ login, setLogin, subscribe, setSubscribe })
       console.error("Failed to connect wallet", error);
     }
   };
+
+  useEffect(() => {
+    // console.log(wallet);
+    getUserAccount(account).then((userAccount) => {
+      if (userAccount === 0) {
+        navigate('/signup');
+      }
+    });
+  }, [account?.address]);
 
   return (
     <div>

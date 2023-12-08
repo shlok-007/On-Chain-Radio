@@ -8,17 +8,17 @@ import {
 import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
+import { useAccountContext } from "../utils/context";
 
 interface FreeCardProps {
-  login: boolean,
-  setLogin: React.Dispatch<React.SetStateAction<boolean>>
   genre: string
 }
 
-const FreeCard: React.FC<FreeCardProps> = ({login, setLogin, genre}) => {
+const FreeCard: React.FC<FreeCardProps> = ({genre}) => {
   const [like, setLike] = useState(false);
   const [pause, setPause] = useState(false);
   const navigate = useNavigate();
+  let login = useAccountContext() !== null;
   const handlePlay = () => {
     login ? navigate("/playsongs") : navigate("/signup")
   }

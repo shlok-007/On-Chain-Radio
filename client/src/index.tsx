@@ -16,13 +16,14 @@ declare global {
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 window.addEventListener('load', () => {
   root.render(
-    <React.StrictMode>
+    // <React.StrictMode>
       <AptosWalletAdapterProvider plugins={wallets} autoConnect={true}>
         <App />
       </AptosWalletAdapterProvider>
-    </React.StrictMode>
+    // </React.StrictMode>
   );
 });
 

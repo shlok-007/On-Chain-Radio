@@ -10,19 +10,18 @@ import {
 import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
+import { useAccountContext } from "../utils/context";
 
 interface PremiumCardProps {
-  login: boolean,
-  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
-  subscribe: boolean,
-  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>,
   genre: string
 }
 
-const PremiumCard: React.FC<PremiumCardProps> = ({ login, setLogin, subscribe, setSubscribe, genre }) => {
+const PremiumCard: React.FC<PremiumCardProps> = ({ genre }) => {
   const [like, setLike] = useState(false);
   const [pause, setPause] = useState(false);
   const navigate = useNavigate();
+  let login = useAccountContext() !== null;
+  let subscribe = useAccountContext()?.premium;
 
   const handlePlay = () => {
     !login ? navigate("/signup") : !subscribe ? navigate("/subscribe") : navigate("/playsongs", {state: {id: genre + " premium"}})

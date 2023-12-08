@@ -1,16 +1,19 @@
 import React, {useState} from "react";
 import { AptosClient } from 'aptos';
 import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
+import { Provider, Network } from "aptos";
+import { useAccountContext } from "../utils/context";
 
 const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
 
 interface SubscribeProps {
-  address: string,
-  publicKey: string | string[]
+  setUserAccount: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const Subscribe: React.FC<SubscribeProps> = ({ address, publicKey }: SubscribeProps) => {
-  const { wallet,connected } = useWallet();
+const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps) => {
+  const {connected } = useWallet();
+  const provider = new Provider(Network.TESTNET);
+  let userAcc = useAccountContext();
 
   const handleTransaction = async (plan: Number) => {
     if(!connected){
@@ -26,7 +29,11 @@ const Subscribe: React.FC<SubscribeProps> = ({ address, publicKey }: SubscribePr
         arguments: [],
         type_arguments: [],
       };
-    await window.aptos.signAndSubmitTransaction(payload);
+    const response = await window.aptos.signAndSubmitTransaction(payload);
+    await provider.waitForTransaction(response.hash);
+    if(userAcc)
+      userAcc.premium = true;
+    setUserAccount(userAcc);
     } catch (error) {
       console.error("Failed to connect wallet", error);
     }

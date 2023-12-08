@@ -8,6 +8,7 @@ import ShowChartIcon from "@mui/icons-material/ShowChart";
 import Tables from "../components/Tables";
 import Insights from "../components/Insights";
 import Profile from "../components/Profile";
+import { useAccountContext } from "../utils/context";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -44,17 +45,18 @@ function a11yProps(index: number) {
 }
 
 interface DashboardProps {
-  address: string;
-  publicKey: string | string[];
   startingPage: any
 }
 
-export default function Dashboard({address,publicKey,startingPage}: DashboardProps) {
+export default function Dashboard({startingPage}: DashboardProps) {
   const [value, setValue] = React.useState(startingPage);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const address = useAccountContext()?.wallet_address || "";
+  const publicKey = useAccountContext()?.public_key || "";
 
   return (
     <div>

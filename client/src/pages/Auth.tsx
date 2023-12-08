@@ -4,63 +4,23 @@ import Logo from "../assets/Logo.png";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import Avatar from "../components/Avatar";
-import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
-import { AptosClient, Types } from 'aptos';
-import { PetraWallet } from "petra-plugin-wallet-adapter";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { Provider, Network } from "aptos";
-
-const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
+import { Account } from "../utils/types";
+import getUserAccount from "../utils/getUserAccount";
 
 interface AuthProps {
-  address: string,
-  publicKey: string | string[]
+  onLoginSuccess: (account:Account) => void,
 }
 
-declare global {
-  interface Window {
-    PetraWallet: any;
-    aptos: any;
-  }
-}
-
-
-const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
+const Auth: React.FC<AuthProps> = ({ onLoginSuccess }: AuthProps) => {
   const provider = new Provider(Network.TESTNET);
-  const { account, signAndSubmitTransaction } = useWallet();
+  const { account} = useWallet();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
-  const [Login,setLogin]=useState(false);
-  const [hasaccount,setHasaccount]=useState(false);
   const { wallet, connected, isLoading } = useWallet();
-  const Petra = new PetraWallet();
- 
-
-  const fetchAcc = async () => {
-    if (!account)
-     return [];
-    // change this to be your module account address
-    const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
-    try {
-      const checkaccount = await provider.getAccountResource(
-        account.address,
-        `${moduleAddress}::user::Account`
-      );
-      setHasaccount(true);
-    } catch (error) {
-      setHasaccount(false);
-    }
-  };
-
-
-  useEffect(() => {
-    fetchAcc();
-    if(hasaccount)
-    navigate('/');
-    else 
-    navigate('/signup');
-  }, [account?.address]);
 
   const handleAccountCreation = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,7 +30,7 @@ const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
     }
     const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
     try {
-      console.log(address);
+      // console.log(address);
       const payload = {
         type: "entry_function_payload",
         function: `${moduleAddress}::user::create_account`,
@@ -78,15 +38,17 @@ const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
         type_arguments: [],
       };
     // sign and submit transaction to chain
-    await window.aptos.signAndSubmitTransaction(payload);
+    const response = await window.aptos.signAndSubmitTransaction(payload);
     // wait for transaction
-    //await provider.waitForTransaction(response.hash);
-    setLogin(true);
+    await provider.waitForTransaction(response.hash);
+    let acc = await getUserAccount(account);
+    if(typeof acc !== 'number'){
+      onLoginSuccess(acc);
+    }
       // if the transaction was successful then navigate to home page
       navigate('/');
     } catch (error) {
-      console.error("Failed to connect wallet", error);
-      setLogin(false);
+      console.error(error);
     }
   };
 
@@ -96,14 +58,6 @@ const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
     } catch (error) {
       console.error("Failed to connect wallet", error);
     }
-  };
-
-  const handleHaveAnAccount = async () => {
-    // open a pop up
-    // connect to wallet
-    // check if the user has an account
-    // if yes, navigate to home page
-    // if no, navigate to signup page
   };
 
   return (
@@ -159,14 +113,14 @@ const Auth: React.FC<AuthProps> = ({ address, publicKey }: AuthProps) => {
                         </div>
 
                         {/* <!--Register button--> */}
-                        <div className="flex items-center justify-between pb-6">
+                        {/* <div className="flex items-center justify-between pb-6">
                           <a
                             onClick={handleHaveAnAccount}
                             className="mb-0 mr-2 hover:cursor-pointer"
                           >
                             Already have an account? Log in
                           </a>
-                        </div>
+                        </div> */}
 
                         {/* <!--Submit button--> */}
                         <div className="mb-12 pb-1 pt-1 text-center">

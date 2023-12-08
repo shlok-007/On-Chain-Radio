@@ -8,25 +8,21 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { disconnect } from "process";
 import { Link } from "react-router-dom";
 import { HashLink } from 'react-router-hash-link';
+import { useAccountContext } from "../utils/context";
 
 
 interface NavbarProps {
-  login?: boolean,
-  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
-  subscribe: boolean,
-  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+  onLogout: () => void,
 }
 
-const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
+const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
   const navigate = useNavigate();
   const [navbar, setNavbar] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { disconnect } = useWallet();
   const location = useLocation();
 
-  const handleDisconnect = async () => {
-    disconnect();
-  };
+  const login = useAccountContext() !== null ;
 
   return (
     <div>
@@ -35,7 +31,7 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
           <div>
             <div className="flex items-center justify-between lg:block">
               {/* LOGO */}
-              <a href="" className="flex" onClick={() => navigate("/")}>
+              <a href="" className="flex" onClick={(e) => { e.preventDefault(); navigate("/")}}>
                 <img
                   src={logo}
                   alt="logo"
@@ -96,7 +92,7 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                   <a
                     href="/"
                     className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                    onClick={() => setNavbar(!navbar)}
+                    onClick={(e) => { e.preventDefault(); navigate("/")}}
                   >
                     Home
                   </a>
@@ -114,14 +110,25 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                 </li>
 
                 {/* -----------------ENDED HERE----------------- */}
-
                 {
                   login &&
                   <li className="my-4">
                     <a
                       href=""
                       className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                      onClick={() => navigate("/dashboard")}
+                      onClick={(e)=>{e.preventDefault(); navigate("/community")}}
+                    >
+                      Community
+                    </a>
+                  </li>
+                }
+                {
+                  login &&
+                  <li className="my-4">
+                    <a
+                      href=""
+                      className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
+                      onClick={(e)=>{e.preventDefault(); navigate("/dashboard")}}
                     >
                       Dashboard
                     </a>
@@ -133,7 +140,7 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                     <a
                       href=""
                       className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                      onClick={() => navigate("/uploadsongs")}
+                      onClick={(e)=>{e.preventDefault(); navigate("/uploadsongs")}}
                     >
                       Upload
                     </a>
@@ -145,7 +152,7 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                     <a
                       href=""
                       className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                      onClick={() => navigate("/profile")}
+                      onClick={(e)=>{e.preventDefault(); navigate("/profile")}}
                     >
                       Profile
                     </a>
@@ -155,9 +162,9 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                 {
                   login && <button
                     className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
-                    onClick={handleDisconnect}
+                    onClick={(e) => { e.preventDefault(); onLogout() }}
                   >
-                    Disconnect Wallet
+                    Logout
                   </button>
                 }
                 {
@@ -174,7 +181,7 @@ const Navbar: React.FC<NavbarProps> = ({ login, setLogin, subscribe, setSubscrib
                   <li className="my-4">
                     <button
                       className="text-xl text-white py-2 px-6 mx-1 text-center bg-indigo-500 rounded-md"
-                      onClick={() => navigate("/signup")}
+                      onClick={(e)=>{e.preventDefault(); navigate("/signup")}}
                     >
                       Get Started
                     </button>

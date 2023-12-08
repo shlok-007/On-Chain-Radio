@@ -6,14 +6,10 @@ import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import TipModal from "../components/TipModal";
 import { useLocation } from "react-router-dom";
 
-interface SongDetailsProps {
-  login: boolean,
-  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
-  subscribe: boolean,
-  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
+interface PlayRadioProps {
 }
 
-const SongDetails: React.FC<SongDetailsProps> = ({login, setLogin, subscribe ,setSubscribe}) => {
+const PlayRadio: React.FC<PlayRadioProps> = ({}) => {
   const [like, setLike] = useState(false);
   const location = useLocation();
   const genre = location.state?.id || 'No genre Selected';
@@ -154,4 +150,4 @@ const SongDetails: React.FC<SongDetailsProps> = ({login, setLogin, subscribe ,se
   );
 };
 
-export default SongDetails;
+export default PlayRadio;

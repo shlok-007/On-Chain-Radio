@@ -3,13 +3,9 @@ import { UploadForm } from "../components/UploadForm";
 import { RevenueForm } from "../components/RevenueForm";
 
 interface UploadProps {
-  login: boolean,
-  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
-  subscribe: boolean,
-  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Upload: React.FC<UploadProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
+const Upload: React.FC<UploadProps> = ({}) => {
   const [revenue, setRevenue] = useState([<RevenueForm />]);
   const addPerson: React.MouseEventHandler<HTMLButtonElement> = () => {
     setRevenue((pre) => {
