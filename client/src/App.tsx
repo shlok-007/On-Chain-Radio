@@ -14,8 +14,11 @@ import { Navbar } from './components/Navbar';
 import Footer from './components/Footer';
 import Test from './pages/Test';
 import { Community } from './pages/Community';
+import { Provider, Network } from "aptos";
 
 function App() {
+  const provider = new Provider(Network.DEVNET);
+
   const { wallet,account } = useWallet();
   const [login, setLogin] = useState(true);
   const [subscribe, setSubscribe] = useState(false);
@@ -32,7 +35,7 @@ function App() {
         setPublicKey(account.publicKey);
       }  
     }else{
-      // setLogin(false);
+      setLogin(false);
     }
   }, [wallet]);
   
