@@ -1,10 +1,22 @@
 import React from "react";
 import { useState,useEffect } from "react";
 import axios from 'axios';
+import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
 
 const UploadForm: React.FC = () => {
     const [pinnedFiles, setPinnedFiles] = useState([]);
+    const [pinnedFiles1, setPinnedFiles1] = useState([]);
     const [file, setFile] = useState<File | null>(null);
+    const [file1, setFile1] = useState<File | null>(null);
+    const [song,setSong] =useState("");
+    const [vocalist,setVocalist] =useState("");
+    const [lyricist,setlyricist] =useState("");
+    const [musician,setMusician] =useState("");
+    const [audio,setAudio] =useState("");
+    const [genre,setGenre] =useState("");
+    const [pre,setPre] =useState(false);
+    const [ipfsimage,setIpfsimage] =useState("");
+    const [ipfsaudio,setIpfsaudio] =useState("");
     const pinataConfig = {
         root: 'https://api.pinata.cloud',
         headers: { 
@@ -29,6 +41,17 @@ const UploadForm: React.FC = () => {
           const response = await axios.get(url, pinataConfig);
           //console.log(response.data.rows)
           setPinnedFiles(response.data.rows);
+        } catch (error) {
+          console.log(error)
+        }
+      };
+
+      const queryPinataFiles1 = async () => {
+        try {
+          const url = `${pinataConfig.root}/data/pinList?status=pinned`;
+          const response = await axios.get(url, pinataConfig);
+          //console.log(response.data.rows)
+          setPinnedFiles1(response.data.rows);
         } catch (error) {
           console.log(error)
         }
@@ -59,6 +82,10 @@ const UploadForm: React.FC = () => {
               headers: pinataConfig.headers
             })
             console.log(response.data)
+            if(file.type === "image/png")
+            setIpfsimage(response.data.IpfsHash);
+            else 
+            setIpfsaudio(response.data.IpfsHash);
             queryPinataFiles();
           } else {
             alert('select file first')
@@ -68,6 +95,40 @@ const UploadForm: React.FC = () => {
         }
       }
 
+    //   const handleclick1 = async () => {
+    //     try {
+    //       //console.log(file);
+    //       if (file1) {
+    //         const formData = new FormData();
+    //         console.log(file1)
+    //         formData.append('file1', file1);
+    //         const pinataBody = {
+    //           options: {
+    //             cidVersion: 1,
+    //           },
+    //           metadata: {
+    //             name: file1.name,
+    //           }
+    //         }
+    //         formData.append('pinataOptions', JSON.stringify(pinataBody.options));
+    //         formData.append('pinataMetadata', JSON.stringify(pinataBody.metadata));
+    //         const url = `${pinataConfig.root}/pinning/pinFileToIPFS`;
+    //         const response = await axios({
+    //           method: 'post',
+    //           url: url,
+    //           data: formData,
+    //           headers: pinataConfig.headers
+    //         })
+    //         console.log(response.data)
+    //         queryPinataFiles1();
+    //       } else {
+    //         alert('select file first')
+    //       }
+    //     } catch (error) {
+    //       console.log(error)
+    //     }
+    //   }
+
       const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
         console.log(selectedFile);
@@ -76,26 +137,70 @@ const UploadForm: React.FC = () => {
         }
     };
 
+    // const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const selectedFile = e.target.files?.[0];
+    //     console.log(selectedFile);
+    //     if (selectedFile) {
+    //         setFile1(selectedFile);
+    //     }
+    // };
+
     // useEffect(() => {
     //   testPinataConnection()
     // });
+
+    const {wallet} = useWallet();
+
+    const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        console.log(genre);
+        e.preventDefault();
+        if (!wallet) {
+          alert("Please connect your wallet");
+          return;
+        }
+        const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
+        try {
+          const payload = {
+            type: "entry_function_payload",
+            function: `${moduleAddress}::song::upload_song`,
+            arguments: [song,ipfsaudio,ipfsimage,pre,"Classical",vocalist,lyricist,musician,audio],
+            type_arguments: [],
+          };
+        // sign and submit transaction to chain
+        await window.aptos.signAndSubmitTransaction(payload);
+        } catch (error) {
+          console.error("Failed to connect wallet", error);
+        }
+      };
 
     return (
         <div>
             <div className="grid md:grid-cols-2 sm:grid-cols-1">
                 <div className="md:px-10 sm:px-5 py-5">
                     <label className="block text-left m-2">Song name:</label>
-                    <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: Dandelions etc."></input>
+                    <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: Dandelions etc." onChange={(e)=>{ setSong(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
-                    <label className="block text-left m-2">Artist / Band name:</label>
-                    <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc."></input>
+                    <label className="block text-left m-2">Vocalist</label>
+                    <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setVocalist(e.target.value) }}></input>
+                </div>
+                <div className="md:px-10 sm:px-5 py-5">
+                    <label className="block text-left m-2">lyricist</label>
+                    <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setlyricist(e.target.value) }}></input>
+                </div>
+                <div className="md:px-10 sm:px-5 py-5">
+                    <label className="block text-left m-2">Musician</label>
+                    <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setMusician(e.target.value) }}></input>
+                </div>
+                <div className="md:px-10 sm:px-5 py-5">
+                    <label className="block text-left m-2">Audio_Engineer</label>
+                    <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setAudio(e.target.value) }}></input>
                 </div>
             </div>
             <div className="grid md:grid-cols-2 sm:grid-cols-1">
                 <div className="md:px-10 sm:px-5 py-5">
                     <label className="block text-left m-2">Genre of the Song:</label>
-                    <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" onChange={(e)=>{ setGenre(e.target.value) }}>
                         <option selected>Select the Genre</option>
                         <option value="#">Pop</option>
                         <option value="#">Classical</option>
@@ -104,8 +209,14 @@ const UploadForm: React.FC = () => {
                     </select>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
-                    <label className="block text-left m-2">Do you want this to be a Paid Content?</label>
-                    <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="If yes, enter the amount."></input>
+                <label className="block text-left m-2">Want the song to be premium</label>
+                    <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" >
+                        <option selected>Select the option</option>
+                        <option value="#" onChange={(e)=>{ setPre(true) }}>Yes</option>
+                        <option value="#" onChange={(e)=>{ setPre(false) }}>No</option>
+                    </select>
+                    {/* <label className="block text-left m-2">Do you want this to be a Paid Content?</label>
+                    <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="If yes, enter the amount."></input> */}
                 </div>
             </div>
             <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-10 md:gap-20 md:px-10 sm:px-5 py-5">
@@ -133,6 +244,12 @@ const UploadForm: React.FC = () => {
                         </div>
                     </div>
                 </div>
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={handleSubmit}
+                >
+                    Submit
+                </button>
             </div>
         </div>
     )
