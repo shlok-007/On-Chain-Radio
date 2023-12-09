@@ -161,7 +161,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
                     <a
                       href=""
                       className="text-xl text-white py-2 px-6 text-center lg:hover:bg-slate-600 rounded-md"
-                      onClick={(e)=>{e.preventDefault(); navigate("/profile")}}
+                      onClick={(e)=>{e.preventDefault(); navigate("/myprofile")}}
                     >
                       Profile
                     </a>

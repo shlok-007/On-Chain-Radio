@@ -1,16 +1,16 @@
 import {AccountInfo}  from '@aptos-labs/wallet-adapter-core';
 import { Provider, Network } from 'aptos';
 
-export default async function getUserAccount(account: AccountInfo | null) {
+export default async function getUserAccount(address: string | null) {
 
     const provider = new Provider(Network.TESTNET);
 
-    if (!account){
+    if (!address) {
         return -1;
     }
     try {
         const accountResource = await provider.getAccountResource(
-        account?.address,
+        address,
         `${process.env.REACT_APP_MODULE_ADDR_TEST}::user::Account`,
         );
         let userAccount = {
@@ -24,7 +24,7 @@ export default async function getUserAccount(account: AccountInfo | null) {
         },
         premium: (accountResource as any).data.premium,
         subscription_expiry: (accountResource as any).data.subscription_expiry,
-        public_key: account.publicKey,
+        public_key: ""
         }
         return userAccount;
     } catch (e: any) {

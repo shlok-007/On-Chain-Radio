@@ -102,7 +102,7 @@ export default function Dashboard({startingPage}: DashboardProps) {
           <Tables address={address} publicKey={publicKey} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <Profile address={address} />
+          <Profile />
         </CustomTabPanel>
       </Box>
     </div>

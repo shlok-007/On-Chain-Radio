@@ -41,7 +41,7 @@ const Auth: React.FC<AuthProps> = ({ onLoginSuccess }: AuthProps) => {
     const response = await window.aptos.signAndSubmitTransaction(payload);
     // wait for transaction
     await provider.waitForTransaction(response.hash);
-    let acc = await getUserAccount(account);
+    let acc = await getUserAccount(account ? account.address : "");
     if(typeof acc !== 'number'){
       onLoginSuccess(acc);
     }

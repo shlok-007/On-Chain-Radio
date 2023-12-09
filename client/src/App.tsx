@@ -40,7 +40,7 @@ function App() {
   }
 
   useEffect(() => {
-    getUserAccount(account).then((userAccount) => {
+    getUserAccount(account? account.address : null).then((userAccount) => {
       if (userAccount !== 0 && userAccount !== -1) {
         onLoginSuccess(userAccount);
       }
@@ -61,7 +61,8 @@ function App() {
           <Route path='/dashboard' element={<Dashboard startingPage={0} />} />
           <Route path='/subscribe' element={<Subscribe setUserAccount={setUserAccount}/>} />
           <Route path='/playsongs' element={<PlayRadio />} />
-          <Route path='/profile' element={<Dashboard startingPage={2}/>} />
+          <Route path='/myprofile' element={<Dashboard startingPage={2}/>} />
+          <Route path='/profile/:address?' element={<Profile/>} />
           <Route path='/learn-more' element={<LearnMore />} />
         </Route>
         <Route path='/test' element={<Test/>} />

@@ -30,7 +30,7 @@ const Hero: React.FC<HeroProps> = ({onLoginSuccess}) => {
 
   useEffect(() => {
     // console.log(wallet);
-    getUserAccount(account).then((userAccount) => {
+    getUserAccount(account ? account.address : "").then((userAccount) => {
       if (userAccount === 0) {
         navigate('/signup');
       }
