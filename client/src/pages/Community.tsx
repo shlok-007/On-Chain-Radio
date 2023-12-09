@@ -6,6 +6,15 @@ import PollModal from "../components/PollModal";
 import { CommunityParams } from "../utils/types";
 import { Provider, Network } from "aptos";
 
+const styles = {
+    gradientDiv: {
+      background: 'linear-gradient(to bottom, #030712, #0d1733)', // Adjust colors as needed
+      justifyContent: 'center',
+      alignItems: 'center',
+      color: 'white', // Text color on the gradient background
+    },
+  };
+
 const Community: React.FC = () => {
     const [votes, setVotes] = useState({for:3, against:2});
     const [polls, setPolls] = useState<(Poll | null)[]>([]);
@@ -104,7 +113,7 @@ const Community: React.FC = () => {
         console.log(polls);
     }, [polls]);
     return (
-        <div className="text-center">
+        <div className="text-center" style={styles.gradientDiv}>
             {/* Parameters */}
             <div className="grid md:grid-cols-4 sm:grid-cols-2 lg:w-3/4 m-auto">
                 <Parameter title= "Premium Subscription Price" value= { params ? params?.premium_price.toString()+" APT" : "1 APT"} />

@@ -27,13 +27,12 @@ const styles = {
     alignItems: 'center',
     color: 'white', // Text color on the gradient background
   },
-  midDiv: {
-    background: `linear-gradient(to bottom, #0d1733, #1b43b3) top,
-                 linear-gradient(to top, #FFB6C1, #122c75) bottom`, // Adjust colors as needed
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'white', // Text color on the gradient background
-  }
+    midDiv: {
+      background: 'linear-gradient(to bottom, #0d1733, #07226b)', // Adjust colors as needed
+      justifyContent: 'center',
+      alignItems: 'center',
+      color: 'white', // Text color on the gradient background
+    },
 }
 
 
@@ -82,7 +81,7 @@ export default function Dashboard({startingPage}: DashboardProps) {
   return (
     <div>
       <Box sx={{ width: "100%" }} >
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Box sx={{ borderBottom: 0 }}>
           <Tabs
             value={value}
             onChange={handleChange}
