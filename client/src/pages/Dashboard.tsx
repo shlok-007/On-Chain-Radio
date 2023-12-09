@@ -16,6 +16,23 @@ interface TabPanelProps {
   value: number;
 }
 
+const styles = {
+  dashboardTab: {
+    background: 'linear-gradient(to bottom, #030712, #061336)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+  },
+  tabText: {
+    color: 'white'
+  },
+  midDiv: {
+    background: 'linear-gradient(to bottom, #061336, #042b94)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+  }
+}
 
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -27,6 +44,7 @@ function CustomTabPanel(props: TabPanelProps) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
+      style={styles.midDiv}
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
@@ -61,16 +79,17 @@ export default function Dashboard({startingPage}: DashboardProps) {
   return (
     <div>
       <Box sx={{ width: "100%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "#061336" }}>
           <Tabs
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
             centered
+            style={styles.dashboardTab}
           >
-            <Tab icon={<DashboardIcon />} label="DashBoard" iconPosition="start" />
-            <Tab label="Transactions" icon={<ShowChartIcon />} iconPosition="start" />
-            <Tab icon={<Person2Icon />} label="Profile" iconPosition="start" />
+            <Tab icon={<DashboardIcon />} style={styles.tabText} label="DashBoard" iconPosition="start" />
+            <Tab label="Transactions" style={styles.tabText} icon={<ShowChartIcon />} iconPosition="start" />
+            <Tab icon={<Person2Icon />} style={styles.tabText} label="Profile" iconPosition="start" />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>

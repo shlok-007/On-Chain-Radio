@@ -26,7 +26,22 @@ interface CustomChartOptions {
   tension: number;
   plugins: {
     legend: {
-      position: "top" | "center" | "left" | "right" | "bottom" | "chartArea" | { [scaleId: string]: number } | undefined;
+      position?: "top" | "center" | "left" | "right" | "bottom" | "chartArea" | { [scaleId: string]: number } | undefined;
+      display?: boolean; // Add this property to control legend display
+    };
+  };
+  scales?: {
+    x?: {
+      beginAtZero?: boolean;
+      ticks?: {
+        color?: string;
+      };
+    };
+    y?: {
+      beginAtZero?: boolean;
+      ticks?: {
+        color?: string;
+      };
     };
   };
 }
@@ -37,6 +52,21 @@ export const options: CustomChartOptions = {
   plugins: {
     legend: {
       position: "top",
+      display: false, // Set display to false to hide the legend
+    },
+  },
+  scales: {
+    x: {
+      beginAtZero: true,
+      ticks: {
+        color: 'white',
+      },
+    },
+    y: {
+      beginAtZero: true,
+      ticks: {
+        color: 'white',
+      },
     },
   },
 };
@@ -65,7 +95,7 @@ export const data = {
         15000, 10000, 14000, 11000, 16000, 12000, 8000, 14000, 11000, 12000,
         23000, 12000,
       ],
-      borderColor: "rgb(255, 99, 132)",
+      borderColor: "rgb(255, 255, 255)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
     },
   ],
