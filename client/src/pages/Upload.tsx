@@ -10,6 +10,16 @@ interface UploadProps {
   setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
 }
 
+
+const styles = {
+  gradientDiv: {
+    background: 'linear-gradient(to bottom, #030712, #329ec9)', // Adjust colors as needed
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white', // Text color on the gradient background
+  }
+}
+
 const Upload: React.FC<UploadProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
   const pinataConfig = {
     root: 'https://api.pinata.cloud',
@@ -43,9 +53,9 @@ const testPinataConnection = async() => {
     setRevenue((prev) => prev.slice(0, -1));
   };
   return (
-    <div>
+    <div style={styles.gradientDiv}>
       <div className="text-center">
-        <form className="w-3/4 mx-auto my-10 py-5">
+        <form className="w-3/4 mx-auto py-5">
           <p className="w-full text-3xl sm:text-4xl font-bold m-auto">Upload Your Song</p>
           <UploadForm />
           <p className="w-full text-3xl sm:text-4xl font-bold m-auto pt-16">Revenue Sharing</p>

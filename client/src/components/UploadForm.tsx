@@ -3,6 +3,7 @@ import { useState,useEffect } from "react";
 import axios from 'axios';
 import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
 
+
 const UploadForm: React.FC = () => {
     const [pinnedFiles, setPinnedFiles] = useState([]);
     const [pinnedFiles1, setPinnedFiles1] = useState([]);
@@ -176,24 +177,24 @@ const UploadForm: React.FC = () => {
     return (
         <div>
             <div className="grid md:grid-cols-2 sm:grid-cols-1">
-                <div className="md:px-10 sm:px-5 py-5">
+                <div className="md:px-10 sm:px-5 py-5 md:col-span-2">
                     <label className="block text-left m-2">Song name:</label>
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: Dandelions etc." onChange={(e)=>{ setSong(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
-                    <label className="block text-left m-2">Vocalist</label>
+                    <label className="block text-left m-2">Name of the Vocalist</label>
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setVocalist(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
-                    <label className="block text-left m-2">lyricist</label>
+                    <label className="block text-left m-2">Name of the Lyricist</label>
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setlyricist(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
-                    <label className="block text-left m-2">Musician</label>
+                    <label className="block text-left m-2">Name of the Musician</label>
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setMusician(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
-                    <label className="block text-left m-2">Audio_Engineer</label>
+                    <label className="block text-left m-2">Name of the Audio Engineer</label>
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setAudio(e.target.value) }}></input>
                 </div>
             </div>
@@ -245,7 +246,7 @@ const UploadForm: React.FC = () => {
                     </div>
                 </div>
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-auto md:col-span-2"
                     onClick={handleSubmit}
                 >
                     Submit
