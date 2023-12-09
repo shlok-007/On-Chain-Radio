@@ -15,6 +15,15 @@ interface NavbarProps {
   onLogout: () => void,
 }
 
+const styles = {
+  gradientDiv: {
+    background: 'linear-gradient(to bottom, #030712, #0d1733)', // Adjust colors as needed
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white', // Text color on the gradient background
+  },
+};
+
 const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
   const navigate = useNavigate();
   const [navbar, setNavbar] = useState(false);
@@ -145,7 +154,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
                       Upload
                     </a>
                   </li>
-                } */}
+                }
                 {
                   login &&
                   <li className="my-4">

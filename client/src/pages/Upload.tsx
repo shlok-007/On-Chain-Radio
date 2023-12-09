@@ -4,10 +4,6 @@ import { RevenueForm } from "../components/RevenueForm";
 import axios from 'axios';
 
 interface UploadProps {
-  login: boolean,
-  setLogin: React.Dispatch<React.SetStateAction<boolean>>,
-  subscribe: boolean,
-  setSubscribe: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const styles = {
@@ -19,27 +15,27 @@ const styles = {
   },
 };
 
-const Upload: React.FC<UploadProps> = ({ login, setLogin, subscribe, setSubscribe }) => {
-  const [revenue, setRevenue] = useState([<RevenueForm />]);
-  const addPerson: React.MouseEventHandler<HTMLButtonElement> = () => {
-    setRevenue((pre) => {
-      return [...pre, <RevenueForm />];
-    });
-  };
-  const removePerson: React.MouseEventHandler<HTMLButtonElement> = () => {
-    setRevenue((prev) => prev.slice(0, -1));
-  };
+const Upload: React.FC<UploadProps> = ({  }) => {
+  // const [revenue, setRevenue] = useState([<RevenueForm />]);
+  // const addPerson: React.MouseEventHandler<HTMLButtonElement> = () => {
+  //   setRevenue((pre) => {
+  //     return [...pre, <RevenueForm />];
+  //   });
+  // };
+  // const removePerson: React.MouseEventHandler<HTMLButtonElement> = () => {
+  //   setRevenue((prev) => prev.slice(0, -1));
+  // };
   return (
     <div style={styles.gradientDiv}>
       <div className="text-center">
         <form className="w-3/4 mx-auto py-5">
           <p className="w-full text-3xl sm:text-4xl font-bold m-auto">Upload Your Song</p>
           <UploadForm />
-          <p className="w-full text-3xl sm:text-4xl font-bold m-auto pt-16">Revenue Sharing</p>
-          {revenue}
+          {/* <p className="w-full text-3xl sm:text-4xl font-bold m-auto pt-16">Revenue Sharing</p> */}
+          {/* {revenue} */}
 
 
-          <div className="flex gap-2 justify-end py-5">
+          {/* <div className="flex gap-2 justify-end py-5">
             <div className="text-right">
               <button
                 type="button"
@@ -59,7 +55,7 @@ const Upload: React.FC<UploadProps> = ({ login, setLogin, subscribe, setSubscrib
                 Remove
               </button>
             </div>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>

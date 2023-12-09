@@ -13,6 +13,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({}) => {
   const [like, setLike] = useState(false);
   const location = useLocation();
   const genre = location.state?.id || 'No genre Selected';
+  const navigate = useNavigate();
   console.log(genre)
 
   return (

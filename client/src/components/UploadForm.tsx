@@ -185,7 +185,7 @@ const UploadForm: React.FC = () => {
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setVocalist(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
-                    <label className="block text-left m-2">lyricist</label>
+                    <label className="block text-left m-2">Lyricist</label>
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setlyricist(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">

@@ -8,7 +8,6 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useAccountContext } from "../utils/context";
 import { Account } from "../utils/types";
 import getUserAccount from "../utils/getUserAccount";
-import { useNavigate } from "react-router-dom";
 
 interface HeroProps {
   onLoginSuccess: (account:Account) => void,
