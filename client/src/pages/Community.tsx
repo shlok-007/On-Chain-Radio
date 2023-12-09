@@ -99,6 +99,10 @@ const Community: React.FC = () => {
     useEffect(() => {
         fetchCommunityParams();
     }, []);
+
+    useEffect(() => {
+        console.log(polls);
+    }, [polls]);
     return (
         <div className="text-center">
             {/* Parameters */}
@@ -108,17 +112,18 @@ const Community: React.FC = () => {
                 <Parameter title= "Artist's cut on tips" value= { params ? params?.artist_gen_cut.toString()+"%" : "90%"} />
                 <Parameter title= "Report Threshold" value= { params ? params?.report_threshold.toString() : "20"} />
             </div>
-            <PollModal />
+            <PollModal setPolls={setPolls} />
             {/* <Polls question="What is your faviorite Song" options={["Tu hai Kahan", "Rap God", "Sham", "Faded"]} time={10} votes={10} optionVotes={[2, 2, 3, 3]} /> */}
-            {/* {
+            {
                 <div>
                 {polls.map((pollItem, index) => (
                   <div key={index}>
-                    <Polls question={pollItem.question} time={pollItem.time} votes={votes} setVotes={setVotes} />
+                    {pollItem !== null ? <Polls question={pollItem?.justification} time={pollItem?.end_time} votes_for={pollItem?.votes_for} votes_against={pollItem?.votes_against} setPolls={setPolls} polls={polls} index={index} /> : <></>}
                   </div>
                 ))}
               </div>
-            } */}
+            }
+            
         </div>
     )
 }

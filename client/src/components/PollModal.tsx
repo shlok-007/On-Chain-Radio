@@ -14,10 +14,10 @@ interface FormData {
 }
 
 interface PollModalProps {
-  
+  setPolls: React.Dispatch<React.SetStateAction<(Poll | null)[]>>
 }
 
-const PollModal:React.FC<PollModalProps> = ({}) => {
+const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -36,6 +36,18 @@ const PollModal:React.FC<PollModalProps> = ({}) => {
         [key]: key === 'justification' ? e.target.value : parseInt(e.target.value, 10),
       });
     };
+
+    const handleSelect = (
+      e: React.ChangeEvent<HTMLSelectElement>
+    ) => {
+      setFormData(() => {
+        const value = e.target.value;
+       return ({
+        ...formData,
+        poll_type: parseInt(value)
+       })
+      })
+    }
     
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
@@ -53,6 +65,19 @@ const PollModal:React.FC<PollModalProps> = ({}) => {
       //         [...pre, data]
       //     )
       // })
+      setPolls((prev: (Poll | null)[]) => {
+        const newPoll: (Poll | null) = {
+          proposed_cut: formData.proposed_value,
+          justification: formData.justification,
+          votes_for: 0,
+          votes_against: 0,
+          end_time: formData.poll_type,
+          voters: []
+        }
+        return(
+          [...prev, newPoll]
+        )
+      })
       handleClose();
       console.log('Form submitted:', formData);
     };
@@ -77,14 +102,21 @@ const PollModal:React.FC<PollModalProps> = ({}) => {
         <label htmlFor="hours" className="block text-sm font-medium text-gray-600">
           Poll For
         </label>
-        <input
+        {/* <input
           type="number"
           id="hours"
           value={formData.poll_type}
           onChange={(e) => handleInputChange(e, 'poll_type')}
           required
           className="mt-1 p-2.5 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500"
-        />
+        /> */}
+        <select id="countries" onChange={handleSelect} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+          <option selected>Select any on option</option>
+          <option value={1}>Option 1</option>
+          <option value={2}>Option 2</option>
+          <option value={3}>Option 3</option>
+          <option value={4}>Option 4</option>
+        </select>
         
       </div>
       <div className="mb-4">

@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { UploadForm } from "../components/UploadForm";
-import { RevenueForm } from "../components/RevenueForm";
-import axios from 'axios';
+// import { RevenueForm } from "../components/RevenueForm";
+// import axios from 'axios';
 
 interface UploadProps {
 }

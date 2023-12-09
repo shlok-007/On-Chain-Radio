@@ -3,21 +3,19 @@ import Timer from "./Timer";
 import { Alert, AlertTitle } from "@mui/material";
 import { Bar } from 'react-chartjs-2';
 import BarGraph from "./BarGraph";
+import { Poll } from "../utils/types";
 
 interface PollProps {
     question: string,
-    votes: {
-        for: number,
-        against: number
-    },
-    setVotes: React.Dispatch<SetStateAction<{
-        for: number,
-        against: number
-    }>>,
-    time: number
+    votes_for: number
+    votes_against: number,
+    time: number,
+    index: number,
+    polls: (Poll | null)[],
+    setPolls: React.Dispatch<React.SetStateAction<(Poll | null)[]>>
 }
 
-const Polls: React.FC<PollProps> = ({ question, votes, setVotes, time }) => {
+const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, setPolls, polls, index }) => {
     const [show, setShow] = useState(false);
     const [timeUp, setTimeUp] = useState(false);
     const [state, setState] = useState("");
@@ -31,16 +29,32 @@ const Polls: React.FC<PollProps> = ({ question, votes, setVotes, time }) => {
         event.preventDefault();
         if (state !== "") setShow(true);
         if (state !== "") {
-            if (state === 'for') setVotes(() => {
-                const obj = votes;
-                obj.for++;
-                return obj;
-            });
-            else setVotes(() => {
-                const obj = votes;
-                obj.against++;
-                return obj;
-            });
+            if (state === 'for') {
+                setPolls((prevPolls) => {
+                    const updatedPolls = [...prevPolls];
+                    const pollToUpdate = updatedPolls[index];
+
+                    if (pollToUpdate !== null) {
+                        // Update the votes_for property
+                        pollToUpdate.votes_for += 1;
+                    }
+
+                    return updatedPolls;
+                    });
+            }
+            else {
+                setPolls((prevPolls) => {
+                    const updatedPolls = [...prevPolls];
+                    const pollToUpdate = updatedPolls[index];
+
+                    if (pollToUpdate !== null) {
+                        // Update the votes_for property
+                        pollToUpdate.votes_against += 1;
+                    }
+
+                    return updatedPolls;
+                    });
+            }
         }
     }
 
@@ -48,12 +62,12 @@ const Polls: React.FC<PollProps> = ({ question, votes, setVotes, time }) => {
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-2 mb-4 md:w-3/4 sm:w-full m-auto">
             <div>
                 <p className="inline-block w-3/4 text-lg font-bold">{question}</p>
-                <Timer initialTime={time} onTimerEnd={() => setTimeUp(true)} />
+                <Timer initialTime={time ? time : 0} onTimerEnd={() => setTimeUp(true)} />
             </div>
 
             {/* options */}
 
-            {show && <BarGraph votes={votes} />}
+            {show && <BarGraph votes_against={votes_against} votes_for={votes_for} />}
 
             <form className="w-3/4 m-auto my-4">
                 <div className="flex items-center mb-4">

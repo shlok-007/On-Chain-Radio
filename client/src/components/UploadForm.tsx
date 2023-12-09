@@ -3,7 +3,6 @@ import { useState,useEffect } from "react";
 import axios from 'axios';
 import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
 
-
 const UploadForm: React.FC = () => {
     const [pinnedFiles, setPinnedFiles] = useState([]);
     const [pinnedFiles1, setPinnedFiles1] = useState([]);
@@ -182,7 +181,7 @@ const UploadForm: React.FC = () => {
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: Dandelions etc." onChange={(e)=>{ setSong(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
-                    <label className="block text-left m-2">Name of the Vocalist</label>
+                    <label className="block text-left m-2">Vocalist</label>
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setVocalist(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
@@ -190,11 +189,11 @@ const UploadForm: React.FC = () => {
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setlyricist(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
-                    <label className="block text-left m-2">Name of the Musician</label>
+                    <label className="block text-left m-2">Musician</label>
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setMusician(e.target.value) }}></input>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
-                    <label className="block text-left m-2">Name of the Audio Engineer</label>
+                    <label className="block text-left m-2">Audio_Engineer</label>
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="Eg: AUR etc." onChange={(e)=>{ setAudio(e.target.value) }}></input>
                 </div>
             </div>
@@ -220,8 +219,8 @@ const UploadForm: React.FC = () => {
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="If yes, enter the amount."></input> */}
                 </div>
             </div>
-            <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-10 md:gap-20 md:px-10 sm:px-5 py-5">
-                <div className="extraOutline p-10 bg-gray-200 w-full m-auto rounded-lg py-5">
+            <div className="grid grid-cols-2 gap-10 md:gap-20 md:px-10 sm:px-5 py-5">
+                <div className="extraOutline p-10 bg-gray-200 w-full m-auto col-span-2 lg:col-span-1 rounded-lg py-5">
                     <div className="file_upload p-5 relative border-4 border-dotted border-gray-300 rounded-lg w-full">
                         <svg className="text-indigo-500 w-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                         <div className="input_field flex flex-col w-max mx-auto text-center">
@@ -233,7 +232,7 @@ const UploadForm: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="extraOutline p-10 bg-gray-200 w-full m-auto rounded-lg py-5">
+                <div className="extraOutline p-10 bg-gray-200 w-full col-span-2 lg:col-span-1 m-auto rounded-lg py-5">
                     <div className="file_upload p-5 relative border-4 border-dotted border-gray-300 rounded-lg w-full">
                         <svg className="text-indigo-500 w-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                         <div className="input_field flex flex-col w-max mx-auto text-center">
@@ -246,7 +245,7 @@ const UploadForm: React.FC = () => {
                     </div>
                 </div>
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-auto md:col-span-2"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded col-span-2 m-auto"
                     onClick={handleSubmit}
                 >
                     Submit

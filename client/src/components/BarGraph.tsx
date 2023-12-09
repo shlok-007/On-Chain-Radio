@@ -4,13 +4,11 @@ import { Chart, registerables } from 'chart.js';  // Import Chart and registerab
 Chart.register(...registerables);  // Register the necessary components
 
 interface MyChartProps {
-    votes: {
-        for: number,
-        against: number
-    }
+    votes_for: number|undefined,
+    votes_against: number|undefined
 }
 
-const MyChart: React.FC<MyChartProps> = ({ votes }) => {
+const MyChart: React.FC<MyChartProps> = ({ votes_against, votes_for }) => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
 
   const data = {
@@ -23,7 +21,7 @@ const MyChart: React.FC<MyChartProps> = ({ votes }) => {
         borderWidth: 1,
         hoverBackgroundColor: 'rgba(75,192,192,0.4)',
         hoverBorderColor: 'rgba(75,192,192,1)',
-        data: [votes.for, votes.against],
+        data: [votes_for, votes_against],
       },
     ],
   };
