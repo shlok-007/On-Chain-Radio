@@ -2,7 +2,7 @@ import ladyMusic from "../assets/ladyMusic.png";
 import { useState, useEffect } from "react";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HashLink } from 'react-router-hash-link';
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useAccountContext } from "../utils/context";

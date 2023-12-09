@@ -9,6 +9,15 @@ interface NavBarDashboardProps {
   indexProp: Number
 }
 
+const styles = {
+  gradientDiv: {
+    background: 'linear-gradient(to bottom, #FFB6C1, #87CEEB)', // Adjust colors as needed
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white', // Text color on the gradient background
+  }
+}
+
 const navLinks = [
   {
     name: "Dashboard",

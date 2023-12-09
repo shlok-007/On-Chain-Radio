@@ -16,6 +16,26 @@ interface TabPanelProps {
   value: number;
 }
 
+const styles = {
+  tabText: {
+    color: '#ffffff'
+  },
+  gradientDiv: {
+    background: 'linear-gradient(to bottom, #030712, #0d1733)', // Adjust colors as needed
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white', // Text color on the gradient background
+  },
+  midDiv: {
+    background: `linear-gradient(to bottom, #0d1733, #1b43b3) top,
+                 linear-gradient(to top, #FFB6C1, #122c75) bottom`, // Adjust colors as needed
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white', // Text color on the gradient background
+  }
+}
+
 
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -27,6 +47,7 @@ function CustomTabPanel(props: TabPanelProps) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
+      style={styles.midDiv}
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
@@ -60,17 +81,18 @@ export default function Dashboard({startingPage}: DashboardProps) {
 
   return (
     <div>
-      <Box sx={{ width: "100%" }}>
+      <Box sx={{ width: "100%" }} >
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
             centered
+            style={styles.gradientDiv}
           >
-            <Tab icon={<DashboardIcon />} label="DashBoard" iconPosition="start" />
-            <Tab label="Transactions" icon={<ShowChartIcon />} iconPosition="start" />
-            <Tab icon={<Person2Icon />} label="Profile" iconPosition="start" />
+            <Tab icon={<DashboardIcon />} style={styles.tabText} label="DashBoard" iconPosition="start" />
+            <Tab label="Transactions" style={styles.tabText} icon={<ShowChartIcon />} iconPosition="start" />
+            <Tab icon={<Person2Icon />} style={styles.tabText} label="Profile" iconPosition="start" />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
@@ -80,7 +102,7 @@ export default function Dashboard({startingPage}: DashboardProps) {
           <Tables address={address} publicKey={publicKey} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <Profile />
+          <Profile address={address} />
         </CustomTabPanel>
       </Box>
     </div>

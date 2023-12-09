@@ -145,7 +145,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
                       Upload
                     </a>
                   </li>
-                }
+                } */}
                 {
                   login &&
                   <li className="my-4">
