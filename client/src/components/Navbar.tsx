@@ -122,7 +122,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
                     </a>
                   </li>
                 }
-                {
+                {/* {
                   login &&
                   <li className="my-4">
                     <a
@@ -133,7 +133,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
                       Dashboard
                     </a>
                   </li>
-                }
+                } */}
                 {
                   login &&
                   <li className="my-4">

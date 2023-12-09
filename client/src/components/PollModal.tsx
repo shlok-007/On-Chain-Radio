@@ -5,75 +5,57 @@ import Modal from "@mui/material/Modal";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWallet } from "@fortawesome/free-solid-svg-icons";
+import { Poll } from "../utils/types";
 
 interface FormData {
-    title: string;
-    hours: number;
-    minutes: number;
-  }
+  proposed_value: number,
+  justification: string,
+  poll_type: number
+}
 
-  interface PollModalProps {
-    poll: {
-        question: string;
-        time: number;
-        votes: {
-          for: number;
-          against: number;
-        };
-      }[];
-      setPoll: React.Dispatch<
-        React.SetStateAction<
-          {
-            question: string;
-            time: number;
-            votes: {
-              for: number;
-              against: number;
-            };
-          }[]
-        >
-      >;
-  }
+interface PollModalProps {
+  
+}
 
-const PollModal:React.FC<PollModalProps> = ({poll, setPoll}) => {
+const PollModal:React.FC<PollModalProps> = ({}) => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [formData, setFormData] = useState<FormData>({
-        title: '',
-        hours: 0,
-        minutes: 0,
+      proposed_value: 0,
+      justification: '',
+      poll_type: 0
+    });
+    
+    const handleInputChange = (
+      e: React.ChangeEvent<HTMLInputElement>,
+      key: keyof FormData
+    ) => {
+      setFormData({
+        ...formData,
+        [key]: key === 'justification' ? e.target.value : parseInt(e.target.value, 10),
       });
+    };
     
-      const handleInputChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        key: keyof FormData
-      ) => {
-        setFormData({
-          ...formData,
-          [key]: key === 'title' ? e.target.value : parseInt(e.target.value, 10),
-        });
-      };
-    
-      const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // send form data
-        const data = {
-            question: formData.title,
-            time: formData.hours * 3600 + formData.minutes * 60,
-            votes: {
-                for:0,
-                against: 0
-            }
-        }
-        setPoll((pre) => {
-            return (
-                [...pre, data]
-            )
-        })
-        handleClose();
-        console.log('Form submitted:', formData);
-      };
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      // send form data
+      // const data = {
+      //     question: formData.title,
+      //     time: formData.hours * 3600 + formData.minutes * 60,
+      //     votes: {
+      //         for:0,
+      //         against: 0
+      //     }
+      // }
+      // setPoll((pre) => {
+      //     return (
+      //         [...pre, data]
+      //     )
+      // })
+      handleClose();
+      console.log('Form submitted:', formData);
+    };
 
   return (
     <div>
@@ -92,40 +74,41 @@ const PollModal:React.FC<PollModalProps> = ({poll, setPoll}) => {
         <div className="text-center">
             <p className="text-xl font-bold">Create Poll</p>
         </div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-600">
-          Title:
-        </label>
-        <input
-          type="text"
-          id="title"
-          value={formData.title}
-          onChange={(e) => handleInputChange(e, 'title')}
-          required
-          className="mt-1 p-2.5 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500"
-        />
-      </div>
-      <div className="mb-4">
         <label htmlFor="hours" className="block text-sm font-medium text-gray-600">
-          Hours:
+          Poll For
         </label>
         <input
           type="number"
           id="hours"
-          value={formData.hours}
-          onChange={(e) => handleInputChange(e, 'hours')}
+          value={formData.poll_type}
+          onChange={(e) => handleInputChange(e, 'poll_type')}
+          required
+          className="mt-1 p-2.5 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500"
+        />
+        
+      </div>
+      <div className="mb-4">
+        <label htmlFor="justification" className="block text-sm font-medium text-gray-600">
+          Why ?
+        </label>
+        <input
+          type="text"
+          id="justification"
+          value={formData.justification}
+          onChange={(e) => handleInputChange(e, 'justification')}
           required
           className="mt-1 p-2.5 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="minutes" className="block text-sm font-medium text-gray-600">
-          Minutes:
+        <label htmlFor="proposed_value" className="block text-sm font-medium text-gray-600">
+          Proposed Value
         </label>
         <input
           type="number"
           id="minutes"
-          value={formData.minutes}
-          onChange={(e) => handleInputChange(e, 'minutes')}
+          value={formData.proposed_value}
+          onChange={(e) => handleInputChange(e, 'proposed_value')}
           required
           className="mt-1 p-2.5 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500"
         />

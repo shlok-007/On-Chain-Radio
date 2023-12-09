@@ -13,3 +13,19 @@ export interface Bio {
     profession: string,
     about: string,
 }
+
+export interface CommunityParams {
+    artist_premium_cut: number,
+    artist_gen_cut: number,
+    premium_price: number,
+    report_threshold: number,
+}
+
+export interface Poll {
+    proposed_cut: number,
+    justification: string,
+    votes_for: number,
+    votes_against: number,
+    end_time: number,
+    voters: string[]
+}
