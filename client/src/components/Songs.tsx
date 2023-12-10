@@ -2,12 +2,48 @@ import React from "react";
 import FreeCard from "./FreeCard";
 import PremiumCard from "./PremiumCard";
 import { useAccountContext } from "../utils/context";
+import { Provider, Network } from "aptos";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import  { useState, useEffect } from "react";
+
 
 interface SongsProps {
 }
 
+
+
 const Songs: React.FC<SongsProps> = ({  }) => {
   let login = useAccountContext() !== null;
+  const provider = new Provider(Network.TESTNET);
+  const { account} = useWallet();
+  const[free,setFree]=useState([]);
+  const[pre,setPre]=useState([]);
+
+  const fetchList = async () => {
+    const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST;
+    try {
+      const SongResource = await provider.getAccountResource(
+        moduleAddress?? '',
+        `${moduleAddress}::songStore::SongStore`
+      );
+      console.log('SongResource:', SongResource);
+      // if (SongResource && SongResource?.data) {
+      //   setFree(SongResource.data?.free_songs?.songs);
+      // }
+      // if (SongResource && SongResource?.data?.premium_songs) {
+      //   setPre(SongResource.premium_songs);
+      // }
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchList();
+  }, []);
+  
+
+  //mapping of each song on basis of there suscrip that is paid or not paid
 
   return (
     <div>
