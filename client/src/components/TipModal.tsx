@@ -71,7 +71,7 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
     <div>
       <div className="grid-cols-2">
         <div>
-          <p>22</p>
+          <p>{currentSong.total_tips}</p>
           <p>Total Tips</p>
         </div>
       <Button onClick={handleOpen}>

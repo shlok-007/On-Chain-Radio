@@ -217,8 +217,8 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
     let songData = await provider.getTableItem(songTableHandle, {
       key_type: key_type,
       value_type: `${moduleAddress}::songStore::Song`,
-      key: key_type === "u8" ? sidx : `${sidx}`  // Uncomment later
-      // key: 4
+      // key: key_type === "u8" ? sidx : `${sidx}`  // Uncomment later
+      key: 0
       });
       setCurrentSong((songData as any));
       if(songData.premium && !isUserPremium) setAuthorized(false);
@@ -240,7 +240,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
   return (
     <div className="h-screen bg-[#7CA4AE]">
       {report && <ReportModal report={report} setReport={setReport} />}
-      {sub && <SubscribeModal onClose={() => setSub(false)}/>}
+      {!authorized && <SubscribeModal onClose={() => setSub(false)}/>}
       <div className="bg-[#7CA4AE] font-sans grid place-items-center py-12">
         <div className="bg-gray-800 md:grid md:grid-cols-2 rounded-md overflow-hidden mx-2 ">
 
@@ -332,16 +332,16 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
               </audio>  */}
               
 
-              {/* <audio ref={audioPlayerRef} 
+              <audio ref={audioPlayerRef} 
               autoPlay 
-              controls
+              // controls
               muted = {!authorized}
               // style={{ display: 'none' }}
               >
               <source src="" type="audio/mp3" />
-              {/* <source src="https://ipfs.io/ipfs/bafybeifc2tqqiltfieu7jwesvc4rq4xbzxxlgv5u7akqwbawdz5kyksatm" type="audio/mp3" /> */}
-              {/* Your browser does not support the audio element.
-              </audio> */} 
+              {/*<source src="https://ipfs.io/ipfs/bafybeifc2tqqiltfieu7jwesvc4rq4xbzxxlgv5u7akqwbawdz5kyksatm" type="audio/mp3" /> */}
+              Your browser does not support the audio element.
+              </audio>
 
               <div className="flex items-center gap-5 my-4 md:mb-8">
                 <div className="text-sm opacity-80">{playbakTime}</div>

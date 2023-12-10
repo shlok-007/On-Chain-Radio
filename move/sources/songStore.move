@@ -318,6 +318,7 @@ module addr_on_chain_radio::songStore {
         aptos_account::transfer(tipper, song.artist_wallet_address, (tip_amount * artist_cut) / 100);
         aptos_account::transfer(tipper, @admin, tip_amount - ((tip_amount * artist_cut) / 100));
         song.total_tips = song.total_tips + tip_amount;
+        // table::upsert(&mut genreLib.songs, song_store_ID, *freeze(song));
         add_to_trending_songs(&mut song_store.trending_songs, *song);
     }
 
