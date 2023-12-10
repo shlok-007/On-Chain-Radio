@@ -5,6 +5,7 @@ import { Parameter } from "../components/Parameter";
 import PollModal from "../components/PollModal";
 import { CommunityParams } from "../utils/types";
 import { Provider, Network } from "aptos";
+import { Poll } from "../utils/types";
 
 const styles = {
     gradientDiv: {
@@ -35,36 +36,9 @@ const Community: React.FC = () => {
         }
     };
 
-    // struct Poll has key, drop {
-    //     proposed_cut: u8,
-    //     justification: String,
-    //     votes_for: u64,
-    //     votes_against: u64,
-    //     end_time: u64,
-    //     voters: vector<address>
-    // }
-
-    interface Poll {
-        proposed_cut: number,
-        justification: string,
-        votes_for: number,
-        votes_against: number,
-        end_time: number,
-        voters: string[]
-    }
-
     const fetchPolls = async () => {
         let pollsResource: (Poll | null)[] = [];
         let pollResource;
-        try {
-            pollResource = await provider.getAccountResource(
-                moduleAddress || "",
-                `${moduleAddress}::community::Poll4PremiumPrice`,
-                );
-            pollsResource.push((pollResource as any).data);
-        } catch (error) {
-            pollsResource.push(null);
-        }
         try {
             pollResource = await provider.getAccountResource(
                 moduleAddress || "",
@@ -74,11 +48,20 @@ const Community: React.FC = () => {
         } catch (error) {
             pollsResource.push(null);
         }
-
         try {
             pollResource = await provider.getAccountResource(
                 moduleAddress || "",
                 `${moduleAddress}::community::Poll4ArtistGenCut`,
+                );
+            pollsResource.push((pollResource as any).data);
+        } catch (error) {
+            pollsResource.push(null);
+        }
+
+        try {
+            pollResource = await provider.getAccountResource(
+                moduleAddress || "",
+                `${moduleAddress}::community::Poll4PremiumPrice`,
                 );
             pollsResource.push((pollResource as any).data);
         } catch (error) {
@@ -95,6 +78,7 @@ const Community: React.FC = () => {
             pollsResource.push(null);
         }
         finally {
+            // console.log(pollsResource);
             setPolls(pollsResource);
         }
     }
@@ -111,14 +95,15 @@ const Community: React.FC = () => {
     }, []);
 
     useEffect(() => {
-       fetchPolls()
         console.log(polls);
-    }, []);
+    }
+    , [polls]);
+
     return (
         <div className="text-center" style={styles.gradientDiv}>
             {/* Parameters */}
             <div className="grid md:grid-cols-4 sm:grid-cols-2 lg:w-3/4 m-auto">
-                <Parameter title= "Premium Subscription Price" value= { params ? params?.premium_price.toString()+" APT" : "1 APT"} />
+                <Parameter title= "Premium Subscription Price" value= { params ? (params?.premium_price / 100000000).toString()+" APT" : "1 APT"} />
                 <Parameter title= "Artists' cut on subscription" value= { params ? params?.artist_premium_cut.toString()+"%" : "60%"} />
                 <Parameter title= "Artist's cut on tips" value= { params ? params?.artist_gen_cut.toString()+"%" : "90%"} />
                 <Parameter title= "Report Threshold" value= { params ? params?.report_threshold.toString() : "20"} />
@@ -129,7 +114,7 @@ const Community: React.FC = () => {
                 <div>
                 {polls.map((pollItem, index) => (
                   <div key={index}>
-                    {pollItem !== null && index < 4 ? <Polls question={pollItem?.justification} time={pollItem?.end_time} votes_for={pollItem?.votes_for} votes_against={pollItem?.votes_against} setPolls={setPolls} polls={polls} index={index} /> : <></>}
+                    {pollItem !== null ? <Polls question={pollItem.justification} proposed_value={pollItem.proposed_value} time={pollItem.end_time} votes_for={pollItem.votes_for} votes_against={pollItem.votes_against} setPolls={setPolls} polls={polls} index={index} /> : <></>}
                   </div>
                 ))}
                 </div>

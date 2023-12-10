@@ -22,7 +22,7 @@ export interface CommunityParams {
 }
 
 export interface Poll {
-    proposed_cut: number,
+    proposed_value: number,
     justification: string,
     votes_for: number,
     votes_against: number,

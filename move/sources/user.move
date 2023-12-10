@@ -39,7 +39,8 @@ module addr_on_chain_radio::user{
     struct Bio has store, drop {
         location: String,
         profession: String,
-        about: String
+        about: String,
+        profile_img_hash: String
     }
 
     public entry fun create_account(account: &signer, _name: String, _email: String){
@@ -52,7 +53,8 @@ module addr_on_chain_radio::user{
             bio: Bio{
                 location: utf8(b""),
                 profession: utf8(b""),
-                about: utf8(b"")
+                about: utf8(b""),
+                profile_img_hash: utf8(b"")
             },
             premium: false,
             subscription_expiry: 0
@@ -101,13 +103,14 @@ module addr_on_chain_radio::user{
         acc.premium = false;
     }
 
-    public entry fun update_bio(account: &signer, _location: String, _profession: String, _about: String) acquires Account {
+    public entry fun update_bio(account: &signer, _location: String, _profession: String, _about: String, _profile_img_hash: String) acquires Account {
         let signer_address = signer::address_of(account);
         assert!(exists<Account>(signer_address), NO_ACCOUNT);
         let acc = borrow_global_mut<Account>(signer_address);
         acc.bio.location = _location;
         acc.bio.profession = _profession;
         acc.bio.about = _about;
+        acc.bio.profile_img_hash = _profile_img_hash;
     }
 
     public entry fun remove_account(account: &signer) acquires Account {

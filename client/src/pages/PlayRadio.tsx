@@ -200,8 +200,8 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
     let sidx;
     // if(songIndex === -1){  setSongIndex(seed % num_songs); sidx = seed % num_songs; }
     // else {setSongIndex((songIndex + 1) % num_songs); sidx = (songIndex + 1) % num_songs;}
-    if(songIndex === -1){  setSongIndex(seed % num_songs); sidx = 3; }
-    else {setSongIndex((songIndex + 1) % 2 +3); sidx = (songIndex + 1) % 2 + 3;}
+    if(songIndex === -1){  setSongIndex(1); sidx = 4; }
+    else {setSongIndex((songIndex + 1) % 2); sidx = (songIndex + 1) % 2 + 3;}
 
     // sidx = (seed % 2) + 3;
     // console.log(seed);

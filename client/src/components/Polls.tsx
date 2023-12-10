@@ -9,6 +9,7 @@ import { Provider, Network } from "aptos";
 
 interface PollProps {
     question: string,
+    proposed_value: number,
     votes_for: number
     votes_against: number,
     time: number,
@@ -17,11 +18,12 @@ interface PollProps {
     setPolls: React.Dispatch<React.SetStateAction<(Poll | null)[]>>
 }
 
-const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, setPolls, polls, index }) => {
+const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, votes_for, time, setPolls, polls, index }) => {
     const [show, setShow] = useState(false);
     const [timeUp, setTimeUp] = useState(false);
     const provider = new Provider(Network.TESTNET);
     const [state,setState]=useState("");
+    const pollMap = ["Poll for Artist Premium Cut", "Poll for Artist Tip Cut", "Poll for Subscription Price", "Poll for Report Threshold"];
     //const [for,setFor]=useState(false);
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -30,6 +32,26 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
+        try {
+          const payload = {
+            type: "entry_function_payload",
+            function: `${moduleAddress}::community::vote`,
+            //give a state using useState of boolean type for true if for and flase if against??
+            arguments: [state === 'for',index],
+            type_arguments: [],
+          };
+          console.log(payload);
+        // sign and submit transaction to chain
+        const response =await window.aptos.signAndSubmitTransaction(payload);
+        await provider.waitForTransaction(response.hash);
+        console.log(response);
+        } catch (error) {
+          console.error(error);
+          return;
+        }
+
         if (state !== "") setShow(true);
         if (state !== "") {
             if (state === 'for') {
@@ -58,7 +80,7 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
                     return updatedPolls;
                     });
             }
-            await handle(event);
+            // await handle(event);
         }
     }
     const handleS = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -69,7 +91,7 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
             type: "entry_function_payload",
             function: `${moduleAddress}::community::end_poll`,
             //here we require poll type??
-            arguments: [index+1],
+            arguments: [index],
             type_arguments: [],
           };
         // sign and submit transaction to chain
@@ -93,9 +115,10 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
             type: "entry_function_payload",
             function: `${moduleAddress}::community::vote`,
             //give a state using useState of boolean type for true if for and flase if against??
-            arguments: [true,index+1],
+            arguments: [state === 'for',index],
             type_arguments: [],
           };
+          console.log(payload);
         // sign and submit transaction to chain
         const response =await window.aptos.signAndSubmitTransaction(payload);
         await provider.waitForTransaction(response.hash);
@@ -105,12 +128,16 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
         }
       };
 
+    //   console.log(pollMap[index]);
+
       //write the tyhpe of question and option type??
 
     return (
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-2 mb-4 md:w-3/4 sm:w-full m-auto">
             <div>
-                <p className="inline-block text-black w-3/4 text-lg font-bold">This is for the Option {index + 1}: {question}</p>
+                <p className="inline-block text-black w-3/4 text-lg font-bold">{pollMap[index]}</p>
+                <p className="inline-block text-black w-3/4 text-lg font-bold">{question}</p>
+                <p className="inline-block text-black w-3/4 text-lg font-bold">{"Proposed Value: "+proposed_value}</p>
                 {/* if you want to add the timer functionality uncomment the following code */}
                 {/* <Timer initialTime={time ? time : 0} onTimerEnd={() => setTimeUp(true)} /> */}
             </div>
