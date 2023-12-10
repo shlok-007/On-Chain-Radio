@@ -118,7 +118,7 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
     }
 
     fetchData();
-}, []);
+}, [address]);
 
 
 
