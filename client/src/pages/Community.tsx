@@ -106,12 +106,14 @@ const Community: React.FC = () => {
     //     report_threshold: number,
     // }
     useEffect(() => {
+        fetchPolls();
         fetchCommunityParams();
     }, []);
 
     useEffect(() => {
         console.log(polls);
     }, [polls]);
+    
     return (
         <div className="text-center" style={styles.gradientDiv}>
             {/* Parameters */}

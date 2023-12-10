@@ -26,7 +26,7 @@ const Songs: React.FC<SongsProps> = ({  }) => {
         moduleAddress?? '',
         `${moduleAddress}::songStore::SongStore`
       );
-      console.log('SongResource:', SongResource);
+      // console.log('SongResource:', SongResource);
       // if (SongResource && SongResource?.data) {
       //   setFree(SongResource.data?.free_songs?.songs);
       // }
@@ -57,10 +57,14 @@ const Songs: React.FC<SongsProps> = ({  }) => {
             </h1>
             <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {/* <!-- FREE CARD  --> */}
-              <FreeCard genre="Jazz" />
+              {/* let _genre_list = vector[utf8(b"Rock"), utf8(b"Pop"), utf8(b"HipHop"), utf8(b"Classical"), utf8(b"Jazz")]; */}
+        
+              <FreeCard genre="Rock" />
               <FreeCard genre="Pop" />
-              <FreeCard genre="Country" />
+              <FreeCard genre="HipHop" />
               <FreeCard genre="Classical" />
+              <FreeCard genre="Jazz" />
+
               {/* <!-- END OF FREE CARD  --> */}
             </section>
           </div>
@@ -74,10 +78,11 @@ const Songs: React.FC<SongsProps> = ({  }) => {
           </h1>
           <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {/* <!-- FREE CARD  --> */}
-            <FreeCard genre="Jazz" />
+            <FreeCard genre="Rock" />
             <FreeCard genre="Pop" />
-            <FreeCard genre="Country" />
+            <FreeCard genre="HipHop" />
             <FreeCard genre="Classical" />
+            <FreeCard genre="Jazz" />
             {/* <!-- END OF FREE CARD  --> */}
           </section>
         </div>
@@ -91,10 +96,12 @@ const Songs: React.FC<SongsProps> = ({  }) => {
             </h1>
             <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {/* <!-- FREE CARD  --> */}
-              <PremiumCard genre="Jazz" />
+              <PremiumCard genre="Rock" />
               <PremiumCard genre="Pop" />
-              <PremiumCard genre="Country" />
+              <PremiumCard genre="HipHop" />
               <PremiumCard genre="Classical" />
+              <PremiumCard genre="Jazz" />
+              
               {/* <!-- END OF FREE CARD  --> */}
             </section>
           </div>
