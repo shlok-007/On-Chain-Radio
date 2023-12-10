@@ -2,6 +2,7 @@ import React from "react";
 import { useState,useEffect } from "react";
 import axios from 'axios';
 import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
+import ImageUpload from "./ImageUpload";
 
 const UploadForm: React.FC = () => {
     const [pinnedFiles, setPinnedFiles] = useState([]);
@@ -163,11 +164,11 @@ const UploadForm: React.FC = () => {
                     <label className="block text-left m-2">Genre of the Song:</label>
                     <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" onChange={(e)=>{ setGenre(e.target.value) }}>
                         <option selected>Select the Genre</option>
-                        <option value="Rock">Rock</option>
-                        <option value="Pop">Pop</option>
-                        <option value="HipHop">HipHop</option>
-                        <option value="Classical">Classical</option>
-                        <option value="Jazz">Jazz</option>
+                        <option value="#">Pop</option>
+                        <option value="#">Classical</option>
+                        <option value="#">Folk</option>
+                        <option value="#">Jazz</option>
+                        <option value="#">HipHop</option>
                     </select>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
@@ -189,7 +190,7 @@ const UploadForm: React.FC = () => {
                         <div className="input_field flex flex-col w-max mx-auto text-center">
                             <label>
                                 <input className="text-sm cursor-pointer w-36 hidden" type="file" multiple accept="image/*"  onChange={handleFileChange} />
-                                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500">Select</div>
+                                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500" onClick={handleclick}>Select</div>
                             </label>
                             <div className="title text-indigo-500 uppercase" >or drop image here</div>
                         </div>
