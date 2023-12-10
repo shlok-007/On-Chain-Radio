@@ -24,7 +24,7 @@ const PremiumCard: React.FC<PremiumCardProps> = ({ genre }) => {
   let subscribe = useAccountContext()?.premium;
 
   const handlePlay = () => {
-    !login ? navigate("/signup") : !subscribe ? navigate("/subscribe") : navigate("/playsongs", {state: {id: genre + " premium"}})
+    !login ? navigate("/signup") : !subscribe ? navigate("/subscribe") : navigate("/premiumsongs/" + genre)
   }
 
   return (
