@@ -28,7 +28,7 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
         setState(value);
       };
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         if (state !== "") setShow(true);
         if (state !== "") {
@@ -58,6 +58,7 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
                     return updatedPolls;
                     });
             }
+            await handle(event);
         }
     }
     const handleS = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -84,7 +85,7 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
           console.error(error);
         }
       };
-      const handle = async (e: React.FormEvent<HTMLFormElement>) => {
+      const handle = async (e: React.FormEvent) => {
         e.preventDefault();
         const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
         try {

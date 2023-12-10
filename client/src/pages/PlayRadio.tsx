@@ -13,7 +13,7 @@ interface PlayRadioProps {
 }
 
 const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(true);
   const navigate = useNavigate();  
   const {genre} = useParams();
   const provider = new Provider(Network.TESTNET);
@@ -54,7 +54,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
   const [duration, setDuration] = useState<string>('00:00');
   const [playbakTime, setPlaybackTime] = useState('00:00');
   const [playbackProgress, setPlaybackProgress] = useState(0);
-  const [songEnded, setSongEnded] = useState(false);
+  const [songEnded, setSongEnded] = useState(true);
 
   const audioPlayerRef = React.createRef<HTMLAudioElement>();
 
@@ -95,6 +95,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
           setPlaybackProgress(progressPercentage);
           setPlaybackTime(`${minutes}:${seconds.toString().padStart(2, '0')}`);
           setSongEnded(currentTime === duration);
+          // console.log("yo!!");
         }
       };
   
@@ -194,12 +195,15 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
   }
 
   const fetchSong = async () => {
-    if(songTableHandle === "" || num_songs === 0) return;
+    console.log("songEnded",songEnded);
+    if(songTableHandle === "" || num_songs === 0 || !songEnded) return;
     let sidx;
-    if(songIndex === -1){  setSongIndex(seed % num_songs); sidx = seed % num_songs; }
-    else {setSongIndex((songIndex + 1) % num_songs); sidx = (songIndex + 1) % num_songs;}
+    // if(songIndex === -1){  setSongIndex(seed % num_songs); sidx = seed % num_songs; }
+    // else {setSongIndex((songIndex + 1) % num_songs); sidx = (songIndex + 1) % num_songs;}
+    if(songIndex === -1){  setSongIndex(seed % num_songs); sidx = 3; }
+    else {setSongIndex((songIndex + 1) % 2 +3); sidx = (songIndex + 1) % 2 + 3;}
 
-    sidx = (seed % 2) + 3;
+    // sidx = (seed % 2) + 3;
     // console.log(seed);
     console.log(sidx);
     // console.log(num_songs);
