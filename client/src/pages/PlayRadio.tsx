@@ -3,7 +3,7 @@ import ladyMusic from "../assets/ladyMusic.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faFlag } from "@fortawesome/free-solid-svg-icons";
 import TipModal from "../components/TipModal";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Song } from "../utils/types";
 import { useAccountContext } from "../utils/context";
 import { Provider, Network } from "aptos";
@@ -14,7 +14,7 @@ interface PlayRadioProps {
 
 const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
   const [like, setLike] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
   const {genre} = useParams();
   const provider = new Provider(Network.TESTNET);
   const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST as string;
