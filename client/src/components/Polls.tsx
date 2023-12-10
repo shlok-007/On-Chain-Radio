@@ -71,7 +71,11 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
             arguments: [index+1],
             type_arguments: [],
           };
-          polls[index] = null;
+          setPolls((prevPolls) => {
+            const newPollArray = [...prevPolls];
+            newPollArray[index] = null;
+            return newPollArray
+          })
         // sign and submit transaction to chain
         const response =await window.aptos.signAndSubmitTransaction(payload);
         await provider.waitForTransaction(response.hash);
@@ -105,7 +109,7 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
     return (
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-2 mb-4 md:w-3/4 sm:w-full m-auto">
             <div>
-                <p className="inline-block text-black w-3/4 text-lg font-bold">This is for the Option {index}: {question}</p>
+                <p className="inline-block text-black w-3/4 text-lg font-bold">This is for the Option {index + 1}: {question}</p>
                 {/* if you want to add the timer functionality uncomment the following code */}
                 {/* <Timer initialTime={time ? time : 0} onTimerEnd={() => setTimeUp(true)} /> */}
             </div>
