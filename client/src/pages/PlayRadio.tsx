@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import ladyMusic from "../assets/ladyMusic.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
+import { faCircleInfo, faFlag } from "@fortawesome/free-solid-svg-icons";
 import TipModal from "../components/TipModal";
 import { useParams, useNavigate } from "react-router-dom";
 import { Song } from "../utils/types";
@@ -238,25 +237,17 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
               {/* -------------------------------Like and Tip buttons------------------------------ */}
               <div className="pt-8 md:py-12 flex items-center justify-around text-[#7CA4AE] px-5">
                 <button>
-                  {like ? (
-                    <FontAwesomeIcon
-                      icon={faHeart}
+                <FontAwesomeIcon
+                      icon={faCircleInfo}
                       className="text-center"
                       onClick={() => setLike(!like)}
                       size="xl"
                     />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={outlineHeart}
-                      onClick={() => setLike(!like)}
-                      size="xl"
-                    />
-                  )}
                 </button>
                   <TipModal />
                 <button>
                   <FontAwesomeIcon
-                    icon={faHeart}
+                    icon={faFlag}
                     className="text-center"
                     size="xl"
                   />
