@@ -54,6 +54,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
   const [duration, setDuration] = useState<string>('00:00');
   const [playbakTime, setPlaybackTime] = useState('00:00');
   const [playbackProgress, setPlaybackProgress] = useState(0);
+  const [songEnded, setSongEnded] = useState(false);
 
   const audioPlayerRef = React.createRef<HTMLAudioElement>();
 
@@ -93,15 +94,26 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
           const progressPercentage = (currentTime / duration) * 100;
           setPlaybackProgress(progressPercentage);
           setPlaybackTime(`${minutes}:${seconds.toString().padStart(2, '0')}`);
+          setSongEnded(currentTime === duration);
         }
       };
   
       audioPlayerRef.current.addEventListener('timeupdate', updateSlider);
 
-      audioPlayerRef.current.addEventListener('ended', () => {
-        console.log("Song ended");
-        // setSongIndex(-1);
-        fetchSong();
+      // audioPlayerRef.current.addEventListener('ended', () => {
+      //   console.log("Song ended");
+      //   if(songEnded){
+      //     console.log("Fetching new song");
+      //     setSongEnded(false);
+      //     // setSongIndex(-1);
+      //     fetchSong();
+      // }
+      // });
+
+      audioPlayerRef.current.addEventListener('canplaythrough', () => {
+        // console.log("Can play through");
+        audioPlayerRef.current?.play().catch((e) => console.log(e));
+        // setSongEnded(true);
       });
 
 
@@ -109,8 +121,8 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
         if(audioPlayerRef.current){
           audioPlayerRef.current.removeEventListener('loadedmetadata', () => {});
           audioPlayerRef.current.removeEventListener('timeupdate', updateSlider);
-          audioPlayerRef.current.removeEventListener('ended', () => {});
-          // audioPlayerRef.current.removeEventListener('canplaythrough', () => {})
+          // audioPlayerRef.current.removeEventListener('ended', () => {});
+          audioPlayerRef.current.removeEventListener('canplaythrough', () => {})
         };
       }
 
@@ -187,8 +199,9 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
     if(songIndex === -1){  setSongIndex(seed % num_songs); sidx = seed % num_songs; }
     else {setSongIndex((songIndex + 1) % num_songs); sidx = (songIndex + 1) % num_songs;}
 
+    sidx = (seed % 2) + 3;
     // console.log(seed);
-    // console.log(sidx);
+    console.log(sidx);
     // console.log(num_songs);
     // console.log(key_type);
     // console.log(songTableHandle);
@@ -203,7 +216,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
       setCurrentSong((songData as any));
       if(songData.premium && !isUserPremium) setAuthorized(false);
       else setAuthorized(true);
-      // console.log(songData);
+      console.log(songData);
     } catch(e){
       console.log(e);}
   }
@@ -214,7 +227,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
 
   useEffect(() => {
     fetchSong();
-  }, [songTableHandle]);
+  }, [songEnded, songTableHandle]);
 
   return (
     <div className="h-screen bg-[#7CA4AE] ">
@@ -237,7 +250,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
             <div className="px-10 py-12">
               {/* ----title-------- */}
               <h2 className="text-2xl font-bold mt-3">{currentSong.title}</h2>
-              <a href="" onClick={() => navigate('/profile', {state:{username: "user"}})} className="text-3x font-bold text-[#7CA4AE]">
+              <a href="" onClick={() => navigate('/profile/'+currentSong.artist_wallet_address)} className="text-3x font-bold text-[#7CA4AE]">
                 {`by ${currentSong.vocalist}`}
               </a>
 
@@ -311,7 +324,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
 
               <audio ref={audioPlayerRef} 
               autoPlay 
-              // controls
+              controls
               muted = {!authorized}
               // style={{ display: 'none' }}
               >
@@ -343,7 +356,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
                       size="xl"
                     />
                 </button>
-                  <TipModal />
+                  <TipModal currentSong={currentSong}/>
                 <button>
                   <FontAwesomeIcon
                     icon={faFlag}
