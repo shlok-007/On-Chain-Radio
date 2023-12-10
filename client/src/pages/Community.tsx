@@ -111,10 +111,9 @@ const Community: React.FC = () => {
     }, []);
 
     useEffect(() => {
-       // fetchPolls()
+       fetchPolls()
         console.log(polls);
-    }, [polls]);
-    
+    }, []);
     return (
         <div className="text-center" style={styles.gradientDiv}>
             {/* Parameters */}
@@ -130,10 +129,10 @@ const Community: React.FC = () => {
                 <div>
                 {polls.map((pollItem, index) => (
                   <div key={index}>
-                    {pollItem !== null ? <Polls question={pollItem?.justification} time={pollItem?.end_time} votes_for={pollItem?.votes_for} votes_against={pollItem?.votes_against} setPolls={setPolls} polls={polls} index={index} /> : <></>}
+                    {pollItem !== null && index < 4 ? <Polls question={pollItem?.justification} time={pollItem?.end_time} votes_for={pollItem?.votes_for} votes_against={pollItem?.votes_against} setPolls={setPolls} polls={polls} index={index} /> : <></>}
                   </div>
                 ))}
-              </div>
+                </div>
             }
             
         </div>
