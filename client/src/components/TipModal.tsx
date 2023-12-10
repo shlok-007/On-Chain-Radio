@@ -69,9 +69,15 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
 
   return (
     <div>
+      <div className="grid-cols-2">
+        <div>
+          <p>22</p>
+          <p>Total Tips</p>
+        </div>
       <Button onClick={handleOpen}>
-        <FontAwesomeIcon icon={faWallet} className="text-center" size="xl" />
+        <FontAwesomeIcon icon={faWallet} className="text-center" size="2xl" />
       </Button>
+      </div>
       <Modal
         open={open}
         onClose={handleClose}

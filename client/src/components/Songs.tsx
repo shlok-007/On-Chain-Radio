@@ -50,12 +50,12 @@ const Songs: React.FC<SongsProps> = ({  }) => {
 
       {/*--------------------- <!-- FREE SECTION >-------------------------- */}
       {
-        !login && <main className="grid place-items-center min-h-screen bg-gradient-to-b from-gray-950 via-[#56757d] to-gray-950 p-5">
+        !login && <main className="grid place-items-center  bg-gradient-to-b from-gray-950 to-[#56757d] p-5">
           <div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
-              Listen Now
+            Trending  
             </h1>
-            <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
               {/* <!-- FREE CARD  --> */}
               {/* let _genre_list = vector[utf8(b"Rock"), utf8(b"Pop"), utf8(b"HipHop"), utf8(b"Classical"), utf8(b"Jazz")]; */}
         
@@ -70,13 +70,51 @@ const Songs: React.FC<SongsProps> = ({  }) => {
           </div>
         </main>
       }
+      <main className="grid place-items-center  bg-[#56757d] p-5">
+          <div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
+              New Arrivals
+            </h1>
+            <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+              {/* <!-- FREE CARD  --> */}
+              {/* let _genre_list = vector[utf8(b"Rock"), utf8(b"Pop"), utf8(b"HipHop"), utf8(b"Classical"), utf8(b"Jazz")]; */}
+        
+              <FreeCard genre="Rock" />
+              <FreeCard genre="Pop" />
+              <FreeCard genre="HipHop" />
+              <FreeCard genre="Classical" />
+              <FreeCard genre="Jazz" />
 
-      {login && <div> <main className="grid place-items-center min-h-screen bg-gradient-to-b from-gray-950 to-[#56757d] p-5">
+              {/* <!-- END OF FREE CARD  --> */}
+            </section>
+          </div>
+        </main>
+        <main className="grid place-items-center bg-[#56757d] p-5">
+          <div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
+              Free Stations
+            </h1>
+            <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+              {/* <!-- FREE CARD  --> */}
+              {/* let _genre_list = vector[utf8(b"Rock"), utf8(b"Pop"), utf8(b"HipHop"), utf8(b"Classical"), utf8(b"Jazz")]; */}
+        
+              <FreeCard genre="Rock" />
+              <FreeCard genre="Pop" />
+              <FreeCard genre="HipHop" />
+              <FreeCard genre="Classical" />
+              <FreeCard genre="Jazz" />
+
+              {/* <!-- END OF FREE CARD  --> */}
+            </section>
+          </div>
+        </main>
+
+      {login && <div> <main className="grid place-items-center min-h-screen bg-gradient-to-b from-[#56757d] to-[#56757d] p-5">
         <div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
             Free Stations
           </h1>
-          <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4">
             {/* <!-- FREE CARD  --> */}
             <FreeCard genre="Rock" />
             <FreeCard genre="Pop" />
@@ -94,7 +132,7 @@ const Songs: React.FC<SongsProps> = ({  }) => {
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
               Premium Stations
             </h1>
-            <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <section className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4">
               {/* <!-- FREE CARD  --> */}
               <PremiumCard genre="Rock" />
               <PremiumCard genre="Pop" />
