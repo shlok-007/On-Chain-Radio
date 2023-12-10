@@ -4,6 +4,8 @@ import { Alert, AlertTitle } from "@mui/material";
 import { Bar } from 'react-chartjs-2';
 import BarGraph from "./BarGraph";
 import { Poll } from "../utils/types";
+import { Provider, Network } from "aptos";
+
 
 interface PollProps {
     question: string,
@@ -18,8 +20,9 @@ interface PollProps {
 const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, setPolls, polls, index }) => {
     const [show, setShow] = useState(false);
     const [timeUp, setTimeUp] = useState(false);
-    const [state, setState] = useState("");
-
+    const provider = new Provider(Network.TESTNET);
+    const [state,setState]=useState("");
+    //const [for,setFor]=useState(false);
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setState(value);
@@ -57,16 +60,58 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
             }
         }
     }
+    const handleS = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
+        try {
+          const payload = {
+            type: "entry_function_payload",
+            function: `${moduleAddress}::community::end_poll`,
+            //here we require poll type??
+            arguments: [index+1],
+            type_arguments: [],
+          };
+          polls[index] = null;
+        // sign and submit transaction to chain
+        const response =await window.aptos.signAndSubmitTransaction(payload);
+        await provider.waitForTransaction(response.hash);
+        console.log(response);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      const handle = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
+        try {
+          const payload = {
+            type: "entry_function_payload",
+            function: `${moduleAddress}::community::vote`,
+            //give a state using useState of boolean type for true if for and flase if against??
+            arguments: [true,index+1],
+            type_arguments: [],
+          };
+        // sign and submit transaction to chain
+        const response =await window.aptos.signAndSubmitTransaction(payload);
+        await provider.waitForTransaction(response.hash);
+        console.log(response);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      //write the tyhpe of question and option type??
 
     return (
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-2 mb-4 md:w-3/4 sm:w-full m-auto">
             <div>
-                <p className="inline-block w-3/4 text-lg font-bold">{question}</p>
-                <Timer initialTime={time ? time : 0} onTimerEnd={() => setTimeUp(true)} />
+                <p className="inline-block text-black w-3/4 text-lg font-bold">This is for the Option {index}: {question}</p>
+                {/* if you want to add the timer functionality uncomment the following code */}
+                {/* <Timer initialTime={time ? time : 0} onTimerEnd={() => setTimeUp(true)} /> */}
             </div>
 
             {/* options */}
-
+            <form onSubmit={handle}>
             {show && <BarGraph votes_against={votes_against} votes_for={votes_for} />}
 
             <form className="w-3/4 m-auto my-4">
@@ -99,6 +144,8 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
                     </Alert>
                 } */}
                 <button type="submit" disabled={show} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2" onClick={handleSubmit}>Submit</button>
+                </form>
+                <button type="button"  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2" onClick={handleS}>End poll</button>
             </form>
         </div>
     )

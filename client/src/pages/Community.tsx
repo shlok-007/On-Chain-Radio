@@ -17,7 +17,7 @@ const styles = {
 
 const Community: React.FC = () => {
     const [votes, setVotes] = useState({for:3, against:2});
-    const [polls, setPolls] = useState<(Poll | null)[]>([]);
+    const [polls, setPolls] = useState<(Poll | null)[]>([null, null, null, null]);
     const [params, setParams] = useState<CommunityParams | null>(null);
     const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST || "";
     const provider = new Provider(Network.TESTNET);
@@ -28,6 +28,7 @@ const Community: React.FC = () => {
             moduleAddress,
             `${moduleAddress}::community::CommunityParams`,
             );
+            console.log(commParams.data);
             setParams((commParams as any).data);
         } catch (error) {
           console.log(error);
@@ -64,7 +65,6 @@ const Community: React.FC = () => {
         } catch (error) {
             pollsResource.push(null);
         }
-
         try {
             pollResource = await provider.getAccountResource(
                 moduleAddress || "",
@@ -111,6 +111,7 @@ const Community: React.FC = () => {
     }, []);
 
     useEffect(() => {
+       // fetchPolls()
         console.log(polls);
     }, [polls]);
     
@@ -123,7 +124,7 @@ const Community: React.FC = () => {
                 <Parameter title= "Artist's cut on tips" value= { params ? params?.artist_gen_cut.toString()+"%" : "90%"} />
                 <Parameter title= "Report Threshold" value= { params ? params?.report_threshold.toString() : "20"} />
             </div>
-            <PollModal setPolls={setPolls} />
+            <PollModal setPolls={setPolls} polls={polls} />
             {/* <Polls question="What is your faviorite Song" options={["Tu hai Kahan", "Rap God", "Sham", "Faded"]} time={10} votes={10} optionVotes={[2, 2, 3, 3]} /> */}
             {
                 <div>

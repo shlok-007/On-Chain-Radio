@@ -28,7 +28,7 @@ const Songs: React.FC<SongsProps> = ({  }) => {
       );
       // console.log('SongResource:', SongResource);
       // if (SongResource && SongResource?.data) {
-      //   setFree(SongResource.data?.free_songs?.songs);
+      //   setFree(SongResource?.data);
       // }
       // if (SongResource && SongResource?.data?.premium_songs) {
       //   setPre(SongResource.premium_songs);
