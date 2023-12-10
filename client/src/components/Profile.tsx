@@ -4,6 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAccountContext } from "../utils/context";
 import getUserAccount from "../utils/getUserAccount";
 import { Account } from "../utils/types";
+import { Provider, Network } from "aptos";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 interface ProfileProps {
 }
@@ -12,6 +14,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   const navigate = useNavigate();
   let [userAcc, setUserAcc] = useState<Account | null>(useAccountContext());
   let {address} = useParams();
+  const provider = new Provider(Network.TESTNET);
   const getAcc = async () => {
     if(address){
       const acc = await getUserAccount(address);
@@ -22,6 +25,25 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   }
   useEffect(() => {
     getAcc();
+  }, [address]);
+  const { account } = useWallet();
+  const fetchList = async () => {
+    //let address=useWallet();
+    console.log(account?.address);
+    const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST;
+    try {
+      const SongResource = await provider.getAccountResource(
+        account?.address?? '',
+        `${moduleAddress}::song::ArtistStore`
+      );
+      console.log('SongResource:', SongResource);
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+  
+  useEffect(() => {
+    fetchList();
   }, [address]);
   
   return (
