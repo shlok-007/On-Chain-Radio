@@ -42,7 +42,7 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls, polls }) => {
     };
     //create poll submit
     const handleCreatePoll = async (e: React.FormEvent<HTMLFormElement>) => {
-      if (polls[formData.poll_type-1]) {
+      if (polls[formData.poll_type]) {
         console.log('This poll is already created');
         return;
       }
@@ -64,7 +64,7 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls, polls }) => {
       {
         //show the poll below after closing the modal
         const newPoll: Poll = {
-          proposed_cut: formData.proposed_value,
+          proposed_value: formData.proposed_value,
           justification: formData.justification,
           votes_for: 0,
           votes_against: 0,
@@ -74,28 +74,28 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls, polls }) => {
         // Update state in the parent component (Community)
         setPolls((prevPolls) => {
           const newPollArray = [...prevPolls]
-          newPollArray[formData.poll_type-1] = newPoll
+          newPollArray[formData.poll_type] = newPoll
           return newPollArray;
         });
         handleClose();
       }
       } catch (error) {
         console.error(error);
-        const newPoll: Poll = {
-          proposed_cut: formData.proposed_value,
-          justification: formData.justification,
-          votes_for: 0,
-          votes_against: 0,
-          end_time: formData.poll_type,
-          voters: [],
-        };
+        // const newPoll: Poll = {
+        //   proposed_cut: formData.proposed_value,
+        //   justification: formData.justification,
+        //   votes_for: 0,
+        //   votes_against: 0,
+        //   end_time: formData.poll_type,
+        //   voters: [],
+        // };
         // Update state in the parent component (Community)
         // setPolls((prevPolls) => [...prevPolls, newPoll]);
-        setPolls((prevPolls) => {
-          const newPollArray = [...prevPolls]
-          newPollArray[formData.poll_type-1] = newPoll
-          return newPollArray;
-        });
+        // setPolls((prevPolls) => {
+        //   const newPollArray = [...prevPolls]
+        //   newPollArray[formData.poll_type] = newPoll
+        //   return newPollArray;
+        // });
         handleClose();
       }
     };
@@ -120,39 +120,6 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls, polls }) => {
        })
       })
     }
-    
-    // const handleSubmit = (e: React.FormEvent) => {
-    //   e.preventDefault();
-    //   // send form data
-    //   // const data = {
-    //   //     question: formData.title,
-    //   //     time: formData.hours * 3600 + formData.minutes * 60,
-    //   //     votes: {
-    //   //         for:0,
-    //   //         against: 0
-    //   //     }
-    //   // }
-    //   // setPoll((pre) => {
-    //   //     return (
-    //   //         [...pre, data]
-    //   //     )
-    //   // })
-    //   setPolls((prev: (Poll | null)[]) => {
-    //     const newPoll: (Poll | null) = {
-    //       proposed_cut: formData.proposed_value,
-    //       justification: formData.justification,
-    //       votes_for: 0,
-    //       votes_against: 0,
-    //       end_time: formData.poll_type,
-    //       voters: []
-    //     }
-    //     return(
-    //       [...prev, newPoll]
-    //     )
-    //   })
-    //   handleClose();
-    //   console.log('Form submitted:', formData);
-    // };
 
   return (
     <div>
@@ -184,10 +151,10 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls, polls }) => {
         /> */}
         <select id="countries" onChange={handleSelect} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
           <option selected>Select any on option</option>
-          {polls[0] !== null ? <></> : <option value={1}>Option 1</option>}
-          {polls[1] !== null ? <></> : <option value={2}>Option 2</option>}
-          {polls[2] !== null ? <></> : <option value={3}>Option 3</option>}
-          {polls[3] !== null ? <></> : <option value={4}>Option 4</option>}
+          {polls[0] !== null ? <></> : <option value={0}>Poll for Artist Premium Cut</option>}
+          {polls[1] !== null ? <></> : <option value={1}>Poll for Artist Tip Cut</option>}
+          {polls[2] !== null ? <></> : <option value={2}>Poll for Subscription Price</option>}
+          {polls[3] !== null ? <></> : <option value={3}>Poll for Report Threshold</option>}
         </select>
         
       </div>

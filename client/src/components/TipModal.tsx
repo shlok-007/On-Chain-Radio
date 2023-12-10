@@ -5,6 +5,8 @@ import Modal from "@mui/material/Modal";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWallet } from "@fortawesome/free-solid-svg-icons";
+import { Song } from "../utils/types";
+import { Provider, Network } from "aptos";
 
 const style = {
   position: "absolute" as "absolute",
@@ -17,11 +19,13 @@ const style = {
   p: 2,
 };
 
-export default function TipModal() {
+export default function TipModal({currentSong}: {currentSong: Song}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [amount, setAmount] = useState("$100.00");
+  const [amount, setAmount] = useState("1");
+  const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST || "";
+  const provider = new Provider(Network.TESTNET);
 
   const handleAmountChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -33,16 +37,47 @@ export default function TipModal() {
     setAmount(tipAmount);
   };
 
-  const handleSubmit = () => {
-    // Add your logic to handle the form submission
-    console.log(`Sending $${amount}`);
+  const handleSubmit = async () => {
+    if(amount === "0"){
+      alert("Amount cannot be 0");
+      return;
+    }
+    console.log(`Sending ${amount} APT`);
+    await tipSong(Number(amount)*100000000);
   };
+
+  const tipSong = async (tip_amount : number) => {
+    const payload = {
+      type: "entry_function_payload",
+      function: `${moduleAddress}::songStore::tip_song`,
+      type_arguments: [],
+      arguments: [
+        `${currentSong.song_store_ID}`,
+        currentSong.genre,
+        currentSong.premium,
+        `${tip_amount}`
+      ],
+    };
+    console.log(payload);
+    try{
+      const response = await window.aptos.signAndSubmitTransaction(payload);
+      await provider.waitForTransaction(response.hash);
+      console.log("Song tipped");
+    } catch(e){
+      console.log("Error tipping song", e);}
+  }
 
   return (
     <div>
+      <div className="grid-cols-2">
+        <div>
+          <p>22</p>
+          <p>Total Tips</p>
+        </div>
       <Button onClick={handleOpen}>
-        <FontAwesomeIcon icon={faWallet} className="text-center" size="xl" />
+        <FontAwesomeIcon icon={faWallet} className="text-center" size="2xl" />
       </Button>
+      </div>
       <Modal
         open={open}
         onClose={handleClose}
@@ -85,7 +120,7 @@ export default function TipModal() {
                     className="mt-1 w-full bg-black text-gray-200 rounded-[4px] border-[1px] border-gray-500 p-2"
                     value={amount}
                     type="text"
-                    placeholder="100.00"
+                    placeholder="2"
                     onChange={handleAmountChange}
                   />
                 </div>
@@ -98,13 +133,13 @@ export default function TipModal() {
 
               <div className="flex justify-between">
                 <div className="flex justify-around">
-                  {["10", "50", "100", "200"].map((tip) => (
+                  {["2", "5", "10", "20"].map((tip) => (
                     <div
                       key={tip}
                       className="mt-[14px] cursor-pointer truncate rounded-[4px] border-[1px] border-gray-500 p-3 text-gray-200 m-3"
                       onClick={() => handleTipClick(tip)}
                     >
-                      ${tip}
+                      {tip+" APT"}
                     </div>
                   ))}
                 </div>
@@ -200,7 +235,7 @@ export default function TipModal() {
                   className="w-full cursor-pointer rounded-[4px] bg-indigo-500 px-3 py-[6px] text-center font-semibold text-white"
                   onClick={handleSubmit}
                 >
-                  Send ${amount}
+                  Send {amount+" APT"}
                 </div>
               </div>
             </div>

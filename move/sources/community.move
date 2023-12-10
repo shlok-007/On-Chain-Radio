@@ -34,7 +34,7 @@ module addr_on_chain_radio::community {
         let community_params = CommunityParams {
             artist_premium_cut: 70,
             artist_gen_cut: 60,
-            premium_price: 1000,
+            premium_price: 100000000,
             report_threshold: 10,
             signer_cap: _signer_cap
         };
@@ -42,7 +42,7 @@ module addr_on_chain_radio::community {
     }
 
     struct Poll4ArtistPremiumCut has key, drop {
-        proposed_cut: u8,
+        proposed_value: u8,
         justification: String,
         votes_for: u64,
         votes_against: u64,
@@ -51,7 +51,7 @@ module addr_on_chain_radio::community {
     }
 
     struct Poll4ArtistGenCut has key, drop {
-        proposed_cut: u8,
+        proposed_value: u8,
         justification: String,
         votes_for: u64,
         votes_against: u64,
@@ -60,7 +60,7 @@ module addr_on_chain_radio::community {
     }
 
     struct Poll4PremiumPrice has key, drop {
-        proposed_price: u64,
+        proposed_value: u64,
         justification: String,
         votes_for: u64,
         votes_against: u64,
@@ -69,7 +69,7 @@ module addr_on_chain_radio::community {
     }
 
     struct Poll4ReportThreshold has key, drop {
-        proposed_threshold: u64,
+        proposed_value: u64,
         justification: String,
         votes_for: u64,
         votes_against: u64,
@@ -90,7 +90,7 @@ module addr_on_chain_radio::community {
             assert!(proposed_value <= 100, INVALID_PROPOSED_CUT);
 
             let poll = Poll4ArtistPremiumCut {
-                proposed_cut: (proposed_value as u8),
+                proposed_value: (proposed_value as u8),
                 justification: justification,
                 votes_for: 0,
                 votes_against: 0,
@@ -105,7 +105,7 @@ module addr_on_chain_radio::community {
             assert!(proposed_value <= 100, INVALID_PROPOSED_CUT);
 
             let poll = Poll4ArtistGenCut {
-                proposed_cut: (proposed_value as u8),
+                proposed_value: (proposed_value as u8),
                 justification: justification,
                 votes_for: 0,
                 votes_against: 0,
@@ -119,7 +119,7 @@ module addr_on_chain_radio::community {
             assert!(proposed_value >= 0, INVALID_PREMIUM_PRICE);
 
             let poll = Poll4PremiumPrice {
-                proposed_price: proposed_value,
+                proposed_value: proposed_value,
                 justification: justification,
                 votes_for: 0,
                 votes_against: 0,
@@ -133,7 +133,7 @@ module addr_on_chain_radio::community {
             assert!(proposed_value >= 0, INVALID_REPORT_THRESHOLD);
 
             let poll = Poll4ReportThreshold {
-                proposed_threshold: proposed_value,
+                proposed_value: proposed_value,
                 justification: justification,
                 votes_for: 0,
                 votes_against: 0,
@@ -214,7 +214,7 @@ module addr_on_chain_radio::community {
             let poll_data = borrow_global_mut<Poll4ArtistPremiumCut>(@addr_on_chain_radio);
             assert!(poll_data.end_time < timestamp::now_seconds(), POLL_NOT_ENDED);
             if(poll_data.votes_for > poll_data.votes_against) {
-                community_params.artist_premium_cut = poll_data.proposed_cut;
+                community_params.artist_premium_cut = poll_data.proposed_value;
             };
             move_from<Poll4ArtistPremiumCut>(@addr_on_chain_radio);
         }
@@ -223,7 +223,7 @@ module addr_on_chain_radio::community {
             let poll_data = borrow_global_mut<Poll4ArtistGenCut>(@addr_on_chain_radio);
             assert!(poll_data.end_time < timestamp::now_seconds(), POLL_NOT_ENDED);
             if(poll_data.votes_for > poll_data.votes_against) {
-                community_params.artist_gen_cut = poll_data.proposed_cut;
+                community_params.artist_gen_cut = poll_data.proposed_value;
             };
             move_from<Poll4ArtistGenCut>(@addr_on_chain_radio);
         }
@@ -232,7 +232,7 @@ module addr_on_chain_radio::community {
             let poll_data = borrow_global_mut<Poll4PremiumPrice>(@addr_on_chain_radio);
             assert!(poll_data.end_time < timestamp::now_seconds(), POLL_NOT_ENDED);
             if(poll_data.votes_for > poll_data.votes_against) {
-                community_params.premium_price = poll_data.proposed_price;
+                community_params.premium_price = poll_data.proposed_value*100000000;
             };
             move_from<Poll4PremiumPrice>(@addr_on_chain_radio);
         }
@@ -241,7 +241,7 @@ module addr_on_chain_radio::community {
             let poll_data = borrow_global_mut<Poll4ReportThreshold>(@addr_on_chain_radio);
             assert!(poll_data.end_time < timestamp::now_seconds(), POLL_NOT_ENDED);
             if(poll_data.votes_for > poll_data.votes_against) {
-                community_params.report_threshold = poll_data.proposed_threshold;
+                community_params.report_threshold = poll_data.proposed_value;
             };
             move_from<Poll4ReportThreshold>(@addr_on_chain_radio);
         }

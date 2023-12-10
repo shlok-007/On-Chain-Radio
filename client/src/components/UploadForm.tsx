@@ -7,7 +7,6 @@ const UploadForm: React.FC = () => {
     const [pinnedFiles, setPinnedFiles] = useState([]);
     const [pinnedFiles1, setPinnedFiles1] = useState([]);
     const [file, setFile] = useState<File | null>(null);
-    const [file1, setFile1] = useState<File | null>(null);
     const [song,setSong] =useState("");
     const [vocalist,setVocalist] =useState("");
     const [lyricist,setlyricist] =useState("");
@@ -62,7 +61,7 @@ const UploadForm: React.FC = () => {
           //console.log(file);
           if (file) {
             const formData = new FormData();
-            console.log(file)
+            // console.log(file)
             formData.append('file', file);
             const pinataBody = {
               options: {
@@ -95,64 +94,26 @@ const UploadForm: React.FC = () => {
         }
       }
 
-    //   const handleclick1 = async () => {
-    //     try {
-    //       //console.log(file);
-    //       if (file1) {
-    //         const formData = new FormData();
-    //         console.log(file1)
-    //         formData.append('file1', file1);
-    //         const pinataBody = {
-    //           options: {
-    //             cidVersion: 1,
-    //           },
-    //           metadata: {
-    //             name: file1.name,
-    //           }
-    //         }
-    //         formData.append('pinataOptions', JSON.stringify(pinataBody.options));
-    //         formData.append('pinataMetadata', JSON.stringify(pinataBody.metadata));
-    //         const url = `${pinataConfig.root}/pinning/pinFileToIPFS`;
-    //         const response = await axios({
-    //           method: 'post',
-    //           url: url,
-    //           data: formData,
-    //           headers: pinataConfig.headers
-    //         })
-    //         console.log(response.data)
-    //         queryPinataFiles1();
-    //       } else {
-    //         alert('select file first')
-    //       }
-    //     } catch (error) {
-    //       console.log(error)
-    //     }
-    //   }
-
-      const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = e.target.files?.[0];
-        console.log(selectedFile);
-        if (selectedFile) {
-            setFile(selectedFile);
-        }
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFile = e.target.files?.[0];
+      console.log(selectedFile);
+      if (selectedFile) {
+          setFile(selectedFile);
+      }
     };
 
-    // const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const selectedFile = e.target.files?.[0];
-    //     console.log(selectedFile);
-    //     if (selectedFile) {
-    //         setFile1(selectedFile);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //   testPinataConnection()
-    // });
+    useEffect(() => {
+      if(file !== null)
+        handleclick();
+    } ,[file]);
 
     const {wallet} = useWallet();
 
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        console.log(genre);
+        // console.log(genre);
+        // console.log(ipfsaudio);
+        // console.log(ipfsimage);
+        console.log(pre);
         e.preventDefault();
         if (!wallet) {
           alert("Please connect your wallet");
@@ -163,7 +124,7 @@ const UploadForm: React.FC = () => {
           const payload = {
             type: "entry_function_payload",
             function: `${moduleAddress}::song::upload_song`,
-            arguments: [song,ipfsaudio,ipfsimage,pre,"Classical",vocalist,lyricist,musician,audio],
+            arguments: [song,ipfsaudio,ipfsimage,pre,genre,vocalist,lyricist,musician,audio],
             type_arguments: [],
           };
         // sign and submit transaction to chain
@@ -202,18 +163,20 @@ const UploadForm: React.FC = () => {
                     <label className="block text-left m-2">Genre of the Song:</label>
                     <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" onChange={(e)=>{ setGenre(e.target.value) }}>
                         <option selected>Select the Genre</option>
-                        <option value="#">Pop</option>
-                        <option value="#">Classical</option>
-                        <option value="#">Folk</option>
-                        <option value="#">Country</option>
+                        <option value="Rock">Rock</option>
+                        <option value="Pop">Pop</option>
+                        <option value="HipHop">HipHop</option>
+                        <option value="Classical">Classical</option>
+                        <option value="Jazz">Jazz</option>
                     </select>
                 </div>
                 <div className="md:px-10 sm:px-5 py-5">
                 <label className="block text-left m-2">Want the song to be premium</label>
-                    <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" >
-                        <option selected>Select the option</option>
-                        <option value="#" onChange={(e)=>{ setPre(true) }}>Yes</option>
-                        <option value="#" onChange={(e)=>{ setPre(false) }}>No</option>
+                    <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                    onChange={(e) => { setPre(e.target.value === "1") }} >
+                        <option selected disabled>Select the option</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
                     </select>
                     {/* <label className="block text-left m-2">Do you want this to be a Paid Content?</label>
                     <input className="block text-black text-left h-10 w-full bg-gray-100 border rounded-lg focus:bg-gray-300 p-2" type="text" placeholder="If yes, enter the amount."></input> */}
@@ -226,7 +189,7 @@ const UploadForm: React.FC = () => {
                         <div className="input_field flex flex-col w-max mx-auto text-center">
                             <label>
                                 <input className="text-sm cursor-pointer w-36 hidden" type="file" multiple accept="image/*"  onChange={handleFileChange} />
-                                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500" onClick={handleclick}>Select</div>
+                                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500">Select</div>
                             </label>
                             <div className="title text-indigo-500 uppercase" >or drop image here</div>
                         </div>
@@ -238,7 +201,7 @@ const UploadForm: React.FC = () => {
                         <div className="input_field flex flex-col w-max mx-auto text-center">
                             <label>
                                 <input className="text-sm cursor-pointer w-36 hidden" type="file" multiple accept="audio/*" onChange={handleFileChange}/>
-                                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500" onClick={handleclick}>Select</div>
+                                    <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500">Select</div>
                             </label>
                             <div className="title text-indigo-500 uppercase">or drop song here</div>
                         </div>
