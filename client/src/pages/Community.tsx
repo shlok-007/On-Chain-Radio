@@ -110,9 +110,9 @@ const Community: React.FC = () => {
     }, []);
 
     useEffect(() => {
-       // fetchPolls()
+       fetchPolls()
         console.log(polls);
-    }, [polls]);
+    }, []);
     return (
         <div className="text-center" style={styles.gradientDiv}>
             {/* Parameters */}

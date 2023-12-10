@@ -71,15 +71,15 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
             arguments: [index+1],
             type_arguments: [],
           };
-          setPolls((prevPolls) => {
-            const newPollArray = [...prevPolls];
-            newPollArray[index] = null;
-            return newPollArray
-          })
         // sign and submit transaction to chain
         const response =await window.aptos.signAndSubmitTransaction(payload);
         await provider.waitForTransaction(response.hash);
         console.log(response);
+        setPolls((prevPolls) => {
+            const newPollArray = [...prevPolls];
+            newPollArray[index] = null;
+            return newPollArray
+          })
         } catch (error) {
           console.error(error);
         }
