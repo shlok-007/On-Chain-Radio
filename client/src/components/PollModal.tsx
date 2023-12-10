@@ -58,17 +58,17 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
       if(response.vm_status === "Executed successfully")
       {
         //show the poll below after closing the modal
+        const newPoll: Poll = {
+          proposed_cut: formData.proposed_value,
+          justification: formData.justification,
+          votes_for: 0,
+          votes_against: 0,
+          end_time: formData.poll_type,
+          voters: [],
+        };
+        // Update state in the parent component (Community)
+        setPolls((prevPolls) => [...prevPolls, newPoll]);
         handleClose();
-        // const newPoll: Poll = {
-        //   proposed_cut: formData.proposed_value,
-        //   justification: formData.justification,
-        //   votes_for: 0,
-        //   votes_against: 0,
-        //   end_time: formData.poll_type,
-        //   voters: [],
-        // };
-        // // Update state in the parent component (Community)
-        // setPolls((prevPolls) => [...prevPolls, newPoll]);
       }
       } catch (error) {
         console.error(error);
