@@ -29,3 +29,21 @@ export interface Poll {
     end_time: number,
     voters: string[]
 }
+    
+export interface Song {
+    song_store_ID: number,
+    artist_store_ID: number,
+    artist_wallet_address: string,
+    title: string,
+    ipfs_hash: string,
+    ipfs_hash_cover_img: string,
+    total_tips: number,
+    premium: boolean,
+    genre: string,
+    vocalist: string,
+    lyricist: string,
+    musician: string,
+    audio_engineer: string,
+    reports: number,
+    reporters: string[],
+}

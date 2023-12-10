@@ -1,20 +1,139 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ladyMusic from "../assets/ladyMusic.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import TipModal from "../components/TipModal";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { Song } from "../utils/types";
+import { useAccountContext } from "../utils/context";
+import { Provider, Network } from "aptos";
 
 interface PlayRadioProps {
+  premium: boolean;
 }
 
-const PlayRadio: React.FC<PlayRadioProps> = ({}) => {
+// export interface Song {
+//   song_store_ID: number,
+//   artist_store_ID: number,
+//   artist_wallet_address: string,
+//   title: string,
+//   ipfs_hash: string,
+//   ipfs_hash_cover_img: string,
+//   total_tips: number,
+//   premium: boolean,
+//   genre: string,
+//   vocalist: string,
+//   lyricist: string,
+//   musician: string,
+//   audio_engineer: string,
+//   reports: number,
+//   reporters: string[],
+// }
+
+const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
   const [like, setLike] = useState(false);
-  const location = useLocation();
-  const genre = location.state?.id || 'No genre Selected';
   const navigate = useNavigate();
-  console.log(genre)
+  const {genre} = useParams();
+  const provider = new Provider(Network.TESTNET);
+  const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST as string;
+  const genreMap = new Map<string, string>([
+    ["rock", "Rock"],
+    ["pop", "Pop"],
+    ["hiphop", "HipHop"],
+    ["classical", "Classical"],
+    ["jazz", "Jazz"]
+  ]);
+
+  const [authorized, setAuthorized] = useState(true);
+  const [currentSong, setCurrentSong] = useState<Song>({
+    song_store_ID: 0,
+    artist_store_ID: 0,
+    artist_wallet_address: "",
+    title: "The Fat Rat",
+    ipfs_hash: "",
+    ipfs_hash_cover_img: "",
+    total_tips: 0,
+    premium: false,
+    genre: "",
+    vocalist: "Laura Brehm",
+    lyricist: "",
+    musician: "",
+    audio_engineer: "",
+    reports: 0,
+    reporters: [],
+  });
+
+  const fetchSong = async () => {
+    if(genre === undefined) return;
+    let song_lib_type;
+    if(premium) {
+      song_lib_type = "premium_songs";
+    }
+    else{
+      if(genre === "newarrivals") song_lib_type = "new_arrivals";
+      else if(genre === "trending") song_lib_type = "trending_songs";
+      else song_lib_type = "free_songs";
+    }
+    let seed = Math.floor(Date.now() / 120000);
+    let songStore;
+    try{
+      songStore = await provider.getAccountResource(
+        moduleAddress,
+        `${moduleAddress}::songStore::SongStore`,
+      );
+    } catch(e){
+      console.log(e);
+      alert("Error fetching song store");
+      return;
+    }
+
+    let songTableHandle;
+    let num_songs;
+    if( song_lib_type === "free_songs" || song_lib_type === "premium_songs") {
+      let songLib;
+      if( song_lib_type === "free_songs") {
+        songLib = (songStore as any).data.free_songs;
+      }
+      else {
+        songLib = (songStore as any).data.premium_songs;
+      }
+      // console.log(songLib);
+      let genreHandle = songLib.songs.handle;
+      let genreItem = {
+        key_type: "0x1::string::String",
+        value_type: `${moduleAddress}::songStore::Genre`,
+        key: genreMap.get(genre),
+      }
+      // console.log(genreHandle);
+      // console.log(genreItem);
+      try{
+        let songTable = await provider.getTableItem(genreHandle, genreItem);
+        songTableHandle = (songTable as any).songs.handle;
+        num_songs = (songTable as any).num_songs;
+        // console.log(songTableHandle);
+      } catch(e){
+        console.log(e);
+        return;
+      }
+    } else {
+      if(song_lib_type === "new_arrivals") {
+        songTableHandle = (songStore as any).data.new_arrivals.songs.handle;
+        num_songs = (songStore as any).data.new_arrivals.num_songs;
+      } else {
+        songTableHandle = (songStore as any).data.trending_songs.songs.handle;
+        num_songs = (songStore as any).data.trending_songs.num_songs;
+      }
+      // console.log(songTableHandle);
+    }
+    console.log(num_songs);
+    let songIndex = seed % num_songs;
+    
+  }
+
+  // useEffect(() => {
+  //   fetchSong();
+  // }, []);
 
   return (
     <div className="h-screen bg-[#7CA4AE] ">

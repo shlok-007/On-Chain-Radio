@@ -60,7 +60,10 @@ function App() {
           <Route path='/uploadsongs' element={<Upload />} />
           <Route path='/dashboard' element={<Dashboard startingPage={0} />} />
           <Route path='/subscribe' element={<Subscribe setUserAccount={setUserAccount}/>} />
-          <Route path='/playsongs' element={<PlayRadio />} />
+          <Route path='/playsongs/:genre' element={<PlayRadio premium={false}/>} />
+          <Route element={<PrivateRoutes isLogged={login}/>}>
+            <Route path='/premiumsongs/:genre' element={<PlayRadio premium={true}/>} />
+          </Route>
           <Route path='/myprofile' element={<Dashboard startingPage={2}/>} />
           <Route path='/profile/:address?' element={<Profile/>} />
           <Route path='/learn-more' element={<LearnMore />} />
