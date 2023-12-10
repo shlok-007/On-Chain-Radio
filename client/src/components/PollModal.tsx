@@ -2,10 +2,11 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useEffect } from "react";
 import { faWallet } from "@fortawesome/free-solid-svg-icons";
 import { Poll } from "../utils/types";
+import { Provider, Network } from "aptos";
+import { Link, useNavigate } from "react-router-dom"; 
 
 interface FormData {
   proposed_value: number,
@@ -21,6 +22,8 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const navigate = useNavigate();
+    const provider = new Provider(Network.TESTNET);
     const [formData, setFormData] = useState<FormData>({
       proposed_value: 0,
       justification: '',
@@ -36,6 +39,49 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
         [key]: key === 'justification' ? e.target.value : parseInt(e.target.value, 10),
       });
     };
+    //create poll submit
+    const handleCreatePoll = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
+      try {
+        const payload = {
+          type: "entry_function_payload",
+          function: `${moduleAddress}::community::create_poll`,
+          arguments: [ formData.proposed_value,formData.justification, formData.poll_type ],
+          type_arguments: [],
+        };
+      // sign and submit transaction to chain
+      const response = await window.aptos.signAndSubmitTransaction(payload);
+      // wait for transaction
+      await provider.waitForTransaction(response.hash);
+      console.log(response);
+      if(response.vm_status === "Executed successfully")
+      {
+        //show the poll below after closing the modal
+        handleClose();
+        // const newPoll: Poll = {
+        //   proposed_cut: formData.proposed_value,
+        //   justification: formData.justification,
+        //   votes_for: 0,
+        //   votes_against: 0,
+        //   end_time: formData.poll_type,
+        //   voters: [],
+        // };
+        // // Update state in the parent component (Community)
+        // setPolls((prevPolls) => [...prevPolls, newPoll]);
+      }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // useEffect(() => {
+    //   // Check if there are existing polls
+    //   if (setPolls.length > 0) {
+    //     // If there are existing polls, show them
+    //     handleOpen();
+    //   }
+    // }, [setPolls]);
 
     const handleSelect = (
       e: React.ChangeEvent<HTMLSelectElement>
@@ -49,38 +95,38 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
       })
     }
     
-    const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      // send form data
-      // const data = {
-      //     question: formData.title,
-      //     time: formData.hours * 3600 + formData.minutes * 60,
-      //     votes: {
-      //         for:0,
-      //         against: 0
-      //     }
-      // }
-      // setPoll((pre) => {
-      //     return (
-      //         [...pre, data]
-      //     )
-      // })
-      setPolls((prev: (Poll | null)[]) => {
-        const newPoll: (Poll | null) = {
-          proposed_cut: formData.proposed_value,
-          justification: formData.justification,
-          votes_for: 0,
-          votes_against: 0,
-          end_time: formData.poll_type,
-          voters: []
-        }
-        return(
-          [...prev, newPoll]
-        )
-      })
-      handleClose();
-      console.log('Form submitted:', formData);
-    };
+    // const handleSubmit = (e: React.FormEvent) => {
+    //   e.preventDefault();
+    //   // send form data
+    //   // const data = {
+    //   //     question: formData.title,
+    //   //     time: formData.hours * 3600 + formData.minutes * 60,
+    //   //     votes: {
+    //   //         for:0,
+    //   //         against: 0
+    //   //     }
+    //   // }
+    //   // setPoll((pre) => {
+    //   //     return (
+    //   //         [...pre, data]
+    //   //     )
+    //   // })
+    //   setPolls((prev: (Poll | null)[]) => {
+    //     const newPoll: (Poll | null) = {
+    //       proposed_cut: formData.proposed_value,
+    //       justification: formData.justification,
+    //       votes_for: 0,
+    //       votes_against: 0,
+    //       end_time: formData.poll_type,
+    //       voters: []
+    //     }
+    //     return(
+    //       [...prev, newPoll]
+    //     )
+    //   })
+    //   handleClose();
+    //   console.log('Form submitted:', formData);
+    // };
 
   return (
     <div>
@@ -94,7 +140,7 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
       >
         <div className="flex items-center justify-center h-screen">
             
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto w-2/3 p-6 bg-white rounded-lg shadow-md">
+        <form onSubmit={handleCreatePoll} className="max-w-md mx-auto w-2/3 p-6 bg-white rounded-lg shadow-md">
       <div className="mb-4">
         <div className="text-center">
             <p className="text-xl font-bold">Create Poll</p>

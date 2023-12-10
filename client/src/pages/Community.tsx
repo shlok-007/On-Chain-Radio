@@ -28,6 +28,7 @@ const Community: React.FC = () => {
             moduleAddress,
             `${moduleAddress}::community::CommunityParams`,
             );
+            console.log(commParams.data);
             setParams((commParams as any).data);
         } catch (error) {
           console.log(error);
@@ -64,7 +65,6 @@ const Community: React.FC = () => {
         } catch (error) {
             pollsResource.push(null);
         }
-
         try {
             pollResource = await provider.getAccountResource(
                 moduleAddress || "",
@@ -110,6 +110,7 @@ const Community: React.FC = () => {
     }, []);
 
     useEffect(() => {
+       // fetchPolls()
         console.log(polls);
     }, [polls]);
     return (
