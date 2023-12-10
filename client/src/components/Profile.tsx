@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAccountContext } from "../utils/context";
 import getUserAccount from "../utils/getUserAccount";
 import { Account } from "../utils/types";
+import EditModal from "./EditModal";
 
 interface ProfileProps {
 }
@@ -12,6 +13,12 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   const navigate = useNavigate();
   let [userAcc, setUserAcc] = useState<Account | null>(useAccountContext());
   let {address} = useParams();
+  const [formData, setFormData] = useState({
+    location: "",
+    profession: "",
+    aboutMe: ""
+  });
+  const [show, setShow] = useState(false);
   const getAcc = async () => {
     if(address){
       const acc = await getUserAccount(address);
@@ -79,11 +86,12 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                       <button
                       className="bg-pink-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
                       type="button" 
-                      onClick={() => navigate("/uploadsongs")}
+                      onClick={() => setShow(true)}
                     >
                       Edit Bio
                     </button>
                   </div>
+                  <EditModal isOpen={show} onClose={() => setShow(false)} formData={formData} setFormData={setFormData} />
                 </div>
                 <div className="w-full lg:w-4/12 px-4 lg:order-1">
                   <div className="flex justify-center py-4 lg:pt-4 pt-8">
