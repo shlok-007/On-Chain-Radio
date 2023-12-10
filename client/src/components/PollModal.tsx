@@ -16,9 +16,10 @@ interface FormData {
 
 interface PollModalProps {
   setPolls: React.Dispatch<React.SetStateAction<(Poll | null)[]>>
+  polls: (Poll | null)[]
 }
 
-const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
+const PollModal:React.FC<PollModalProps> = ({ setPolls, polls }) => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -41,6 +42,10 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
     };
     //create poll submit
     const handleCreatePoll = async (e: React.FormEvent<HTMLFormElement>) => {
+      if (!polls[formData.poll_type]) {
+        console.log('This poll is already created');
+        return;
+      }
       e.preventDefault();
       const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
       try {
@@ -67,21 +72,30 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
           voters: [],
         };
         // Update state in the parent component (Community)
-        setPolls((prevPolls) => [...prevPolls, newPoll]);
+        setPolls((prevPolls) => {
+          const newPollArray = [...prevPolls]
+          newPollArray[formData.poll_type] = newPoll
+          return newPollArray;
+        });
         handleClose();
       }
       } catch (error) {
         console.error(error);
-        const newPoll: Poll = {
-          proposed_cut: formData.proposed_value,
-          justification: formData.justification,
-          votes_for: 0,
-          votes_against: 0,
-          end_time: formData.poll_type,
-          voters: [],
-        };
-        // Update state in the parent component (Community)
-        setPolls((prevPolls) => [...prevPolls, newPoll]);
+        // const newPoll: Poll = {
+        //   proposed_cut: formData.proposed_value,
+        //   justification: formData.justification,
+        //   votes_for: 0,
+        //   votes_against: 0,
+        //   end_time: formData.poll_type,
+        //   voters: [],
+        // };
+        // // Update state in the parent component (Community)
+        // // setPolls((prevPolls) => [...prevPolls, newPoll]);
+        // setPolls((prevPolls) => {
+        //   const newPollArray = [...prevPolls]
+        //   newPollArray[formData.poll_type] = newPoll
+        //   return newPollArray;
+        // });
         handleClose();
       }
     };
@@ -99,6 +113,7 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
     ) => {
       setFormData(() => {
         const value = e.target.value;
+        
        return ({
         ...formData,
         poll_type: parseInt(value)
@@ -169,10 +184,10 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls }) => {
         /> */}
         <select id="countries" onChange={handleSelect} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
           <option selected>Select any on option</option>
-          <option value={1}>Option 1</option>
-          <option value={2}>Option 2</option>
-          <option value={3}>Option 3</option>
-          <option value={4}>Option 4</option>
+          {polls[0] === null ? <></> : <option value={1}>Option 1</option>}
+          {polls[1] === null ? <></> : <option value={2}>Option 2</option>}
+          {polls[2] === null ? <></> : <option value={3}>Option 3</option>}
+          {polls[3] === null ? <></> : <option value={4}>Option 4</option>}
         </select>
         
       </div>

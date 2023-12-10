@@ -68,9 +68,10 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
             type: "entry_function_payload",
             function: `${moduleAddress}::community::end_poll`,
             //here we require poll type??
-            arguments: [1],
+            arguments: [index+1],
             type_arguments: [],
           };
+          polls[index] = null;
         // sign and submit transaction to chain
         const response =await window.aptos.signAndSubmitTransaction(payload);
         await provider.waitForTransaction(response.hash);
@@ -87,7 +88,7 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
             type: "entry_function_payload",
             function: `${moduleAddress}::community::vote`,
             //give a state using useState of boolean type for true if for and flase if against??
-            arguments: [true,1],
+            arguments: [true,index+1],
             type_arguments: [],
           };
         // sign and submit transaction to chain
@@ -104,8 +105,9 @@ const Polls: React.FC<PollProps> = ({ question, votes_against, votes_for, time, 
     return (
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-2 mb-4 md:w-3/4 sm:w-full m-auto">
             <div>
-                <p className="inline-block w-3/4 text-lg font-bold">{question}</p>
-                <Timer initialTime={time ? time : 0} onTimerEnd={() => setTimeUp(true)} />
+                <p className="inline-block text-black w-3/4 text-lg font-bold">This is for the Option {index}: {question}</p>
+                {/* if you want to add the timer functionality uncomment the following code */}
+                {/* <Timer initialTime={time ? time : 0} onTimerEnd={() => setTimeUp(true)} /> */}
             </div>
 
             {/* options */}
