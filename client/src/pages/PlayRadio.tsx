@@ -7,15 +7,18 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Song } from "../utils/types";
 import { useAccountContext } from "../utils/context";
 import { Provider, Network } from "aptos";
+import { ReportModal } from "../components/ReportModal";
+import SubscribeModal from "../components/SubscribeModal";
 
 interface PlayRadioProps {
   premium: boolean;
 }
 
 const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
-  const [like, setLike] = useState(true);
+  const [sub, setSub] = useState(true);
   const navigate = useNavigate();  
   const {genre} = useParams();
+  const [report, setReport] = useState(false);
   const provider = new Provider(Network.TESTNET);
   const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST as string;
   const isUserPremium = useAccountContext()?.premium || false;
@@ -232,9 +235,12 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
   useEffect(() => {
     fetchSong();
   }, [songEnded, songTableHandle]);
+  
 
   return (
-    <div className="h-screen bg-[#7CA4AE] ">
+    <div className="h-screen bg-[#7CA4AE]">
+      {report && <ReportModal report={report} setReport={setReport} />}
+      {sub && <SubscribeModal onClose={() => setSub(false)}/>}
       <div className="bg-[#7CA4AE] font-sans grid place-items-center py-12">
         <div className="bg-gray-800 md:grid md:grid-cols-2 rounded-md overflow-hidden mx-2 ">
 
@@ -242,7 +248,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
           {/* --------------------------------cover image------------------------------- */}
           <div>
             <img
-              src={`https://ipfs.io/ipfs/${currentSong.ipfs_hash_cover_img}`}
+              src={ladyMusic}
               alt="Cover"
               className="w-full h-full object-cover"
             />
@@ -261,7 +267,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
               {/* -----------------controls---------------- */}
               <div className=" py-4 md:py-12 flex items-center justify-around text-[#7CA4AE] px-5">
                 {/* ---------previous button------------- */}
-                <button className="control-button">
+                {/* <button className="control-button">
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <g fill="none">
                       <path
@@ -274,7 +280,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
                       ></path>
                     </g>
                   </svg>
-                </button>
+                </button> */}
 
                 {/* ---------Play/pause button--------- */}
                 <button className="control-button">
@@ -303,7 +309,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
                 </button>
 
                 {/* ---------next button--------- */}
-                <button className="control-button">
+                {/* {/* <button className="control-button">
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <g fill="none">
                       <path
@@ -316,8 +322,8 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
                       ></path>
                     </g>
                   </svg>
-                </button>
-              </div>
+                </button> */}
+              </div> 
 
               {/* -------------silder music duration------------ */}
 
@@ -326,7 +332,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
               </audio>  */}
               
 
-              <audio ref={audioPlayerRef} 
+              {/* <audio ref={audioPlayerRef} 
               autoPlay 
               controls
               muted = {!authorized}
@@ -334,8 +340,8 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
               >
               <source src="" type="audio/mp3" />
               {/* <source src="https://ipfs.io/ipfs/bafybeifc2tqqiltfieu7jwesvc4rq4xbzxxlgv5u7akqwbawdz5kyksatm" type="audio/mp3" /> */}
-              Your browser does not support the audio element.
-              </audio>
+              {/* Your browser does not support the audio element.
+              </audio> */} 
 
               <div className="flex items-center gap-5 my-4 md:mb-8">
                 <div className="text-sm opacity-80">{playbakTime}</div>
@@ -350,13 +356,13 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
               </div>
 
 
-              {/* -------------------------------Like and Tip buttons------------------------------ */}
+              {/* -------------------------------sub and Tip buttons------------------------------ */}
               <div className="pt-8 md:py-12 flex items-center justify-around text-[#7CA4AE] px-5">
                 <button>
                 <FontAwesomeIcon
                       icon={faCircleInfo}
                       className="text-center"
-                      onClick={() => setLike(!like)}
+                      onClick={() => setReport(!report)}
                       size="xl"
                     />
                 </button>
@@ -373,7 +379,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   );
 };
 
