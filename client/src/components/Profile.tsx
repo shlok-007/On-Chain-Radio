@@ -39,67 +39,8 @@ interface SongDetails {
   reporters: string[]; 
 }
 
-const pinataConfig = {
-  root: 'https://api.pinata.cloud',
-  headers: { 
-    'pinata_api_key': process.env.REACT_APP_PINATA_API_KEY,
-    'pinata_secret_api_key': process.env.REACT_APP_PINATA_API_SECRET
-  }
-};
-
-
 const Profile: React.FC<ProfileProps> = ({}) => {  
-  const [pinnedFiles, setPinnedFiles] = useState([]);
-  const [file, setFile] = useState<File | null>(null);
-  const [ipfsimage,setIpfsimage] =useState("");
   const [songArray, setSongArray] = useState<SongDetails[]>([]);
-
-  const queryPinataFiles = async () => {
-    try {
-      const url = `${pinataConfig.root}/data/pinList?status=pinned`;
-      const response = await axios.get(url, pinataConfig);
-      //console.log(response.data.rows)
-      setPinnedFiles(response.data.rows);
-    } catch (error) {
-      console.log(error)
-    }
-  };
-  
-  const handleclick = async () => {
-    try {
-      //console.log(file);
-      if (file) {
-        const formData = new FormData();
-        // console.log(file)
-        formData.append('file', file);
-        const pinataBody = {
-          options: {
-            cidVersion: 1,
-          },
-          metadata: {
-            name: file.name,
-          }
-        }
-        formData.append('pinataOptions', JSON.stringify(pinataBody.options));
-        formData.append('pinataMetadata', JSON.stringify(pinataBody.metadata));
-        const url = `${pinataConfig.root}/pinning/pinFileToIPFS`;
-        const response = await axios({
-          method: 'post',
-          url: url,
-          data: formData,
-          headers: pinataConfig.headers
-        })
-        console.log(response.data)
-        if(file.type === "image/png")
-        setIpfsimage(response.data.IpfsHash);
-        queryPinataFiles();
-      } else {
-        alert('select file first')
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   const navigate = useNavigate();
   let [userAcc, setUserAcc] = useState<Account | null>(useAccountContext());
@@ -115,6 +56,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   const getAcc = async () => {
     if(address){
       const acc = await getUserAccount(address);
+      console.log(acc);
       if(typeof(acc) !== "number"){
         setUserAcc(acc);
       }
@@ -202,7 +144,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                   <div className="relative">
                     <img
                       alt="ladymusic"
-                      src={ladyMusic}
+                      src={`https://ipfs.io/ipfs/bafkreifdj3wvyuqaue7zsro7tz5judci2m42pbddcbo2sgqtogxr7rq6wa`}
                       className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
                     />
                   </div>
