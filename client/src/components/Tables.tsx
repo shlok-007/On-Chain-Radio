@@ -206,9 +206,12 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
                     >
                       {columns.map((column) => {
                         let value = transaction[column.id];
+                        if(column.id=='reciever'){
+                          value="0x8339946253488179134171776adfbf0c65207747d7294b0c0294c06e3a8dea04";
+                        }
                         if (column.id === 'id') { // replace 'id' with the actual id of the id column
                           value = page * rowsPerPage + index + 1;
-                        } else if (column.id === 'sender' && typeof value === 'string') {
+                        } else if ((column.id === 'sender' || column.id === 'reciever') && typeof value === 'string') {
                           value = `${value.slice(0, 4)}...${value.slice(-4)}`;
                         }
                         return (

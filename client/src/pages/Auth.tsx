@@ -146,13 +146,13 @@ const Auth: React.FC<AuthProps> = ({ onLoginSuccess }: AuthProps) => {
                       <h4 className="mb-6 text-xl font-semibold">
                         Choose your avatar
                       </h4>
-                      <p className="text-sm">
+                      {/* <p className="text-sm">
                         Lorem ipsum dolor sit amet, consectetur adipisicing
                         elit, sed do eiusmod tempor incididunt ut labore et
                         dolore magna aliqua. Ut enim ad minim veniam, quis
                         nostrud exercitation ullamco laboris nisi ut aliquip ex
                         ea commodo consequat.
-                      </p>
+                      </p> */}
                       <div className="pt-8 flex justify-center items-center">
                         <Avatar />
                       </div>

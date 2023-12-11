@@ -49,13 +49,13 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
               Pricing
             </h1>
             <p className="lg:w-2/3 mx-auto leading-relaxed text-base text-gray-500">
-              Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical.
+              Subscribe to our premium stations to experience unbounded music.
             </p>
           </div>
           <div className="flex flex-wrap justify-center -m-4">
 
 {/* ---------------------------------CARD 1---------------------------------------- */}
-            <div className="p-5 xl:w-1/4 md:w-1/2 w-full">
+            {/* <div className="p-5 xl:w-1/4 md:w-1/2 w-full">
               <div className="h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden">
                 <h2 className="text-sm tracking-widest title-font mb-1 font-medium">
                   SPECIAL
@@ -153,7 +153,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
                   Literally you probably haven't heard of them jean shorts.
                 </p>
               </div>
-            </div>
+            </div> */}
 
 {/* ---------------------------------CARD 2---------------------------------------- */}
             <div className="p-4 xl:w-1/4 md:w-1/2 w-full">
@@ -165,7 +165,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
                   PRO
                 </h2>
                 <h1 className="text-5xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">
-                  <span>$38</span>
+                  <span>APT 2</span>
                   <span className="text-lg ml-1 font-normal text-gray-500">
                     /mo
                   </span>
@@ -184,7 +184,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Vexillologist pitchfork
+                  Access to premium content
                 </p>
                 <p className="flex items-center text-gray-600 mb-2">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center bg-indigo-500 text-white rounded-full flex-shrink-0">
@@ -200,7 +200,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Tumeric plaid portland
+                  1 month access
                 </p>
                 <p className="flex items-center text-gray-600 mb-2">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center bg-indigo-500 text-white rounded-full flex-shrink-0">
@@ -216,7 +216,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Hexagon neutra unicorn
+                  Unlimited access
                 </p>
                 <p className="flex items-center text-gray-600 mb-6">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center bg-indigo-500 text-white rounded-full flex-shrink-0">
@@ -232,19 +232,19 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Mixtape chillwave tumeric
+                  Listen to your favourite artists
                 </p>
                 <button className="flex items-center justify-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded" onClick={()=>handleTransaction(1)}>
                   Subscribe
                 </button>
                 <p className="text-xs text-gray-500 mt-3">
-                  Literally you probably haven't heard of them jean shorts.
+                 Pay now to enjoy unbounded listening experience
                 </p>
               </div>
             </div>
 
 {/* ---------------------------------CARD 3---------------------------------------- */}
-            <div className="p-5 xl:w-1/4 md:w-1/2 w-full">
+            {/* <div className="p-5 xl:w-1/4 md:w-1/2 w-full">
               <div className="h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden">
                 <h2 className="text-sm tracking-widest title-font mb-1 font-medium">
                   BUSINESS
@@ -342,7 +342,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
                   Literally you probably haven't heard of them jean shorts.
                 </p>
               </div>
-            </div>
+            </div> */}
 
           </div>
         </div>
