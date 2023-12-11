@@ -84,7 +84,7 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
 
             // Extracting required transaction details from the response array
             const details = data.map((transaction: any) => {
-                const {
+                let {
                     version,
                     type,
                     sender,
@@ -99,7 +99,10 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
 
                 // Converting gas to APT
                 const gasInAPT = Number(max_gas_amount) * Number(gas_unit_price) * (0.00000001);
-
+                const date=new Date(timestamp/1000);
+                timestamp = date.toLocaleString();
+                             
+                console.log(timestamp);
                 // Building the final transaction object with required details
                 return {
                     version,
