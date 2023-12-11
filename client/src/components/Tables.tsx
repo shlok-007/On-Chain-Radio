@@ -27,7 +27,7 @@ const columns: readonly Column[] = [
     format: (value: Number) => value.toLocaleString("en-US"),
   },
   { id: "sender", label: "Sender", minWidth: 170 },
-  { id: "reciever", label: "Reciever", minWidth: 100 },
+  // { id: "reciever", label: "Reciever", minWidth: 100 },
   {
     id: "amount",
     label: "Amount (in APT)",
