@@ -171,54 +171,64 @@ This module is essential for community governance. It allows the users to create
 - `get_artist_premium_cut()`: Returns the current artist premium cut.
 
 ## Data Storage
+The Data Storage module in your React app manages song data upload and storage, connecting with external APIs, enabling IPFS file pinning, and ensuring secure blockchain-backed data handling. It encompasses the `UploadForm`, `ImageUpload`, and `AudioUpload` components, streamlining the upload process for songs.
 
-(add here)
+### Important Notes
+- Ensure the ImageUpload and AudioUpload components are correctly implemented to handle image and audio file uploads, respectively.
+- Set up environmental variables (`REACT_APP_PINATA_API_KEY` and `REACT_APP_PINATA_API_SECRET`) for Pinata API credentials for successful file uploads.
+- Modify the form fields, input validations, and transaction submission logic as needed based on your application's requirements.
+
+### Functionalities
+- Handles song information such as song name, vocalist, lyricist, musician, and audio engineer details.
+- Allows selection of song genre and premium status.
+- Uploads image and audio files using the Pinata API for pinning to IPFS.
+- Submits song-related information to the blockchain after successful wallet connection and validation checks.
 
 ## Frontend Implementation'
 
 In the project directory, run:
-### 'cd client`
+### `cd client`
 ### `npm install` 
 ### `npm start`
 
-## These are the Frontend pages employed
+### These are the Frontend pages employed
 
-## Authentication Page
+### Authentication Page
 - **Description:** Handles user authentication, connecting wallets, and account creation.
 - **Dependencies:** React, React Router DOM, Wallet Adapter (Ant Design), Aptos
 - **Usage:** Renders an authentication form for user login/signup, integrates wallet functionalities, and manages user avatars.
 
-## Community Page
+### Community Page
 - **Description:** Fetches and displays community parameters and polls from Aptos network.
 - **Dependencies:** React, Aptos
 - **Usage:** Shows community parameters, polls, and enables user interactions for voting.
 
-## Dashboard Page
+### Dashboard Page
 - **Description:** Renders a tabbed dashboard layout using Material-UI.
 - **Dependencies:** React, Material-UI
 - **Usage:** Provides tab navigation for insights, transactions, and profile sections.
 
-## Home Page
+### Home Page
 - **Description:** Displays the main landing page with a hero section and song exploration area.
 - **Dependencies:** React
 - **Usage:** Serves as the main entry point for user interaction and song exploration.
 
-## LearnMore Page
+### LearnMore Page
 - **Description:** Presents detailed information about PeerPlay's features, statistics, and popular artists.
 - **Dependencies:** React
 - **Usage:** Provides users with additional insights about PeerPlay's key aspects.
 
-## PlayRadio Page
+### PlayRadio Page
 - **Description:** Represents a music player with functionalities like play/pause, song selection, duration display, and modal integration.
 - **Dependencies:** React, react-router-dom, aptos, @fortawesome/react-fontawesome
 - **Usage:** Controls music playback, song details, and premium access.
 
-## Subscribe Page
+### Subscribe Page
 - **Overview:** Handles subscription plans and transactions within the application.
 - **Usage:** Facilitates subscription options and wallet connections for accessing premium features.
 - **Dependencies:** React, Aptos Client, Wallet Adapter React, React Router DOM
 
-## Upload Page
+### Upload Page
 - **Overview:** Renders a structured form for uploading songs within the application.
 - **Usage:** Facilitates the song upload process.
 - **Dependencies:** React
