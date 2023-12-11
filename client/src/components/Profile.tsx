@@ -22,7 +22,7 @@ interface SongResourceData {
 }
 
 const Profile: React.FC<ProfileProps> = ({}) => {  
-  const [songArray, setSongArray] = useState<SongDetails[]>([]);
+  const [songArray, setSongArray] = useState<Song[]>([]);
   const [sub, setSub] = useState(true);
   const styles = {
     premium: {
