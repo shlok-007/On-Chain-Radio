@@ -23,16 +23,14 @@ interface SongResourceData {
 
 const Profile: React.FC<ProfileProps> = ({}) => {  
   const [songArray, setSongArray] = useState<Song[]>([]);
-  // const [sub, setSub] = useState(true);
-  let sub = useAccountContext()?.premium || false;
+  const [sub, setSub] = useState(true);
   const styles = {
     premium: {
-      backgroundColor: sub ? '#f0c44c' : "white"
+      backgroundColor: 'white'
     }
   }
   const navigate = useNavigate();
   let [userAcc, setUserAcc] = useState<Account | null>(useAccountContext());
-  const [numSong, setNumSong] = useState<number>(0);
   let {address} = useParams();
   const provider = new Provider(Network.TESTNET);
   const [formData, setFormData] = useState({
@@ -49,74 +47,45 @@ const Profile: React.FC<ProfileProps> = ({}) => {
       if(typeof(acc) !== "number"){
         setUserAcc(acc);
       }
-    }
+    } 
   }
   useEffect(() => {
     getAcc();
-    fetchList();
   }, [address]);
-
-  useEffect(() => {
-    if(!show && userAcc){
-      getUserAccount(userAcc.wallet_address).then((acc) => {
-        if(typeof(acc) !== "number"){
-          setUserAcc(acc);
-        }
-      });
-    }
-  }, [show]);
-
-
-  // const { account } = useWallet();
+  const { account } = useWallet();
   const fetchList = async () => {
-    if (!userAcc) return [];
-  
-      const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST;
-      const resourceAddress = userAcc.wallet_address;
-      console.log('Fetching resource for address:', resourceAddress);
-  
+    //let address=useWallet();
+    console.log(account?.address);
+    const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST;
+    try {
       const SongResource = await provider.getAccountResource(
-        resourceAddress,
+        account?.address?? '',
         `${moduleAddress}::song::ArtistStore`
       );
       console.log('SongResource:', SongResource);
-  
-      // const data = SongResource.data as any;
-  
-      // console.log(`Artist Address: ${data.artist_wallet_address}`);
-      // console.log(`Number of Songs: ${data.num_songs}`);
-  
-      // Object.keys(data.songs).forEach((handle) => {
-      //   const songDetails = data.songs[handle] as SongDetails;
-      //   setSongArray((prev) => [...prev, songDetails]);
-      //   console.log(`Handle: ${handle}, Song Details: `, songDetails);
-      // });
-       
-      // console.log(data.songs);
-      const tableHandle= (SongResource as any).data.songs.handle;
-      const num_songs = (SongResource as any).data.num_songs;
-      setNumSong(num_songs);
-      let songs =[];
-      let counter = 0;
-      while (counter < num_songs)
-      {
-        const tableItem = {
-          key_type: "u64",
-          value_type: `${moduleAddress}::songStore::Song`,
-          key: `${counter}`,
-        };
-        const song = await provider.getTableItem(tableHandle, tableItem);
-        songs.push(song);
-        counter++;
-      }
-      console.log(songs);
-      setSongArray(songs);
+      //after songs fetch from particular artist required
+      const data = SongResource.data as SongResourceData;
+
+      console.log(`Artist Address: ${data.artist_address}`);
+      console.log(`Number of Songs: ${data.num_songs}`);
+
+      Object.keys(data.songs).forEach((handle) => {
+          const Song = data.songs[handle] as Song;
+          setSongArray((prev) => {
+            return (
+              [...prev, Song]
+            )
+          })
+          console.log(`Handle: ${handle}, Song Details: `, Song);
+      });
+    } catch (e: any) {
+      console.log(e);
+    }
   };
   
   useEffect(() => {
-    // console.log(account?.address);
     fetchList();
-  }, [userAcc]);
+  }, [address]);
   
   return (
     <main className="profile-page md:py-10 text-black">
@@ -161,8 +130,8 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                 <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                   <div className="relative">
                     <img
-                      alt={ladyMusic}
-                      src={userAcc?.bio.profile_img_hash !== "" ? `https://ipfs.io/ipfs/${userAcc?.bio.profile_img_hash}` : ladyMusic}
+                      alt="ladymusic"
+                      src={`https://ipfs.io/ipfs/bafkreifdj3wvyuqaue7zsro7tz5judci2m42pbddcbo2sgqtogxr7rq6wa`}
                       className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
                     />
                   </div>
@@ -184,9 +153,9 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                   <div className="flex justify-center py-4 lg:pt-4 pt-8">
                     <div className="mr-4 p-3 text-center">
                       <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                        {numSong}
+                        22
                       </span>
-                      <span className="text-sm text-blueGray-400">Songs Uploaded</span>
+                      <span className="text-sm text-blueGray-400">Total Tips Received</span>
                     </div>
                     {/* <div className="mr-4 p-3 text-center">
                       <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
@@ -210,29 +179,29 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                   {userAcc?.name}
                 </h3>
                 {sub ? <Chip
-                label="Premium"
+                label="Premium User"
                 color="primary"
                 className="hover:bg-blue-500 cursor-pointer"
               /> : <></>}
                 <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
                   <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
-                  {userAcc?.bio.location !== "" ? userAcc?.bio.location : "Bangalore, India"}
+                  {userAcc?.bio.location == "" ? userAcc?.bio.location : "Bangalore, India"}
                   
                 </div>
-                <div className="mb-2 text-blueGray-600 mt-10">
+                <div className="mb-0 text-blueGray-600">
                   <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
-                  {userAcc?.bio.profession !== "" ? userAcc?.bio.profession : "Influencer / Artist"}
+                  {userAcc?.bio.profession == "" ? userAcc?.bio.profession : "Influencer / Artist"}
                 </div>
-                <div className="mb-2 text-blueGray-600">
+                {/* <div className="mb-2 text-blueGray-600">
                   <i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>
                   
-                </div>
+                </div> */}
               </div>
               <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
                 <div className="flex flex-wrap justify-center">
                   <div className="w-full lg:w-9/12 px-4">
-                    <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                      {userAcc?.bio.about !== "" ? userAcc?.bio.about : "An artist who loves to sing and dance."}
+                    <p className="mb-0 text-lg leading-relaxed text-blueGray-700">
+                      {userAcc?.bio.about == "" ? userAcc?.bio.about : "An artist who loves to sing and dance."}
                     </p>
                   </div>
                 </div>
@@ -248,7 +217,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
         <div className="container px-5 py-10 mx-auto">
           <div className="flex flex-col text-center w-full mb-20">
             <h1 className="text-4xl text-white font-medium title-font mb-4 text-gray-900">
-              Songs
+              Artist Gallery  
             </h1>
             <p className="lg:w-2/3 mx-auto leading-relaxed text-base">
               Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical
@@ -256,14 +225,10 @@ const Profile: React.FC<ProfileProps> = ({}) => {
               haven't heard of them.
             </p>
           </div>
-          <div className="flex flex-wrap m-4">
-
-
-            
-              {songArray.map((song: Song, index) => (
-                <div key={index}>
-                  <ProfileSong song={song} />
-                </div>
+          <div className=" grid-cols-5 m-4">
+              {songArray.map((song: Song, index) => (<div key={index} className="inline-block my-1">
+                <ProfileSong song={song} />
+              </div> 
               ))}
             
           </div>
