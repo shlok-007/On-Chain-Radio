@@ -2,12 +2,14 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWallet } from "@fortawesome/free-solid-svg-icons";
 import { Song } from "../utils/types";
 import { Provider, Network } from "aptos";
 import { useAccountContext } from "../utils/context";
+import getUserAccount from "../utils/getUserAccount";
+import { Account } from "../utils/types";
 
 const style = {
   position: "absolute" as "absolute",
@@ -25,6 +27,7 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [amount, setAmount] = useState("1");
+  const [artistAccount, setArtistAccount] = useState<Account | null>(null);
   const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST || "";
   const provider = new Provider(Network.TESTNET);
 
@@ -67,6 +70,16 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
     } catch(e){
       console.log("Error tipping song", e);}
   }
+
+  useEffect(() => {
+    if(artistAccount === null){
+      getUserAccount(currentSong.artist_wallet_address).then((account) => {
+        console.log("Artist Acc",account);
+        if(typeof(account)!=='number')
+          setArtistAccount(account);
+      });
+    }
+  }, [currentSong]);
 
   return (
     <div>
@@ -201,7 +214,7 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
                     Receiving
                   </span>
                   <div className="flex cursor-pointer items-center gap-x-2">
-                    <svg
+                    {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-5 w-5 text-green-700"
                       fill="none"
@@ -214,22 +227,22 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
                         strokeLinejoin="round"
                         d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
-                    </svg>
-                    <div className="font-semibold text-green-700">
+                    </svg> */}
+                    {/* <div className="font-semibold text-green-700">
                       Add recipient
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
                 <div className="flex items-center gap-x-[10px] bg-black border-[1px] p-2 mt-2 rounded-[4px]">
                   <img
                     className="h-10 w-10 rounded-full"
-                    src="https://images.unsplash.com/photo-1507019403270-cca502add9f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                    src={artistAccount?.bio.profile_img_hash === "" ? "https://www.pngitem.com/pimgs/m/30-307416_profile-icon-png-image-free-download-searchpng-employee.png" : "https://ipfs.io/ipfs/"+artistAccount?.bio.profile_img_hash}
                     alt=""
                   />
                   <div>
                     <div className="font-semibold text-white">{currentSong.artist_wallet_address.slice(0,8)+"..."+currentSong.artist_wallet_address.slice(-15)}</div>
-                    <div className="text-[#64748B]">@KittyKatmills</div>
+                    <div className="text-[#64748B]">{artistAccount?.name}</div>
                   </div>
                 </div>
               </div>

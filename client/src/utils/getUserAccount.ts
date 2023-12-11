@@ -21,6 +21,7 @@ export default async function getUserAccount(address: string | null) {
             location: (accountResource as any).data.bio.location,
             profession: (accountResource as any).data.bio.profession,
             about: (accountResource as any).data.bio.about,
+            profile_img_hash: (accountResource as any).data.bio.profile_img_hash,
         },
         premium: (accountResource as any).data.premium,
         subscription_expiry: (accountResource as any).data.subscription_expiry,
