@@ -52,42 +52,20 @@ const Songs: React.FC<SongsProps> = ({  }) => {
        <main className="grid place-items-center  bg-gradient-to-b from-gray-950 to-[#56757d] p-5">
           <div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
-            Trending  
+            Top Charts 
             </h1>
             <section className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {/* <!-- FREE CARD  --> */}
               {/* let _genre_list = vector[utf8(b"Rock"), utf8(b"Pop"), utf8(b"HipHop"), utf8(b"Classical"), utf8(b"Jazz")]; */}
         
-              <FreeCard genre="Rock" />
-              <FreeCard genre="Pop" />
-              <FreeCard genre="HipHop" />
-              <FreeCard genre="Classical" />
-              <FreeCard genre="Jazz" />
+              <FreeCard genre="Trending Now" />
+              <FreeCard genre="New Arrivals" />
 
               {/* <!-- END OF FREE CARD  --> */}
             </section>
           </div>
         </main>
       
-      <main className="grid place-items-center  bg-[#56757d] p-5">
-          <div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
-              New Arrivals
-            </h1>
-            <section className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-              {/* <!-- FREE CARD  --> */}
-              {/* let _genre_list = vector[utf8(b"Rock"), utf8(b"Pop"), utf8(b"HipHop"), utf8(b"Classical"), utf8(b"Jazz")]; */}
-        
-              <FreeCard genre="Rock" />
-              <FreeCard genre="Pop" />
-              <FreeCard genre="HipHop" />
-              <FreeCard genre="Classical" />
-              <FreeCard genre="Jazz" />
-
-              {/* <!-- END OF FREE CARD  --> */}
-            </section>
-          </div>
-        </main>
         {!login && <main className="grid place-items-center bg-[#56757d] p-5">
           <div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-200 mb-5">
