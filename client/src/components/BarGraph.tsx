@@ -15,9 +15,9 @@ const MyChart: React.FC<MyChartProps> = ({ votes_against, votes_for }) => {
     labels: ['For', 'Against'],
     datasets: [
       {
-        label: "Number of Votes",
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)',
+        label: 'Votes',
+        backgroundColor: 'rgb(255, 255, 255, 0.5)',
+        borderColor: 'rgba(0, 0, 255, 1)',
         borderWidth: 1,
         hoverBackgroundColor: 'rgba(75,192,192,0.4)',
         hoverBorderColor: 'rgba(75,192,192,1)',
@@ -37,7 +37,16 @@ const MyChart: React.FC<MyChartProps> = ({ votes_against, votes_for }) => {
           options: {
             scales: {
               y: {
-                beginAtZero: true
+                beginAtZero: true,
+                ticks: {
+                  color: '#fff'
+                }
+              },
+              x: {
+                beginAtZero: true,
+                ticks: {
+                  color: '#fff'
+                }
               }
             }
           }
