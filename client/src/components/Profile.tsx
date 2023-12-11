@@ -65,38 +65,60 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   useEffect(() => {
     getAcc();
   }, [address]);
+
+
   const { account } = useWallet();
   const fetchList = async () => {
-    //let address=useWallet();
-    console.log(account?.address);
-    const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST;
     try {
+      if (!account) {
+        console.error("Wallet account is undefined.");
+        return;
+      }
+  
+      const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST;
+      const resourceAddress = account?.address ?? '';
+      console.log('Fetching resource for address:', resourceAddress);
+  
       const SongResource = await provider.getAccountResource(
-        account?.address?? '',
+        resourceAddress,
         `${moduleAddress}::song::ArtistStore`
       );
       console.log('SongResource:', SongResource);
-      //after songs fetch from particular artist required
+  
       const data = SongResource.data as SongResourceData;
-
+  
       console.log(`Artist Address: ${data.artist_address}`);
       console.log(`Number of Songs: ${data.num_songs}`);
-
+  
       Object.keys(data.songs).forEach((handle) => {
-          const songDetails = data.songs[handle] as SongDetails;
-          setSongArray((prev) => {
-            return (
-              [...prev, songDetails]
-            )
-          })
-          console.log(`Handle: ${handle}, Song Details: `, songDetails);
+        const songDetails = data.songs[handle] as SongDetails;
+        setSongArray((prev) => [...prev, songDetails]);
+        console.log(`Handle: ${handle}, Song Details: `, songDetails);
       });
+       
+      console.log(data.songs);
+      const tableHandle=data.songs ;
+      let songs =[];
+      let counter = 0;
+      while (counter < data.num_songs)
+      {
+        const tableItem = {
+          key_type: "u64",
+          value_type: `${moduleAddress}::songStore::Song`,
+          key: `${counter}`,
+        };
+        const song = await provider.getTableItem(tableHandle, tableItem);
+        songs.push(song);
+        counter++;
+      }
+      
     } catch (e: any) {
-      console.log(e);
+      console.error(e);
     }
   };
   
   useEffect(() => {
+    console.log(account?.address);
     fetchList();
   }, [address]);
   
