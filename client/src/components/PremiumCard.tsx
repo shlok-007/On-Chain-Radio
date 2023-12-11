@@ -11,6 +11,11 @@ import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { useAccountContext } from "../utils/context";
+import Jazz from '../assets/Jazz.jpeg'
+import Classical from '../assets/Classical.jpeg'
+import Hiphop from '../assets/Hip hop.jpeg'
+import Rock from '../assets/Rock.jpeg'
+import Pop from '../assets/Pop.jpeg'
 
 interface PremiumCardProps {
   genre: string
@@ -26,6 +31,7 @@ const PremiumCard: React.FC<PremiumCardProps> = ({ genre }) => {
   const handlePlay = () => {
     !login ? navigate("/signup") : !subscribe ? navigate("/subscribe") : navigate("/premiumsongs/" + genre)
   }
+  const [image, setImage] = useState(genre === 'Jazz' ? Jazz : genre === 'HipHop' ? Hiphop : genre === 'Pop' ? Pop : genre === 'Classical' ? Classical : Rock);
 
   return (
     <>
@@ -33,12 +39,12 @@ const PremiumCard: React.FC<PremiumCardProps> = ({ genre }) => {
       <div className="bg-[#ebc247] shadow-lg rounded p-3">
         <div className="group relative">
           <img
-            className="w-full md:w-72 block rounded"
-            src="https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg"
+            className="w-full md:w-72 block rounded h-64"
+            src={image}
             alt=""
           />
           <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
-            <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
+            {/* <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
               {like ? (
                 <FontAwesomeIcon
                   icon={faHeart}
@@ -53,7 +59,7 @@ const PremiumCard: React.FC<PremiumCardProps> = ({ genre }) => {
                   size="xl"
                 />
               )}
-            </button>
+            </button> */}
 
             <button onClick={handlePlay} className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
               {pause ? (
@@ -71,24 +77,21 @@ const PremiumCard: React.FC<PremiumCardProps> = ({ genre }) => {
               )}
             </button>
 
-            <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
+            {/* <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
               <FontAwesomeIcon icon={faWallet} size="xl" />
-            </button>
+            </button> */}
           </div>
         </div>
         <div className="p-5">
-          <div className="flex justify-between">
+          <div className="flex justify-between grid-cols-2 md:grid-cols-1 lg-grid-cols-2">
             <h3 className="text-black text-lg">{genre}</h3>
-            <Stack direction="row" spacing={1}>
+            
               <Chip
                 label="Premium"
                 color="primary"
                 className="hover:bg-blue-500 cursor-pointer"
               />
-            </Stack>
           </div>
-
-          <p className="text-gray-900">Tycho</p>
         </div>
       </div>
       {/* <!-- END OF CARD 1 --> */}

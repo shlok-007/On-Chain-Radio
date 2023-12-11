@@ -9,6 +9,7 @@ import { Provider, Network } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import axios from 'axios';
 import { ProfileSong } from "./ProfileSong";
+import { Chip } from "@mui/material";
 
 interface ProfileProps {
 }
@@ -41,7 +42,12 @@ interface SongDetails {
 
 const Profile: React.FC<ProfileProps> = ({}) => {  
   const [songArray, setSongArray] = useState<SongDetails[]>([]);
-
+  const [sub, setSub] = useState(true);
+  const styles = {
+    premium: {
+      backgroundColor: sub ? '#f0c44c' : "white"
+    }
+  }
   const navigate = useNavigate();
   let [userAcc, setUserAcc] = useState<Account | null>(useAccountContext());
   let {address} = useParams();
@@ -137,7 +143,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
       </section>
       <section className="relative py-16 bg-blueGray-200">
         <div className="container mx-auto px-4">
-          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
+          <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg -mt-64" style={styles.premium}>
             <div className="px-6">
               <div className="flex flex-wrap justify-center">
                 <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
@@ -162,7 +168,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                   </div>
                   <EditModal isOpen={show} onClose={() => setShow(false)} formData={formData} setFormData={setFormData} />
                 </div>
-                <div className="w-full lg:w-4/12 px-4 lg:order-1">
+                <div className="w-full lg:w-4/12 px-4 lg:order-1 my-4">
                   <div className="flex justify-center py-4 lg:pt-4 pt-8">
                     <div className="mr-4 p-3 text-center">
                       <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
@@ -187,13 +193,19 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                   </div>
                 </div>
               </div>
-              <div className="text-center mt-12">
+              <div className="text-center mt-5">
                 <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700">
                   {userAcc?.name}
                 </h3>
+                {sub ? <Chip
+                label="Premium"
+                color="primary"
+                className="hover:bg-blue-500 cursor-pointer"
+              /> : <></>}
                 <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
                   <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
                   {userAcc?.bio.location !== "" ? userAcc?.bio.location : "Bangalore, India"}
+                  
                 </div>
                 <div className="mb-2 text-blueGray-600 mt-10">
                   <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
