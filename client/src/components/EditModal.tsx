@@ -89,7 +89,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
       console.log(response);
       onClose();
       } catch (error) {
-        console.error("Failed to connect wallet", error);
+        console.error(error);
       }
   };
   const handleCancel = () => {
