@@ -30,6 +30,7 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
   const [artistAccount, setArtistAccount] = useState<Account | null>(null);
   const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST || "";
   const provider = new Provider(Network.TESTNET);
+  const [totalTips, setTotalTips] = useState(currentSong.total_tips);
 
   const handleAmountChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -62,11 +63,17 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
         `${tip_amount}`
       ],
     };
-    console.log(payload);
+    console.log("Final tip amt ",currentSong.total_tips/100000000 + tip_amount/100000000);
+    // console.log(currentSong.total_tips);
+    // console.log(tip_amount/100000000, tip_amount);
+
+    // console.log(payload);
     try{
       const response = await window.aptos.signAndSubmitTransaction(payload);
       await provider.waitForTransaction(response.hash);
       console.log("Song tipped");
+      setTotalTips(currentSong.total_tips/100000000 + tip_amount/100000000);
+      alert("Song tipped successfully");
     } catch(e){
       console.log("Error tipping song", e);}
   }
@@ -85,7 +92,7 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
     <div>
       <div className="grid-cols-2">
         <div>
-          <p>{currentSong.total_tips / 100000000}</p>
+          <p>{totalTips ===0 ? currentSong.total_tips/100000000 : totalTips} APT</p>
           <p>Total Tips</p>
         </div>
       <Button onClick={handleOpen}>

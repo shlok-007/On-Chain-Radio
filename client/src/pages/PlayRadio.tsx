@@ -222,7 +222,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
       key_type: key_type,
       value_type: `${moduleAddress}::songStore::Song`,
       // key: key_type === "u8" ? sidx : `${sidx}`  // Uncomment later
-      key: 1
+      key: 0
       });
       setCurrentSong((songData as any));
       if(songData.premium && !isUserPremium) setAuthorized(false);
