@@ -7,11 +7,100 @@ import { Account } from "../utils/types";
 import EditModal from "./EditModal";
 import { Provider, Network } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import axios from 'axios';
+import { ProfileSong } from "./ProfileSong";
 
 interface ProfileProps {
 }
 
+interface SongResourceData {
+  artist_address: string;
+  num_songs: number;
+  songs: { [handle: string]: SongDetails }; 
+}
+
+
+interface SongDetails {
+  // Define the structure of each song
+  song_store_ID: number;
+  artist_store_ID: number;
+  artist_wallet_address: string;
+  title: string;
+  ipfs_hash: string;
+  ipfs_hash_cover_img: string;
+  total_tips: number;
+  premium: boolean;
+  genre: string;
+  vocalist: string;
+  lyricist: string;
+  musician: string;
+  audio_engineer: string;
+  reports: number;
+  reporters: string[]; 
+}
+
+const pinataConfig = {
+  root: 'https://api.pinata.cloud',
+  headers: { 
+    'pinata_api_key': process.env.REACT_APP_PINATA_API_KEY,
+    'pinata_secret_api_key': process.env.REACT_APP_PINATA_API_SECRET
+  }
+};
+
+
 const Profile: React.FC<ProfileProps> = ({}) => {  
+  const [pinnedFiles, setPinnedFiles] = useState([]);
+  const [file, setFile] = useState<File | null>(null);
+  const [ipfsimage,setIpfsimage] =useState("");
+  const [songArray, setSongArray] = useState<SongDetails[]>([]);
+
+  const queryPinataFiles = async () => {
+    try {
+      const url = `${pinataConfig.root}/data/pinList?status=pinned`;
+      const response = await axios.get(url, pinataConfig);
+      //console.log(response.data.rows)
+      setPinnedFiles(response.data.rows);
+    } catch (error) {
+      console.log(error)
+    }
+  };
+  
+  const handleclick = async () => {
+    try {
+      //console.log(file);
+      if (file) {
+        const formData = new FormData();
+        // console.log(file)
+        formData.append('file', file);
+        const pinataBody = {
+          options: {
+            cidVersion: 1,
+          },
+          metadata: {
+            name: file.name,
+          }
+        }
+        formData.append('pinataOptions', JSON.stringify(pinataBody.options));
+        formData.append('pinataMetadata', JSON.stringify(pinataBody.metadata));
+        const url = `${pinataConfig.root}/pinning/pinFileToIPFS`;
+        const response = await axios({
+          method: 'post',
+          url: url,
+          data: formData,
+          headers: pinataConfig.headers
+        })
+        console.log(response.data)
+        if(file.type === "image/png")
+        setIpfsimage(response.data.IpfsHash);
+        queryPinataFiles();
+      } else {
+        alert('select file first')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const navigate = useNavigate();
   let [userAcc, setUserAcc] = useState<Account | null>(useAccountContext());
   let {address} = useParams();
@@ -19,7 +108,8 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   const [formData, setFormData] = useState({
     location: "",
     profession: "",
-    aboutMe: ""
+    aboutMe: "",
+    selectedImage: ""
   });
   const [show, setShow] = useState(false);
   const getAcc = async () => {
@@ -44,6 +134,21 @@ const Profile: React.FC<ProfileProps> = ({}) => {
         `${moduleAddress}::song::ArtistStore`
       );
       console.log('SongResource:', SongResource);
+      //after songs fetch from particular artist required
+      const data = SongResource.data as SongResourceData;
+
+      console.log(`Artist Address: ${data.artist_address}`);
+      console.log(`Number of Songs: ${data.num_songs}`);
+
+      Object.keys(data.songs).forEach((handle) => {
+          const songDetails = data.songs[handle] as SongDetails;
+          setSongArray((prev) => {
+            return (
+              [...prev, songDetails]
+            )
+          })
+          console.log(`Handle: ${handle}, Song Details: `, songDetails);
+      });
     } catch (e: any) {
       console.log(e);
     }
@@ -188,72 +293,13 @@ const Profile: React.FC<ProfileProps> = ({}) => {
           <div className="flex flex-wrap m-4">
 
 
-            <div className="p-4 lg:w-1/4 md:w-1/2">
-              <div className="h-full flex flex-col items-center text-center">
-                <img
-                  alt="team"
-                  className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4"
-                  src="https://dummyimage.com/200x200"
-                />
-                <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-white">
-                    Alper Kamu
-                  </h2>
-                  <h3 className="text-gray-400 mb-3">Album Song</h3>
+            
+              {songArray.map((song: SongDetails, index) => (
+                <div key={index}>
+                  <ProfileSong song={song} />
                 </div>
-              </div>
-            </div>
-
-
-            <div className="p-4 lg:w-1/4 md:w-1/2">
-              <div className="h-full flex flex-col items-center text-center">
-                <img
-                  alt="team"
-                  className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4"
-                  src="https://dummyimage.com/201x201"
-                />
-                <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-white">
-                    Holden Caulfield
-                  </h2>
-                  <h3 className="text-gray-400 mb-3">Album Song</h3>
-                </div>
-              </div>
-            </div>
-
-
-            <div className="p-4 lg:w-1/4 md:w-1/2">
-              <div className="h-full flex flex-col items-center text-center">
-                <img
-                  alt="team"
-                  className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4"
-                  src="https://dummyimage.com/202x202"
-                />
-                <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-white">
-                    Atticus Finch
-                  </h2>
-                  <h3 className="text-gray-400 mb-3">Album Song</h3>
-                </div>
-              </div>
-            </div>
-
-
-            <div className="p-4 lg:w-1/4 md:w-1/2">
-              <div className="h-full flex flex-col items-center text-center">
-                <img
-                  alt="team"
-                  className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4"
-                  src="https://dummyimage.com/203x203"
-                />
-                <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-white">
-                    Henry Letham
-                  </h2>
-                  <h3 className="text-gray-400 mb-3">Album Song</h3>
-                </div>
-              </div>
-            </div>
+              ))}
+            
           </div>
         </div>
       </section>

@@ -6,17 +6,20 @@ interface EditModalProps {
   formData: {
     location: string,
     profession: string,
-    aboutMe: string
+    aboutMe: string,
+    selectedImage:string
   },
   setFormData: React.Dispatch<SetStateAction<{
     location: string,
     profession: string,
-    aboutMe: string
+    aboutMe: string,
+    selectedImage: string
   }>>
 }
 
 const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFormData }) => {
-  
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
     setFormData((prev) => {
@@ -35,14 +38,43 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
         })
     })
   }
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
 
-  const handleSave = () => {
-    //code to save the bio
+    if (file) {
+      setSelectedImage(file);
 
-
-    // Close the EditModal
-    onClose();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    //code to save the bio
+      e.preventDefault();
+      const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
+      try {
+        const payload = {
+          type: "entry_function_payload",
+          function: `${moduleAddress}::user::update_bio`,
+          arguments: [formData.location,formData.profession,formData.aboutMe, selectedImage],
+          type_arguments: [],
+        };
+      // sign and submit transaction to chain
+      await window.aptos.signAndSubmitTransaction(payload);
+      // Close the EditModal
+      onClose();
+      } catch (error) {
+        console.error("Failed to connect wallet", error);
+      }
+  };
+  const handleCancel = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    onClose();
+  }
 
   return (
     <>
@@ -90,6 +122,25 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
                 rows={4}
               ></textarea>
             </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm text-left font-bold mb-2" htmlFor="image">
+                Image
+              </label>
+              <input
+                type="file"
+                id="image"
+                name="image"
+                onChange={handleImageChange}
+                className="border rounded w-full p-3 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Image Preview"
+                className="mx-auto mb-4 h-32 object-contain rounded-lg"
+              />
+            )}
             <div className="flex justify-end">
               <button
                 className="bg-blue-500 text-white px-6 py-3 rounded focus:outline-none hover:bg-blue-600"
@@ -99,7 +150,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
               </button>
               <button
                 className="ml-4 border px-6 py-3 rounded focus:outline-none hover:border-blue-500"
-                onClick={onClose}
+                onClick={handleCancel}
               >
                 Cancel
               </button>
