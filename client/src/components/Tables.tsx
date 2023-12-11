@@ -8,6 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { useAccountContext } from "../utils/context";
 
 interface Column {
   id: "id" | "sender" | "reciever" | "amount" | "timestamp";
@@ -74,7 +75,7 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
 
   useEffect(() => {
     const fetchData = async () => {
-        const url = 'https://fullnode.devnet.aptoslabs.com/v1/accounts/0xbebe574b455ce6b3ce909b61d856038c25ada16e777521982811c43786e4ec54/transactions?limit=10';
+        const url = `https://fullnode.testnet.aptoslabs.com/v1/accounts/${address}/transactions?limit=10`;
 
         try {
             const response = await fetch(url);
