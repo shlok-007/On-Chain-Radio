@@ -176,4 +176,49 @@ This module is essential for community governance. It allows the users to create
 
 ## Frontend Implementation'
 
-(add here)
+In the project directory, run:
+### 'cd client`
+### `npm install` 
+### `npm start`
+
+## These are the Frontend pages employed
+
+## Authentication Page
+- **Description:** Handles user authentication, connecting wallets, and account creation.
+- **Dependencies:** React, React Router DOM, Wallet Adapter (Ant Design), Aptos
+- **Usage:** Renders an authentication form for user login/signup, integrates wallet functionalities, and manages user avatars.
+
+## Community Page
+- **Description:** Fetches and displays community parameters and polls from Aptos network.
+- **Dependencies:** React, Aptos
+- **Usage:** Shows community parameters, polls, and enables user interactions for voting.
+
+## Dashboard Page
+- **Description:** Renders a tabbed dashboard layout using Material-UI.
+- **Dependencies:** React, Material-UI
+- **Usage:** Provides tab navigation for insights, transactions, and profile sections.
+
+## Home Page
+- **Description:** Displays the main landing page with a hero section and song exploration area.
+- **Dependencies:** React
+- **Usage:** Serves as the main entry point for user interaction and song exploration.
+
+## LearnMore Page
+- **Description:** Presents detailed information about PeerPlay's features, statistics, and popular artists.
+- **Dependencies:** React
+- **Usage:** Provides users with additional insights about PeerPlay's key aspects.
+
+## PlayRadio Page
+- **Description:** Represents a music player with functionalities like play/pause, song selection, duration display, and modal integration.
+- **Dependencies:** React, react-router-dom, aptos, @fortawesome/react-fontawesome
+- **Usage:** Controls music playback, song details, and premium access.
+
+## Subscribe Page
+- **Overview:** Handles subscription plans and transactions within the application.
+- **Usage:** Facilitates subscription options and wallet connections for accessing premium features.
+- **Dependencies:** React, Aptos Client, Wallet Adapter React, React Router DOM
+
+## Upload Page
+- **Overview:** Renders a structured form for uploading songs within the application.
+- **Usage:** Facilitates the song upload process.
+- **Dependencies:** React
