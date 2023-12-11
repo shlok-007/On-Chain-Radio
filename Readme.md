@@ -186,10 +186,7 @@ The Data Storage module in your React app manages song data upload and storage, 
 
 ## Frontend Implementation'
 
-In the project directory, run:
-### `cd client`
-### `npm install` 
-### `npm start`
+In the project directory, ``` client ``` contains the frontend of the application
 
 ### These are the Frontend pages employed
 
