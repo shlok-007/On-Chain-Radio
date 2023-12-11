@@ -19,13 +19,23 @@ interface FreeCardProps {
   genre: string
 }
 
+const categoryMap = new Map([
+  ['Rock', 'rock'],
+  ['Pop', 'pop'],
+  ['HipHop', 'hiphop'],
+  ['Classical', 'classical'],
+  ['Jazz', 'jazz'],
+  ['Trending Now', 'trending'],
+  ['New Arrivals', 'newarrivals']
+])
+
 const FreeCard: React.FC<FreeCardProps> = ({genre}) => {
   const [like, setLike] = useState(false);
   const [pause, setPause] = useState(false);
   const navigate = useNavigate();
   let login = useAccountContext() !== null;
   const handlePlay = () => {
-    login ? navigate("/playsongs/trending") : navigate("/signup")
+    login ? navigate("/playsongs/"+categoryMap.get(genre)) : navigate("/signup")
   }
   const [image, setImage] = useState(genre === 'Jazz' ? Jazz : genre === 'HipHop' ? Hiphop : genre === 'Pop' ? Pop : genre === 'Classical' ? Classical : Rock);
   return (

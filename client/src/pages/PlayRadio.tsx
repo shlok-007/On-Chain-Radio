@@ -176,11 +176,12 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
         value_type: `${moduleAddress}::songStore::Genre`,
         key: genreMap.get(genre),
       }
-      console.log("genreTableHandle",genreHandle);
+      // console.log("genreTableHandle",genreHandle);
       // console.log(genreItem);
       try{
         let songTable = await provider.getTableItem(genreHandle, genreItem);
-        setNumSongs((songTable as any).num_songs);
+        if((songTable as any).num_songs === 0){ alert("We currently don't have any songs of this category");}
+        else  setNumSongs((songTable as any).num_songs);
         setSongTableHandle((songTable as any).songs.handle);
         console.log("Genre",songTable);
       } catch(e){
@@ -208,10 +209,10 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
     console.log("songEnded",songEnded);
     if(songTableHandle === "" || num_songs === 0 || !songEnded) return;
     let sidx;
-    // if(songIndex === -1){  setSongIndex(seed % num_songs); sidx = seed % num_songs; }
-    // else {setSongIndex((songIndex + 1) % num_songs); sidx = (songIndex + 1) % num_songs;}
-    if(songIndex === -1){  setSongIndex(1); sidx = 4; }
-    else {setSongIndex((songIndex + 1) % 2); sidx = (songIndex + 1) % 2 + 3;}
+    if(songIndex === -1){  setSongIndex(seed % num_songs); sidx = seed % num_songs; }
+    else {setSongIndex((songIndex + 1) % num_songs); sidx = (songIndex + 1) % num_songs;}
+    // if(songIndex === -1){  setSongIndex(1); sidx = 4; }
+    // else {setSongIndex((songIndex + 1) % 2); sidx = (songIndex + 1) % 2 + 3;}
 
     // sidx = (seed % 2) + 3;
     // console.log(seed);
@@ -224,8 +225,8 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
     let songData = await provider.getTableItem(songTableHandle, {
       key_type: key_type,
       value_type: `${moduleAddress}::songStore::Song`,
-      // key: key_type === "u8" ? sidx : `${sidx}`  // Uncomment later
-      key: 0
+      key: key_type === "u8" ? sidx : `${sidx}`  // Uncomment later
+      // key: 0
       });
       setCurrentSong((songData as any));
       if(songData.premium && !isUserPremium) setAuthorized(false);
