@@ -9,6 +9,7 @@ import { Provider, Network } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import axios from 'axios';
 import { ProfileSong } from "./ProfileSong";
+import { Song } from "../utils/types";
 
 interface ProfileProps {
 }
@@ -16,34 +17,15 @@ interface ProfileProps {
 interface SongResourceData {
   artist_address: string;
   num_songs: number;
-  songs: { [handle: string]: SongDetails }; 
-}
-
-
-interface SongDetails {
-  // Define the structure of each song
-  song_store_ID: number;
-  artist_store_ID: number;
-  artist_wallet_address: string;
-  title: string;
-  ipfs_hash: string;
-  ipfs_hash_cover_img: string;
-  total_tips: number;
-  premium: boolean;
-  genre: string;
-  vocalist: string;
-  lyricist: string;
-  musician: string;
-  audio_engineer: string;
-  reports: number;
-  reporters: string[]; 
+  songs: { [handle: string]: Song }; 
 }
 
 const Profile: React.FC<ProfileProps> = ({}) => {  
-  const [songArray, setSongArray] = useState<SongDetails[]>([]);
+  const [songArray, setSongArray] = useState<Song[]>([]);
 
   const navigate = useNavigate();
   let [userAcc, setUserAcc] = useState<Account | null>(useAccountContext());
+  const [numSong, setNumSong] = useState<number>(0);
   let {address} = useParams();
   const provider = new Provider(Network.TESTNET);
   const [formData, setFormData] = useState({
@@ -64,19 +46,16 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   }
   useEffect(() => {
     getAcc();
+    fetchList();
   }, [address]);
 
 
-  const { account } = useWallet();
+  // const { account } = useWallet();
   const fetchList = async () => {
-    try {
-      if (!account) {
-        console.error("Wallet account is undefined.");
-        return;
-      }
+    if (!userAcc) return [];
   
       const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST;
-      const resourceAddress = account?.address ?? '';
+      const resourceAddress = userAcc.wallet_address;
       console.log('Fetching resource for address:', resourceAddress);
   
       const SongResource = await provider.getAccountResource(
@@ -85,22 +64,24 @@ const Profile: React.FC<ProfileProps> = ({}) => {
       );
       console.log('SongResource:', SongResource);
   
-      const data = SongResource.data as SongResourceData;
+      // const data = SongResource.data as any;
   
-      console.log(`Artist Address: ${data.artist_address}`);
-      console.log(`Number of Songs: ${data.num_songs}`);
+      // console.log(`Artist Address: ${data.artist_wallet_address}`);
+      // console.log(`Number of Songs: ${data.num_songs}`);
   
-      Object.keys(data.songs).forEach((handle) => {
-        const songDetails = data.songs[handle] as SongDetails;
-        setSongArray((prev) => [...prev, songDetails]);
-        console.log(`Handle: ${handle}, Song Details: `, songDetails);
-      });
+      // Object.keys(data.songs).forEach((handle) => {
+      //   const songDetails = data.songs[handle] as SongDetails;
+      //   setSongArray((prev) => [...prev, songDetails]);
+      //   console.log(`Handle: ${handle}, Song Details: `, songDetails);
+      // });
        
-      console.log(data.songs);
-      const tableHandle=data.songs ;
+      // console.log(data.songs);
+      const tableHandle= (SongResource as any).data.songs.handle;
+      const num_songs = (SongResource as any).data.num_songs;
+      setNumSong(num_songs);
       let songs =[];
       let counter = 0;
-      while (counter < data.num_songs)
+      while (counter < num_songs)
       {
         const tableItem = {
           key_type: "u64",
@@ -111,16 +92,14 @@ const Profile: React.FC<ProfileProps> = ({}) => {
         songs.push(song);
         counter++;
       }
-      
-    } catch (e: any) {
-      console.error(e);
-    }
+      console.log(songs);
+      setSongArray(songs);
   };
   
   useEffect(() => {
-    console.log(account?.address);
+    // console.log(account?.address);
     fetchList();
-  }, [address]);
+  }, [userAcc]);
   
   return (
     <main className="profile-page md:py-10 text-black">
@@ -188,9 +167,9 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                   <div className="flex justify-center py-4 lg:pt-4 pt-8">
                     <div className="mr-4 p-3 text-center">
                       <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                        22
+                        {numSong}
                       </span>
-                      <span className="text-sm text-blueGray-400">Total Tips Received</span>
+                      <span className="text-sm text-blueGray-400">Songs Uploaded</span>
                     </div>
                     {/* <div className="mr-4 p-3 text-center">
                       <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
@@ -258,7 +237,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 
 
             
-              {songArray.map((song: SongDetails, index) => (
+              {songArray.map((song: Song, index) => (
                 <div key={index}>
                   <ProfileSong song={song} />
                 </div>

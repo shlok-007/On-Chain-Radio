@@ -12,7 +12,7 @@ const ProfileSong: React.FC<ProfileSongProps> = ({ song }) => {
                 <img
                     alt="team"
                     className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4"
-                    src={song.ipfs_hash_cover_img}
+                    src={"https://ipfs.io/ipfs/"+song.ipfs_hash_cover_img}
                     />
                 <div className="w-full">
                     <h2 className="title-font font-medium text-lg text-white">
