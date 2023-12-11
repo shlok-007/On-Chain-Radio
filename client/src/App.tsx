@@ -41,7 +41,7 @@ function App() {
 
   useEffect(() => {
     getUserAccount(account? account.address : null).then((userAccount) => {
-      if (userAccount !== 0 && userAccount !== -1) {
+      if (typeof userAccount !== 'number') {
         onLoginSuccess(userAccount);
       }
     });

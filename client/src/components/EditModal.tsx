@@ -1,4 +1,14 @@
 import React, { SetStateAction, useState } from 'react';
+import axios from 'axios';
+
+
+const pinataConfig = {
+  root: 'https://api.pinata.cloud',
+  headers: { 
+    'pinata_api_key': process.env.REACT_APP_PINATA_API_KEY,
+    'pinata_secret_api_key': process.env.REACT_APP_PINATA_API_SECRET
+  }
+};
 
 interface EditModalProps {
   isOpen: boolean;
@@ -20,6 +30,10 @@ interface EditModalProps {
 const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFormData }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [pinnedFiles, setPinnedFiles] = useState([]);
+  const [file, setFile] = useState<File | null>(null);
+  const [ipfsimage,setIpfsimage] =useState("");
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
     setFormData((prev) => {
@@ -38,7 +52,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
         })
     })
   }
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
 
     if (file) {
@@ -49,22 +63,27 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+      await handleclick();
     }
   };
   const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
     //code to save the bio
-      e.preventDefault();
+    //await handleclick();
+    e.preventDefault();
+    console.log(ipfsimage);
       const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
       try {
         const payload = {
           type: "entry_function_payload",
           function: `${moduleAddress}::user::update_bio`,
-          arguments: [formData.location,formData.profession,formData.aboutMe, selectedImage],
+          arguments: [formData.location,formData.profession,formData.aboutMe, ipfsimage],
           type_arguments: [],
         };
+        console.log(payload);
       // sign and submit transaction to chain
-      await window.aptos.signAndSubmitTransaction(payload);
+     const response= await window.aptos.signAndSubmitTransaction(payload);
       // Close the EditModal
+      console.log(response);
       onClose();
       } catch (error) {
         console.error("Failed to connect wallet", error);
@@ -75,6 +94,55 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
     setImagePreview(null);
     onClose();
   }
+
+  const queryPinataFiles = async () => {
+    try {
+      const url = `${pinataConfig.root}/data/pinList?status=pinned`;
+      const response = await axios.get(url, pinataConfig);
+      //console.log(response.data.rows)
+      setPinnedFiles(response.data.rows);
+    } catch (error) {
+      console.log(error)
+    }
+  };
+  
+  const handleclick = async () => {
+    try {
+      //console.log(file);
+      if (selectedImage) {
+        const formData = new FormData();
+        // console.log(file)
+        formData.append('file', selectedImage);
+        const pinataBody = {
+          options: {
+            cidVersion: 1,
+          },
+          metadata: {
+            name: selectedImage.name,
+          }
+        }
+        formData.append('pinataOptions', JSON.stringify(pinataBody.options));
+        formData.append('pinataMetadata', JSON.stringify(pinataBody.metadata));
+        const url = `${pinataConfig.root}/pinning/pinFileToIPFS`;
+        const response = await axios({
+          method: 'post',
+          url: url,
+          data: formData,
+          headers: pinataConfig.headers
+        })
+        console.log(response.data)
+        console.log(response.data.IpfsHash);
+        if(selectedImage.type === "image/png")
+        setIpfsimage(response.data.IpfsHash);
+        queryPinataFiles();
+      } else {
+        alert('select file first')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   return (
     <>

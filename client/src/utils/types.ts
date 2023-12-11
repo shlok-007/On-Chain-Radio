@@ -12,6 +12,7 @@ export interface Bio {
     location: string,
     profession: string,
     about: string,
+    profile_img_hash: String
 }
 
 export interface CommunityParams {

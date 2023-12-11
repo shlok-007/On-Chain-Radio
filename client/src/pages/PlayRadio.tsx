@@ -181,15 +181,18 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
         console.log("Genre",songTable);
       } catch(e){
         console.log(e);
+        alert("We currently don't have any songs of this category");
         return;
       }
     } else {
       setKeyType("u8");
       if(song_lib_type === "new_arrivals") {
         setNumSongs((songStore as any).data.new_arrivals.num_songs);
+        if((songStore as any).data.new_arrivals.num_songs === 0) alert("We currently don't have any songs of this category");
         setSongTableHandle((songStore as any).data.new_arrivals.songs.handle);
       } else {
         setNumSongs((songStore as any).data.trending_songs.num_songs);
+        if((songStore as any).data.trending_songs.num_songs === 0) alert("We currently don't have any songs of this category");
         setSongTableHandle((songStore as any).data.trending_songs.songs.handle);
       }
     }
@@ -248,7 +251,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
           {/* --------------------------------cover image------------------------------- */}
           <div>
             <img
-              src={ladyMusic}
+              src={currentSong.ipfs_hash_cover_img==="" ? ladyMusic : `https://ipfs.io/ipfs/${currentSong.ipfs_hash_cover_img}`}
               alt="Cover"
               className="w-full h-full object-cover"
             />
