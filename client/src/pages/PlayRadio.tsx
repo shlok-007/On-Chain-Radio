@@ -9,6 +9,7 @@ import { useAccountContext } from "../utils/context";
 import { Provider, Network } from "aptos";
 import { ReportModal } from "../components/ReportModal";
 import SubscribeModal from "../components/SubscribeModal";
+import {ModalComponent} from "../components/ModalComponent";
 
 interface PlayRadioProps {
   premium: boolean;
@@ -16,6 +17,8 @@ interface PlayRadioProps {
 
 const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
   const [sub, setSub] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleClode = () => setIsModalOpen(false);
   const navigate = useNavigate();  
   const {genre} = useParams();
   const [report, setReport] = useState(false);
@@ -263,7 +266,8 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
           <div className="text-center bg-black text-gray-200">
             <div className="px-10 py-12">
               {/* ----title-------- */}
-              <h2 className="text-2xl font-bold mt-3">{currentSong.title}</h2>
+              <h2 className="text-2xl font-bold mt-3" onClick={() => setIsModalOpen(true)}>{currentSong.title}</h2>
+              <ModalComponent isOpen={isModalOpen} onClose={setIsModalOpen} song={currentSong} />
               <a href="" onClick={() => navigate('/profile/'+currentSong.artist_wallet_address)} className="text-3x font-bold text-[#7CA4AE]">
                 {`by ${currentSong.vocalist}`}
               </a>

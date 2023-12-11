@@ -9,6 +9,11 @@ import { faHeart as outlineHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { useAccountContext } from "../utils/context";
+import Jazz from '../assets/Jazz.jpeg'
+import Classical from '../assets/Classical.jpeg'
+import Hiphop from '../assets/Hip hop.jpeg'
+import Rock from '../assets/Rock.jpeg'
+import Pop from '../assets/Pop.jpeg'
 
 interface FreeCardProps {
   genre: string
@@ -22,19 +27,19 @@ const FreeCard: React.FC<FreeCardProps> = ({genre}) => {
   const handlePlay = () => {
     login ? navigate("/playsongs/trending") : navigate("/signup")
   }
-
+  const [image, setImage] = useState(genre === 'Jazz' ? Jazz : genre === 'HipHop' ? Hiphop : genre === 'Pop' ? Pop : genre === 'Classical' ? Classical : Rock);
   return (
     <>
       {/* <!-- CARD 1 --> */}
       <div className="bg-gray-900 shadow-lg rounded p-3">
         <div className="group relative">
           <img
-            className="w-full md:w-72 block rounded"
-            src="https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg"
+            className="w-full md:w-72 block rounded h-64"
+            src={image}
             alt=""
           />
           <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
-            <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
+            {/* <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
               {like ? (
                 <FontAwesomeIcon
                   icon={faHeart}
@@ -49,7 +54,7 @@ const FreeCard: React.FC<FreeCardProps> = ({genre}) => {
                   size="xl"
                 />
               )}
-            </button>
+            </button> */}
 
             <button onClick={handlePlay} className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
               {pause ? (
@@ -66,15 +71,14 @@ const FreeCard: React.FC<FreeCardProps> = ({genre}) => {
                 />
               )}
             </button>
-
+{/* 
             <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
               <FontAwesomeIcon icon={faWallet} size="xl" />
-            </button>
+            </button> */}
           </div>
         </div>
         <div className="p-5">
           <h3 className="text-white text-lg">{genre}</h3>
-          <p className="text-gray-400">Tycho</p>
         </div>
       </div>
       {/* <!-- END OF CARD 1 --> */}
