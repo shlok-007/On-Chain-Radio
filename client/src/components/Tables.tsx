@@ -22,7 +22,7 @@ interface Column {
 const columns: readonly Column[] = [
   {
     id: "id",
-    label: "ID",
+    label: "Sr. no.",
     minWidth: 10,
     format: (value: Number) => value.toLocaleString("en-US"),
   },
@@ -89,7 +89,7 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
   useEffect(() => {
     const fetchBalance = async () => {
       let result = await getAccountBalance(address);
-      let amountInAPT:Number = Number(result)/100000000;
+      let amountInAPT: Number = Number(result) / 100000000;
       console.log(amountInAPT);
       result = amountInAPT.toString();
       setBalance(result);
@@ -98,22 +98,17 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
     fetchBalance();
   }, [address]);
 
-  // Replace 'YOUR_ACCOUNT_ADDRESS' with the actual account address
-  // const accountAddress = "YOUR_ACCOUNT_ADDRESS";
-  getAccountBalance(address)
-    .then((balance) => console.log(`Balance: ${balance}`))
-    .catch((error) => console.error(error));
-
   const [transactionDetails, setTransactionDetails] = useState<Transaction[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = `https://fullnode.testnet.aptoslabs.com/v1/accounts/${address}/transactions?limit=10`;
+      const url = `https://fullnode.testnet.aptoslabs.com/v1/accounts/${address}/transactions`;
 
       try {
         const response = await fetch(url);
         const data = await response.json();
         console.log(data);
+        console.log(data.length);
 
         // Extracting required transaction details from the response array
         const details = data.map((transaction: any) => {
@@ -132,10 +127,12 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
 
           // Converting gas to APT
           const gasInAPT = Number(max_gas_amount) * Number(gas_unit_price) * (0.00000001);
+          // console.log(gasInAPT);
+          amount = gasInAPT;
           const date = new Date(timestamp / 1000);
           timestamp = date.toLocaleString();
 
-          console.log(timestamp);
+
           // Building the final transaction object with required details
           return {
             version,
@@ -159,26 +156,25 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
 
 
 
-  console.log(address, publicKey);
+  // console.log(address, publicKey);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
+  // const handleChangePage = (event: unknown, newPage: number) => {
+  //   setPage(newPage);
+  // };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  // const handleChangeRowsPerPage = (
+  //   event: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setRowsPerPage(+event.target.value);
+  //   setPage(0);
+  // };
 
   return (
     <>
-      {/* display balance */}
       <div className="flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-semibold text-center md:py-10">Balance: {balance} APT</h2>
+        <h2 className="text-2xl font-semibold text-center py-5 md:py-8">Balance: {balance} APT</h2>
       </div>
       <h2 className="text-2xl font-semibold text-center md:py-10">Transactions</h2>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -209,7 +205,12 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
                       key={transaction.reciever}
                     >
                       {columns.map((column) => {
-                        const value = transaction[column.id];
+                        let value = transaction[column.id];
+                        if (column.id === 'id') { // replace 'id' with the actual id of the id column
+                          value = page * rowsPerPage + index + 1;
+                        } else if (column.id === 'sender' && typeof value === 'string') {
+                          value = `${value.slice(0, 4)}...${value.slice(-4)}`;
+                        }
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === "number"
@@ -224,7 +225,7 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+        {/* <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
           count={transactionDetails.length}
@@ -232,7 +233,7 @@ export default function StickyHeadTable({ address, publicKey }: TableProps) {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        /> */}
       </Paper>
     </>
   );
