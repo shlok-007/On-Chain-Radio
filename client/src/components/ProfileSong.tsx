@@ -7,7 +7,7 @@ interface ProfileSongProps {
 
 const ProfileSong: React.FC<ProfileSongProps> = ({ song }) => {
     return (
-        <div className="p-4 lg:w-1/4 md:w-1/2">
+        <div className="p-4">
             <div className="h-full flex flex-col items-center text-center">
                 <img
                     alt="team"
