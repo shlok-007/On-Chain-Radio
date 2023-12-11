@@ -37,7 +37,7 @@ const FreeCard: React.FC<FreeCardProps> = ({genre}) => {
   const handlePlay = () => {
     login ? navigate("/playsongs/"+categoryMap.get(genre)) : navigate("/signup")
   }
-  const [image, setImage] = useState(genre === 'Jazz' ? Jazz : genre === 'HipHop' ? Hiphop : genre === 'Pop' ? Pop : genre === 'Classical' ? Classical : Rock);
+  const [image, setImage] = useState(genre === 'Jazz' ? Jazz : genre === 'HipHop' ? Hiphop : genre === 'Pop' ? Pop : genre === 'Classical' ? Classical : genre === 'New Arrivals' ? Pop : Rock );
   return (
     <>
       {/* <!-- CARD 1 --> */}
