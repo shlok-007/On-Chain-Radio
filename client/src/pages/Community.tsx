@@ -89,10 +89,10 @@ const Community: React.FC = () => {
     //     premium_price: number,
     //     report_threshold: number,
     // }
-    useEffect(() => {
-        fetchPolls();
-        fetchCommunityParams();
-    }, []);
+    // useEffect(() => {
+    //     fetchPolls();
+    //     fetchCommunityParams();
+    // }, []);
 
     useEffect(() => {
         console.log(polls);
@@ -100,7 +100,7 @@ const Community: React.FC = () => {
     , [polls]);
 
     return (
-        <div className="text-center" style={styles.gradientDiv}>
+        <div className="text-center p-4" style={styles.gradientDiv}>
             {/* Parameters */}
             <div className="grid md:grid-cols-4 sm:grid-cols-2 lg:w-3/4 m-auto">
                 <Parameter title= "Premium Subscription Price" value= { params ? (params?.premium_price / 100000000).toString()+" APT" : "1 APT"} />
