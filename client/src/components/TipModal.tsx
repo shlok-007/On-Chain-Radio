@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWallet } from "@fortawesome/free-solid-svg-icons";
 import { Song } from "../utils/types";
 import { Provider, Network } from "aptos";
+import { useAccountContext } from "../utils/context";
 
 const style = {
   position: "absolute" as "absolute",
@@ -89,7 +90,7 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
           <div className="font-manrope flex w-full items-center justify-center">
             <div className="mx-auto box-border w-[365px] border bg-black p-4">
               <div className="flex items-center justify-between">
-                <span className="text-[#64748B]">Sending Money</span>
+                <span className="text-[#64748B]">Tip the Artist</span>
                 <div
                   className="cursor-pointer border rounded-[4px]"
                   onClick={handleClose}
@@ -133,7 +134,7 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
 
               <div className="flex justify-between">
                 <div className="flex justify-around">
-                  {["2", "5", "10", "20"].map((tip) => (
+                  {["2", "5", "10"].map((tip) => (
                     <div
                       key={tip}
                       className="mt-[14px] cursor-pointer truncate rounded-[4px] border-[1px] border-gray-500 p-3 text-gray-200 m-3"
@@ -165,11 +166,15 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
                           d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      <span className="font-semibold text-white">Checking</span>
+                      <span className="font-semibold text-white">You</span>
                     </div>
 
                     <div className="flex items-center gap-x-2">
-                      <div className="text-[#64748B]">card ending in 6678</div>
+                      <div className="text-[#64748B]">
+                        {/* starting 2 digits and last 4 diigts of address */}
+                        {/* {currentSong.artist_wallet_address.slice(0,8)+"..."+currentSong.artist_wallet_address.slice(-15)} */}
+                        {useAccountContext()?.wallet_address.slice(0,8)+"..."+useAccountContext()?.wallet_address.slice(-15)}
+                      </div>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5 cursor-pointer"
@@ -223,7 +228,7 @@ export default function TipModal({currentSong}: {currentSong: Song}) {
                     alt=""
                   />
                   <div>
-                    <div className="font-semibold text-white">Kathy Miller</div>
+                    <div className="font-semibold text-white">{currentSong.artist_wallet_address.slice(0,8)+"..."+currentSong.artist_wallet_address.slice(-15)}</div>
                     <div className="text-[#64748B]">@KittyKatmills</div>
                   </div>
                 </div>

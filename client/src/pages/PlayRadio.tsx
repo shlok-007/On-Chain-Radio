@@ -334,7 +334,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
 
               <audio ref={audioPlayerRef} 
               autoPlay 
-              controls
+              // controls
               muted = {!authorized}
               // style={{ display: 'none' }}
               >

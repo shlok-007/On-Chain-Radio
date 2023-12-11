@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
 import ImageUpload from "./ImageUpload";
 import AudioUpload from "./AudioUpload";
+import { Provider, Network } from "aptos";
 
 const UploadForm: React.FC = () => {
     const [pinnedFiles, setPinnedFiles] = useState([]);
@@ -110,17 +111,22 @@ const UploadForm: React.FC = () => {
     } ,[file]);
 
     const {wallet} = useWallet();
-
+    const provider = new Provider(Network.TESTNET);
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         // console.log(genre);
         // console.log(ipfsaudio);
         // console.log(ipfsimage);
         console.log(pre);
         e.preventDefault();
-        if (!wallet) {
-          alert("Please connect your wallet");
-          return;
-        }
+        if (!wallet) {alert("Please connect your wallet");  return;}
+        else if (song === "") {alert("Please enter the song name");  return;}
+        else if(genre === "") {alert("Please select the genre");  return;}
+        else if(ipfsaudio === "") {alert("Please upload the audio");  return;}
+        else if(ipfsimage === "") {alert("Please upload the image");  return;}
+        else if(vocalist === "") {alert("Please enter the vocalist name");  return;}
+        else if(lyricist === "") {alert("Please enter the lyricist name");  return;}
+        else if(musician === "") {alert("Please enter the musician name");  return;}
+        else if(audio === "") {alert("Please enter the audio engineer name");  return;}
         const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
         try {
           const payload = {
@@ -130,7 +136,10 @@ const UploadForm: React.FC = () => {
             type_arguments: [],
           };
         // sign and submit transaction to chain
-        await window.aptos.signAndSubmitTransaction(payload);
+        let response = await window.aptos.signAndSubmitTransaction(payload);
+        // wait for transaction
+        await provider.waitForTransaction(response.hash);
+        alert("Song Uploaded");
         } catch (error) {
           console.error("Failed to connect wallet", error);
         }
@@ -189,7 +198,8 @@ const UploadForm: React.FC = () => {
                 <AudioUpload onFileChange={handleFileChange}/>
                 <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded col-span-2 m-auto"
-                    onClick={handleSubmit}
+                    onClick={handleSubmit} 
+                    disabled = {ipfsaudio === "" || ipfsimage === "" }
                 >
                     Submit
                 </button>
