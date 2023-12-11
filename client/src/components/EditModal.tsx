@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from 'react';
+import React, { SetStateAction, useState, useEffect } from 'react';
 import axios from 'axios';
 
 
@@ -63,7 +63,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
-      await handleclick();
+      // await handleclick();
     }
   };
   const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -107,9 +107,8 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
   };
   
   const handleclick = async () => {
-    try {
+    if(!selectedImage || selectedImage.type.split('/')[0] !== 'image') return;
       //console.log(file);
-      if (selectedImage) {
         const formData = new FormData();
         // console.log(file)
         formData.append('file', selectedImage);
@@ -124,24 +123,25 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
         formData.append('pinataOptions', JSON.stringify(pinataBody.options));
         formData.append('pinataMetadata', JSON.stringify(pinataBody.metadata));
         const url = `${pinataConfig.root}/pinning/pinFileToIPFS`;
-        const response = await axios({
-          method: 'post',
-          url: url,
-          data: formData,
-          headers: pinataConfig.headers
-        })
-        console.log(response.data)
-        console.log(response.data.IpfsHash);
-        if(selectedImage.type === "image/png")
-        setIpfsimage(response.data.IpfsHash);
-        queryPinataFiles();
-      } else {
-        alert('select file first')
-      }
-    } catch (error) {
-      console.log(error)
-    }
+        try {
+          const response = await axios({
+            method: 'post',
+            url: url,
+            data: formData,
+            headers: pinataConfig.headers
+          })
+          // console.log(response.data)
+          console.log(response.data.IpfsHash);
+          setIpfsimage(response.data.IpfsHash);
+          queryPinataFiles();
+        } catch (error) {
+          console.log(error)
+        }
   }
+
+  useEffect(() => {
+    handleclick();
+  } ,[selectedImage])
 
 
   return (

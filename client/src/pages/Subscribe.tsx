@@ -3,6 +3,7 @@ import { AptosClient } from 'aptos';
 import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
 import { Provider, Network } from "aptos";
 import { useAccountContext } from "../utils/context";
+import { useNavigate } from "react-router-dom";
 
 const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
 
@@ -14,6 +15,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
   const {connected } = useWallet();
   const provider = new Provider(Network.TESTNET);
   let userAcc = useAccountContext();
+  const navigate = useNavigate();
 
   const handleTransaction = async (plan: Number) => {
     if(!connected){
@@ -31,6 +33,8 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
       };
     const response = await window.aptos.signAndSubmitTransaction(payload);
     await provider.waitForTransaction(response.hash);
+    alert("You are now a premium user!");
+    navigate('/');
     if(userAcc)
       userAcc.premium = true;
     setUserAccount(userAcc);

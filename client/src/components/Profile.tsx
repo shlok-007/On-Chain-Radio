@@ -60,7 +60,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
       if(typeof(acc) !== "number"){
         setUserAcc(acc);
       }
-    } 
+    }
   }
   useEffect(() => {
     getAcc();
@@ -143,8 +143,8 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                 <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                   <div className="relative">
                     <img
-                      alt="ladymusic"
-                      src={`https://ipfs.io/ipfs/bafkreifdj3wvyuqaue7zsro7tz5judci2m42pbddcbo2sgqtogxr7rq6wa`}
+                      alt={ladyMusic}
+                      src={userAcc?.bio.profile_img_hash !== "" ? `https://ipfs.io/ipfs/${userAcc?.bio.profile_img_hash}` : ladyMusic}
                       className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
                     />
                   </div>
