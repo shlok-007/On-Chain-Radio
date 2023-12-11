@@ -49,6 +49,16 @@ const Profile: React.FC<ProfileProps> = ({}) => {
     fetchList();
   }, [address]);
 
+  useEffect(() => {
+    if(!show && userAcc){
+      getUserAccount(userAcc.wallet_address).then((acc) => {
+        if(typeof(acc) !== "number"){
+          setUserAcc(acc);
+        }
+      });
+    }
+  }, [show]);
+
 
   // const { account } = useWallet();
   const fetchList = async () => {

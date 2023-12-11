@@ -48,6 +48,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
     reports: 0,
     reporters: [],
   });
+  const [totalTips, setTotalTips] = useState(currentSong.total_tips);
 
   const seed = Math.floor(Date.now() / 120000);
   const [songTableHandle, setSongTableHandle] = useState("");
@@ -242,7 +243,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
 
   return (
     <div className="h-screen bg-[#7CA4AE]">
-      {report && <ReportModal report={report} setReport={setReport} />}
+      {report && <ReportModal report={report} setReport={setReport} song={currentSong} />}
       {!authorized && <SubscribeModal onClose={() => setSub(false)}/>}
       <div className="bg-[#7CA4AE] font-sans grid place-items-center py-12">
         <div className="bg-gray-800 md:grid md:grid-cols-2 rounded-md overflow-hidden mx-2 ">

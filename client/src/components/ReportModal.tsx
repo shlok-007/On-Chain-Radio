@@ -1,11 +1,33 @@
 import React from "react";
+import { Song } from "../utils/types";
+import { Provider, Network } from "aptos";
 
 interface ReportModalProps {
     report: boolean,
-    setReport: React.Dispatch<React.SetStateAction<boolean>>
+    setReport: React.Dispatch<React.SetStateAction<boolean>>,
+    song: Song
 }
 
-const ReportModal: React.FC<ReportModalProps> = ({report, setReport}) => {
+const ReportModal: React.FC<ReportModalProps> = ({report, setReport, song}) => {
+
+    const provider = new Provider(Network.TESTNET);
+    const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST;
+    const reportSubmit= async () => {
+        const payload = {
+            type: "entry_function_payload",
+            function: `${moduleAddress}::song::report_song`,
+            arguments: [song.artist_wallet_address, song.artist_store_ID],
+            type_arguments: [],
+          };
+        // sign and submit transaction to chain
+        const response = await window.aptos.signAndSubmitTransaction(payload);
+        // wait for transaction
+        await provider.waitForTransaction(response.hash);
+        alert("Song reported successfully");
+        setReport(false);
+    }
+
+
     return (
         <div className="text-center justify-center">
                     <div id="deleteModal" tabIndex={-1} aria-hidden="true" className="absolute z-50 justify-center items-center flex md:inset-0 h-modal md:h-full">
@@ -22,7 +44,7 @@ const ReportModal: React.FC<ReportModalProps> = ({report, setReport}) => {
                         <button onClick={() => setReport(false)} data-modal-toggle="deleteModal" type="button" className="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
                             No, cancel
                         </button>
-                        <button type="submit" onClick={() => console.log('Song reported')} className="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
+                        <button type="submit" onClick={reportSubmit} className="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
                             Yes, I'm sure
                         </button>
                     </div>

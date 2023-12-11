@@ -1,5 +1,6 @@
 import React, { SetStateAction, useState, useEffect } from 'react';
 import axios from 'axios';
+import { Provider, Network } from 'aptos';
 
 
 const pinataConfig = {
@@ -33,6 +34,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
   const [pinnedFiles, setPinnedFiles] = useState([]);
   const [file, setFile] = useState<File | null>(null);
   const [ipfsimage,setIpfsimage] =useState("");
+  const provider = new Provider(Network.TESTNET);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -81,8 +83,9 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
         };
         console.log(payload);
       // sign and submit transaction to chain
-     const response= await window.aptos.signAndSubmitTransaction(payload);
-      // Close the EditModal
+      const response= await window.aptos.signAndSubmitTransaction(payload);
+      // wait for transaction
+      await provider.waitForTransaction(response.hash);
       console.log(response);
       onClose();
       } catch (error) {
@@ -212,7 +215,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
             <div className="flex justify-end">
               <button
                 className="bg-blue-500 text-white px-6 py-3 rounded focus:outline-none hover:bg-blue-600"
-                onClick={handleSave}
+                onClick={handleSave} disabled={ipfsimage===""}
               >
                 Save
               </button>
