@@ -84,9 +84,9 @@ const UploadForm: React.FC = () => {
             })
             console.log(response.data)
             if(file.type === "image/png")
-            setIpfsimage(response.data.IpfsHash);
-            else 
-            setIpfsaudio(response.data.IpfsHash);
+              setIpfsimage(response.data.IpfsHash);
+            else if(file.type === "audio/mpeg")
+              setIpfsaudio(response.data.IpfsHash);
             queryPinataFiles();
           } else {
             alert('select file first')
@@ -96,7 +96,7 @@ const UploadForm: React.FC = () => {
         }
       }
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const selectedFile = e.target.files?.[0];
       console.log(selectedFile);
       if (selectedFile) {
@@ -185,8 +185,8 @@ const UploadForm: React.FC = () => {
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-10 md:gap-20 md:px-10 sm:px-5 py-5">
-                <ImageUpload />
-                <AudioUpload />
+                <ImageUpload onFileChange={handleFileChange}/>
+                <AudioUpload onFileChange={handleFileChange}/>
                 <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded col-span-2 m-auto"
                     onClick={handleSubmit}

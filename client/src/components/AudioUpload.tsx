@@ -1,6 +1,10 @@
 import React, {useState} from "react";
 
-const AudioUpload: React.FC = () => {
+interface AudioUploadProps {
+  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const AudioUpload: React.FC<AudioUploadProps> = ({onFileChange}) => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
   
@@ -9,7 +13,7 @@ const AudioUpload: React.FC = () => {
   
       if (file) {
         setSelectedImage(file);
-  
+        onFileChange(e);
         const reader = new FileReader();
         reader.onloadend = () => {
           setImagePreview(reader.result as string);

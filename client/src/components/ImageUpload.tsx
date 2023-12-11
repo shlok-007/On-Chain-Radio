@@ -1,6 +1,10 @@
 import React, {useState} from "react";
 
-const ImageUpload: React.FC = () => {
+interface ImageUploadProps {
+  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const ImageUpload: React.FC<ImageUploadProps> = ({onFileChange}) => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
   
@@ -9,6 +13,7 @@ const ImageUpload: React.FC = () => {
   
       if (file) {
         setSelectedImage(file);
+        onFileChange(e);
   
         const reader = new FileReader();
         reader.onloadend = () => {
