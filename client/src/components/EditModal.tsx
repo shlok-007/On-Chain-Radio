@@ -36,12 +36,24 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
     })
   }
 
-  const handleSave = () => {
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
     //code to save the bio
-
-
-    // Close the EditModal
-    onClose();
+      e.preventDefault();
+      const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
+      try {
+        const payload = {
+          type: "entry_function_payload",
+          function: `${moduleAddress}::user::update_bio`,
+          arguments: [formData.location,formData.profession,formData.aboutMe],
+          type_arguments: [],
+        };
+      // sign and submit transaction to chain
+      await window.aptos.signAndSubmitTransaction(payload);
+      // Close the EditModal
+      onClose();
+      } catch (error) {
+        console.error("Failed to connect wallet", error);
+      }
   };
 
   return (
