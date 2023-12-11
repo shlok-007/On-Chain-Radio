@@ -8,6 +8,7 @@ import EditModal from "./EditModal";
 import { Provider, Network } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import axios from 'axios';
+import { ProfileSong } from "./ProfileSong";
 
 interface ProfileProps {
 }
@@ -51,6 +52,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   const [pinnedFiles, setPinnedFiles] = useState([]);
   const [file, setFile] = useState<File | null>(null);
   const [ipfsimage,setIpfsimage] =useState("");
+  const [songArray, setSongArray] = useState<SongDetails[]>([]);
 
   const queryPinataFiles = async () => {
     try {
@@ -106,7 +108,8 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   const [formData, setFormData] = useState({
     location: "",
     profession: "",
-    aboutMe: ""
+    aboutMe: "",
+    selectedImage: ""
   });
   const [show, setShow] = useState(false);
   const getAcc = async () => {
@@ -139,6 +142,11 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 
       Object.keys(data.songs).forEach((handle) => {
           const songDetails = data.songs[handle] as SongDetails;
+          setSongArray((prev) => {
+            return (
+              [...prev, songDetails]
+            )
+          })
           console.log(`Handle: ${handle}, Song Details: `, songDetails);
       });
     } catch (e: any) {
@@ -285,72 +293,13 @@ const Profile: React.FC<ProfileProps> = ({}) => {
           <div className="flex flex-wrap m-4">
 
 
-            <div className="p-4 lg:w-1/4 md:w-1/2">
-              <div className="h-full flex flex-col items-center text-center">
-                <img
-                  alt="team"
-                  className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4"
-                  src="https://dummyimage.com/200x200"
-                />
-                <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-white">
-                    Alper Kamu
-                  </h2>
-                  <h3 className="text-gray-400 mb-3">Album Song</h3>
+            
+              {songArray.map((song: SongDetails, index) => (
+                <div key={index}>
+                  <ProfileSong song={song} />
                 </div>
-              </div>
-            </div>
-
-
-            <div className="p-4 lg:w-1/4 md:w-1/2">
-              <div className="h-full flex flex-col items-center text-center">
-                <img
-                  alt="team"
-                  className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4"
-                  src="https://dummyimage.com/201x201"
-                />
-                <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-white">
-                    Holden Caulfield
-                  </h2>
-                  <h3 className="text-gray-400 mb-3">Album Song</h3>
-                </div>
-              </div>
-            </div>
-
-
-            <div className="p-4 lg:w-1/4 md:w-1/2">
-              <div className="h-full flex flex-col items-center text-center">
-                <img
-                  alt="team"
-                  className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4"
-                  src="https://dummyimage.com/202x202"
-                />
-                <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-white">
-                    Atticus Finch
-                  </h2>
-                  <h3 className="text-gray-400 mb-3">Album Song</h3>
-                </div>
-              </div>
-            </div>
-
-
-            <div className="p-4 lg:w-1/4 md:w-1/2">
-              <div className="h-full flex flex-col items-center text-center">
-                <img
-                  alt="team"
-                  className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4"
-                  src="https://dummyimage.com/203x203"
-                />
-                <div className="w-full">
-                  <h2 className="title-font font-medium text-lg text-white">
-                    Henry Letham
-                  </h2>
-                  <h3 className="text-gray-400 mb-3">Album Song</h3>
-                </div>
-              </div>
-            </div>
+              ))}
+            
           </div>
         </div>
       </section>
