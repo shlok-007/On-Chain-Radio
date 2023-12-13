@@ -198,7 +198,8 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, formData, setFor
                 Image
               </label>
               <input
-                type="file"
+                type="file" 
+                accept='image/*'
                 id="image"
                 name="image"
                 onChange={handleImageChange}

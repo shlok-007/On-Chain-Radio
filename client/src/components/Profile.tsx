@@ -74,12 +74,17 @@ const Profile: React.FC<ProfileProps> = ({}) => {
       const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST;
       const resourceAddress = userAcc.wallet_address;
       console.log('Fetching resource for address:', resourceAddress);
-  
-      const SongResource = await provider.getAccountResource(
+      let SongResource;
+      try{
+      SongResource = await provider.getAccountResource(
         resourceAddress,
         `${moduleAddress}::song::ArtistStore`
       );
       console.log('SongResource:', SongResource);
+      } catch (error) {
+        console.log(error);
+        return;
+      }
   
       // const data = SongResource.data as any;
   
@@ -248,13 +253,13 @@ const Profile: React.FC<ProfileProps> = ({}) => {
         <div className="container px-5 py-10 mx-auto">
           <div className="flex flex-col text-center w-full mb-20">
             <h1 className="text-4xl text-white font-medium title-font mb-4 text-gray-900">
-              Songs
+              Songs Uploaded
             </h1>
-            <p className="lg:w-2/3 mx-auto leading-relaxed text-base">
+            {/* <p className="lg:w-2/3 mx-auto leading-relaxed text-base">
               Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical
               gentrify, subway tile poke farm-to-table. Franzen you probably
               haven't heard of them.
-            </p>
+            </p> */}
           </div>
           <div className="flex flex-wrap m-4">
 

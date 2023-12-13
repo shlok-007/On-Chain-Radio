@@ -83,11 +83,16 @@ const UploadForm: React.FC = () => {
               data: formData,
               headers: pinataConfig.headers
             })
-            console.log(response.data)
-            if(file.type.startsWith("image/"))
+            console.log(response.data);
+            console.log(file.type); 
+            if(file.type.startsWith("image/")){
               setIpfsimage(response.data.IpfsHash);
-            else if(file.type.startsWith("audio/"))
+              console.log("image uploaded");
+            }
+            else if(file.type.startsWith("audio/")){
               setIpfsaudio(response.data.IpfsHash);
+              console.log("audio uploaded");
+            }
             queryPinataFiles();
           } else {
             alert('select file first')
@@ -107,7 +112,10 @@ const UploadForm: React.FC = () => {
 
     useEffect(() => {
       if(file !== null)
-        handleclick();
+        // handleclick();
+        handleclick().then(() => {
+          console.log("done");
+        });
     } ,[file]);
 
     const {wallet} = useWallet();

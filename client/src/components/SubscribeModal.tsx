@@ -19,7 +19,7 @@ const SubscribeModal: React.FC<SubscribeModalProps> = () => {
                 </svg>
                 <span className="sr-only">Light bulb</span>
             </span>
-            <span>To Listen to this song you need to Subscribe to Peerplay <a href="" onClick={() => navigate('/subscribe')} className="inline font-medium text-blue-600 underline dark:text-blue-500 underline-offset-2 decoration-600 dark:decoration-500 decoration-solid hover:no-underline">Subscribe</a></span>
+            <span>To Listen to this song you need to Subscribe to Peerplay <a href="" onClick={(e) => { e.preventDefault() ;navigate('/subscribe')}} className="inline font-medium text-blue-600 underline dark:text-blue-500 underline-offset-2 decoration-600 dark:decoration-500 decoration-solid hover:no-underline">Subscribe</a></span>
         </p>
     </div>
 </div>

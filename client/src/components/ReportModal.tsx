@@ -19,12 +19,17 @@ const ReportModal: React.FC<ReportModalProps> = ({report, setReport, song}) => {
             arguments: [song.artist_wallet_address, song.artist_store_ID],
             type_arguments: [],
           };
+          try{
         // sign and submit transaction to chain
         const response = await window.aptos.signAndSubmitTransaction(payload);
         // wait for transaction
         await provider.waitForTransaction(response.hash);
         alert("Song reported successfully");
         setReport(false);
+          } catch (error) {
+            alert("You might have already reported this song.");
+            console.error(error);
+          }
     }
 
 

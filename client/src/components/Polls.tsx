@@ -5,6 +5,7 @@ import { Bar } from 'react-chartjs-2';
 import BarGraph from "./BarGraph";
 import { Poll } from "../utils/types";
 import { Provider, Network } from "aptos";
+import { useAccountContext } from "../utils/context";
 
 
 interface PollProps {
@@ -15,12 +16,14 @@ interface PollProps {
     time: number,
     index: number,
     polls: (Poll | null)[],
+    voters: string[],
     setPolls: React.Dispatch<React.SetStateAction<(Poll | null)[]>>
 }
 
-const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, votes_for, time, setPolls, polls, index }) => {
-    const [show, setShow] = useState(false);
-    const [timeUp, setTimeUp] = useState(false);
+const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, votes_for, time, setPolls, polls, index, voters }) => {
+    // const acc = useAccountContext();
+    const [show, setShow] = useState(voters.includes(useAccountContext()?.wallet_address || ""));
+    // const [timeUp, setTimeUp] = useState(false);
     const provider = new Provider(Network.TESTNET);
     const [state,setState]=useState("");
     const pollMap = ["Poll for Artist Premium Cut", "Poll for Artist Tip Cut", "Poll for Subscription Price", "Poll for Report Threshold"];
@@ -32,6 +35,7 @@ const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, v
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        if(state==="") {alert("Please select an option before submitting"); return;}
 
         const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
         try {
@@ -46,42 +50,46 @@ const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, v
         // sign and submit transaction to chain
         const response =await window.aptos.signAndSubmitTransaction(payload);
         await provider.waitForTransaction(response.hash);
+        setShow(true);
+
+          if (state === 'for') {
+              setPolls((prevPolls) => {
+                  const updatedPolls = [...prevPolls];
+                  const pollToUpdate = updatedPolls[index];
+
+                  if (pollToUpdate !== null) {
+                      // Update the votes_for property
+                      pollToUpdate.votes_for += 1;
+                  }
+
+                  return updatedPolls;
+                  });
+          }
+          else {
+              setPolls((prevPolls) => {
+                  const updatedPolls = [...prevPolls];
+                  const pollToUpdate = updatedPolls[index];
+
+                  if (pollToUpdate !== null) {
+                      // Update the votes_for property
+                      pollToUpdate.votes_against += 1;
+                  }
+
+                  return updatedPolls;
+                  });
+          }
+          // await handle(event);
+      
+
         console.log(response);
         } catch (error) {
+          alert("The poll has ended. You can no longer vote.");
+          setShow(true);
           console.error(error);
           return;
         }
 
-        if (state !== "") setShow(true);
-        if (state !== "") {
-            if (state === 'for') {
-                setPolls((prevPolls) => {
-                    const updatedPolls = [...prevPolls];
-                    const pollToUpdate = updatedPolls[index];
-
-                    if (pollToUpdate !== null) {
-                        // Update the votes_for property
-                        pollToUpdate.votes_for += 1;
-                    }
-
-                    return updatedPolls;
-                    });
-            }
-            else {
-                setPolls((prevPolls) => {
-                    const updatedPolls = [...prevPolls];
-                    const pollToUpdate = updatedPolls[index];
-
-                    if (pollToUpdate !== null) {
-                        // Update the votes_for property
-                        pollToUpdate.votes_against += 1;
-                    }
-
-                    return updatedPolls;
-                    });
-            }
-            // await handle(event);
-        }
+        // if (state !== "") setShow(true);
     }
     const handleS = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -104,6 +112,7 @@ const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, v
             return newPollArray
           })
         } catch (error) {
+          alert("The poll has not ended yet. Please try again later.");
           console.error(error);
         }
       };
@@ -133,7 +142,7 @@ const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, v
       //write the tyhpe of question and option type??
 
     return (
-        <div className="bg-indigo-600 text-white shadow-md rounded px-8 pt-6 pb-2 mb-0 md:w-3/4 sm:w-full m-auto">
+        <div className="bg-indigo-600 text-white shadow-md rounded px-8 pt-6 pb-2 mb-0 md:w-3/4 sm:w-full m-auto my-4">
             <div>
                 <p className="inline-block  w-3/4 text-lg font-bold">{pollMap[index]}</p>
                 <p className="inline-block  w-3/4 text-lg font-bold">{question}</p>
@@ -146,7 +155,7 @@ const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, v
             <form>
             {show && <BarGraph votes_against={votes_against} votes_for={votes_for} />}
 
-            <form className="w-3/4 m-auto my-4">
+            { !show && <form className="w-3/4 m-auto my-4">
                 <div className="flex items-center mb-4">
                     <input type="radio" name="for" value="for" checked={state === 'for'} className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600" onChange={handleRadioChange} />
                     <label className="block ms-2  text-sm font-medium text-gray-200 dark:text-gray-300">
@@ -175,8 +184,8 @@ const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, v
                         We can't take response now — <strong>Time's Up!</strong>
                     </Alert>
                 } */}
-                <button type="submit" disabled={show} className="bg-indigo-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2" onClick={handleSubmit}>Submit</button>
-                </form>
+                 <button type="submit" disabled={show} className="bg-indigo-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2" onClick={handleSubmit}>Submit</button>
+                </form> }
                 <button type="button"  className="bg-indigo-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2" onClick={handleS}>End poll</button>
             </form>
         </div>

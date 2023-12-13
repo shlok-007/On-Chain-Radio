@@ -21,6 +21,16 @@ interface PremiumCardProps {
   genre: string
 }
 
+const categoryMap = new Map([
+  ['Rock', 'rock'],
+  ['Pop', 'pop'],
+  ['HipHop', 'hiphop'],
+  ['Classical', 'classical'],
+  ['Jazz', 'jazz'],
+  ['Trending Now', 'trending'],
+  ['New Arrivals', 'newarrivals']
+])
+
 const PremiumCard: React.FC<PremiumCardProps> = ({ genre }) => {
   const [like, setLike] = useState(false);
   const [pause, setPause] = useState(false);
@@ -29,7 +39,7 @@ const PremiumCard: React.FC<PremiumCardProps> = ({ genre }) => {
   let subscribe = useAccountContext()?.premium;
 
   const handlePlay = () => {
-    !login ? navigate("/signup") : !subscribe ? navigate("/subscribe") : navigate("/premiumsongs/" + genre)
+    !login ? navigate("/signup") : !subscribe ? navigate("/subscribe") : navigate("/premiumsongs/" + categoryMap.get(genre)) ;
   }
   const [image, setImage] = useState(genre === 'Jazz' ? Jazz : genre === 'HipHop' ? Hiphop : genre === 'Pop' ? Pop : genre === 'Classical' ? Classical : Rock);
 

@@ -180,7 +180,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
       // console.log(genreItem);
       try{
         let songTable = await provider.getTableItem(genreHandle, genreItem);
-        if((songTable as any).num_songs === 0){ alert("We currently don't have any songs of this category");}
+        if((songTable as any).num_songs == 0){ alert("We currently don't have any songs of this category");}
         else  setNumSongs((songTable as any).num_songs);
         setSongTableHandle((songTable as any).songs.handle);
         console.log("Genre",songTable);
@@ -193,11 +193,13 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
       setKeyType("u8");
       if(song_lib_type === "new_arrivals") {
         setNumSongs((songStore as any).data.new_arrivals.num_songs);
-        if((songStore as any).data.new_arrivals.num_songs === 0) alert("We currently don't have any songs of this category");
+        console.log("Num songs: ",(songStore as any).data.new_arrivals.num_songs);
+        if((songStore as any).data.new_arrivals.num_songs == 0) alert("We currently don't have any songs of this category");
         setSongTableHandle((songStore as any).data.new_arrivals.songs.handle);
       } else {
         setNumSongs((songStore as any).data.trending_songs.num_songs);
-        if((songStore as any).data.trending_songs.num_songs === 0) alert("We currently don't have any songs of this category");
+        console.log("Num songs: ",(songStore as any).data.trending_songs.num_songs);
+        if((songStore as any).data.trending_songs.num_songs == 0) alert("We currently don't have any songs of this category");
         setSongTableHandle((songStore as any).data.trending_songs.songs.handle);
       }
     }
@@ -371,7 +373,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
                 <FontAwesomeIcon
                       icon={faCircleInfo}
                       className="text-center"
-                      onClick={() => setReport(!report)}
+                      
                       size="xl"
                     />
                 </button>
@@ -379,7 +381,8 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
                 <button>
                   <FontAwesomeIcon
                     icon={faFlag}
-                    className="text-center"
+                    className="text-center" 
+                    onClick={() => setReport(!report)}
                     size="xl"
                   />
                 </button>

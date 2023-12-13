@@ -9,6 +9,7 @@ module addr_on_chain_radio::songStore {
     use 0x1::coin;
     use 0x1::aptos_coin::AptosCoin; 
     use 0x1::aptos_account;
+    use 0x1::debug::print;
 
     #[test_only]
     use std::account;
@@ -199,8 +200,9 @@ module addr_on_chain_radio::songStore {
         while(j < trending_songs.num_songs){
             if(table::contains(&trending_songs.songs, i)) {
                 let _song = table::borrow_mut(&mut trending_songs.songs, i);
-                if(_song.song_store_ID == song.song_store_ID) {
+                if(_song.song_store_ID == song.song_store_ID && _song.premium == song.premium && _song.genre == song.genre) {
                     _song.total_tips = song.total_tips;
+                    print(&utf8(b"song already exists in trending songs"));
                     if(i == trending_songs.least_trending) {
                         update_least_trending(trending_songs);
                     };
@@ -211,10 +213,12 @@ module addr_on_chain_radio::songStore {
             i = i + 1;
         };
         if(trending_songs.num_songs < trending_songs.max_songs) {
+            print(&utf8(b"adding song to trending songs"));
             table::add(&mut trending_songs.songs, trending_songs.num_songs, song);
             trending_songs.num_songs = trending_songs.num_songs + 1;
             update_least_trending(trending_songs);
         }else if(song.total_tips > table::borrow(&trending_songs.songs, trending_songs.least_trending).total_tips) {
+            print(&utf8(b"adding song to trending songs max songs reached"));
             table::remove(&mut trending_songs.songs, trending_songs.least_trending);
             table::add(&mut trending_songs.songs, trending_songs.num_songs, song);
             update_least_trending(trending_songs);
@@ -476,8 +480,12 @@ module addr_on_chain_radio::songStore {
         assert!(table::borrow(&borrow_global<SongStore>(signer::address_of(store_acc)).trending_songs.songs, 0).total_tips == 100, 5);
         assert!(table::borrow(&borrow_global<SongStore>(signer::address_of(store_acc)).trending_songs.songs, 0).title == utf8(b"song1"), 6);
         
-        tip_song(&tipper, 0, utf8(b"Rock"), false, 100);
-        assert!(table::borrow(&borrow_global<SongStore>(signer::address_of(store_acc)).trending_songs.songs, 0).total_tips == 200, 7);
+        let song2 = instantiate_song(signer::address_of(&artist), 0, utf8(b"song2"), utf8(b"ipfs_hash1"), utf8(b"ipfs_hash_cvr_img"), true, utf8(b"Pop"), utf8(b"vocalist1"), utf8(b"lyricist1"), utf8(b"musician1"), utf8(b"audio_engineer1"));
+        add_song_to_songStore(&artist, song2);
+        tip_song(&tipper, 0, utf8(b"Pop"), true, 100);
+        assert!(table::borrow(&table::borrow(&borrow_global<SongStore>(signer::address_of(store_acc)).premium_songs.songs, utf8(b"Pop")).songs, 0).total_tips == 100, 8);
+        assert!(borrow_global<SongStore>(signer::address_of(store_acc)).trending_songs.num_songs == 2, 7);
+        // assert!(table::borrow(&borrow_global<SongStore>(signer::address_of(store_acc)).trending_songs.songs, 0).total_tips == 200, 7);
         
         coin::destroy_burn_cap(_burn_cap);
         coin::destroy_mint_cap(_mint_cap);

@@ -184,7 +184,7 @@ The Data Storage module in your React app manages song data upload and storage, 
 - Uploads image and audio files using the Pinata API for pinning to IPFS.
 - Submits song-related information to the blockchain after successful wallet connection and validation checks.
 
-## Frontend Implementation'
+## Frontend Implementation
 
 In the project directory, ``` client ``` contains the frontend of the application
 

@@ -101,7 +101,7 @@ const Community: React.FC = () => {
     , [polls]);
 
     return (
-        <div className="text-center p-4" style={styles.gradientDiv}>
+        <div className="text-center p-4 h-screen" style={styles.gradientDiv}>
             {/* Parameters */}
             <div className="grid md:grid-cols-4 sm:grid-cols-2 lg:w-3/4 m-auto">
                 <Parameter title= "Premium Subscription Price" value= { params ? (params?.premium_price / 100000000).toString()+" APT" : "1 APT"} />
@@ -115,7 +115,7 @@ const Community: React.FC = () => {
                 <div>
                 {polls.map((pollItem, index) => (
                   <div key={index}>
-                    {pollItem !== null ? <Polls question={pollItem.justification} proposed_value={pollItem.proposed_value} time={pollItem.end_time} votes_for={pollItem.votes_for} votes_against={pollItem.votes_against} setPolls={setPolls} polls={polls} index={index} /> : <></>}
+                    {pollItem !== null ? <Polls question={pollItem.justification} proposed_value={pollItem.proposed_value} time={pollItem.end_time} votes_for={pollItem.votes_for} votes_against={pollItem.votes_against} setPolls={setPolls} polls={polls} index={index} voters={pollItem.voters} /> : <></>}
                   </div>
                 ))}
                 </div>
