@@ -271,7 +271,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
               {/* ----title-------- */}
               <h2 className="text-2xl font-bold mt-3" onClick={() => setIsModalOpen(true)}>{currentSong.title}</h2>
               <ModalComponent isOpen={isModalOpen} onClose={setIsModalOpen} song={currentSong} />
-              <a href="" onClick={() => navigate('/profile/'+currentSong.artist_wallet_address)} className="text-3x font-bold text-[#7CA4AE]">
+              <a href="" onClick={(e) => {e.preventDefault(); navigate('/profile/'+currentSong.artist_wallet_address)}} className="text-3x font-bold text-[#7CA4AE]">
                 {`by ${currentSong.vocalist}`}
               </a>
 
