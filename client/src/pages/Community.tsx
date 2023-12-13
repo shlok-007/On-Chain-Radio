@@ -89,13 +89,14 @@ const Community: React.FC = () => {
     //     premium_price: number,
     //     report_threshold: number,
     // }
-    // useEffect(() => {
-    //     fetchPolls();
-    //     fetchCommunityParams();
-    // }, []);
+    useEffect(() => {
+        fetchPolls();
+        // fetchCommunityParams();
+    }, []);
 
     useEffect(() => {
         console.log(polls);
+        fetchCommunityParams();
     }
     , [polls]);
 

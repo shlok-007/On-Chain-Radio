@@ -84,9 +84,9 @@ const UploadForm: React.FC = () => {
               headers: pinataConfig.headers
             })
             console.log(response.data)
-            if(file.type === "image/png")
+            if(file.type.startsWith("image/"))
               setIpfsimage(response.data.IpfsHash);
-            else if(file.type === "audio/mpeg")
+            else if(file.type.startsWith("audio/"))
               setIpfsaudio(response.data.IpfsHash);
             queryPinataFiles();
           } else {
@@ -135,6 +135,7 @@ const UploadForm: React.FC = () => {
             arguments: [song,ipfsaudio,ipfsimage,pre,genre,vocalist,lyricist,musician,audio],
             type_arguments: [],
           };
+          console.log(payload);
         // sign and submit transaction to chain
         let response = await window.aptos.signAndSubmitTransaction(payload);
         // wait for transaction
@@ -199,7 +200,7 @@ const UploadForm: React.FC = () => {
                 <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded col-span-2 m-auto"
                     onClick={handleSubmit} 
-                    disabled = {ipfsaudio === "" || ipfsimage === "" }
+                   disabled = {ipfsaudio === "" || ipfsimage === "" }
                 >
                     Submit
                 </button>

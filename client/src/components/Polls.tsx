@@ -107,26 +107,26 @@ const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, v
           console.error(error);
         }
       };
-      const handle = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
-        try {
-          const payload = {
-            type: "entry_function_payload",
-            function: `${moduleAddress}::community::vote`,
-            //give a state using useState of boolean type for true if for and flase if against??
-            arguments: [state === 'for',index],
-            type_arguments: [],
-          };
-          console.log(payload);
-        // sign and submit transaction to chain
-        const response =await window.aptos.signAndSubmitTransaction(payload);
-        await provider.waitForTransaction(response.hash);
-        console.log(response);
-        } catch (error) {
-          console.error(error);
-        }
-      };
+      // const handle = async (e: React.FormEvent) => {
+      //   e.preventDefault();
+      //   const moduleAddress=process.env.REACT_APP_MODULE_ADDR_TEST;
+      //   try {
+      //     const payload = {
+      //       type: "entry_function_payload",
+      //       function: `${moduleAddress}::community::vote`,
+      //       //give a state using useState of boolean type for true if for and flase if against??
+      //       arguments: [state === 'for',index],
+      //       type_arguments: [],
+      //     };
+      //     console.log(payload);
+      //   // sign and submit transaction to chain
+      //   const response =await window.aptos.signAndSubmitTransaction(payload);
+      //   await provider.waitForTransaction(response.hash);
+      //   console.log(response);
+      //   } catch (error) {
+      //     console.error(error);
+      //   }
+      // };
 
     //   console.log(pollMap[index]);
 
@@ -143,7 +143,7 @@ const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, v
             </div>
 
             {/* options */}
-            <form onSubmit={handle}>
+            <form>
             {show && <BarGraph votes_against={votes_against} votes_for={votes_for} />}
 
             <form className="w-3/4 m-auto my-4">
