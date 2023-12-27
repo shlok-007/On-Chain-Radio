@@ -19,6 +19,7 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
   const [sub, setSub] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleClode = () => setIsModalOpen(false);
+  const [infoModal, setInfoModal] = useState(false);
   const navigate = useNavigate();  
   const {genre} = useParams();
   const [report, setReport] = useState(false);
@@ -269,8 +270,8 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
           <div className="text-center bg-black text-gray-200">
             <div className="px-10 py-12">
               {/* ----title-------- */}
-              <h2 className="text-2xl font-bold mt-3" onClick={() => setIsModalOpen(true)}>{currentSong.title}</h2>
-              <ModalComponent isOpen={isModalOpen} onClose={setIsModalOpen} song={currentSong} />
+              <h2 className="text-2xl font-bold mt-3" >{currentSong.title}</h2>
+              
               <a href="" onClick={(e) => {e.preventDefault(); navigate('/profile/'+currentSong.artist_wallet_address)}} className="text-3x font-bold text-[#7CA4AE]">
                 {`by ${currentSong.vocalist}`}
               </a>
@@ -373,9 +374,10 @@ const PlayRadio: React.FC<PlayRadioProps> = ({premium}) => {
                 <FontAwesomeIcon
                       icon={faCircleInfo}
                       className="text-center"
-                      
+                      onClick={() => setIsModalOpen(true)}
                       size="xl"
                     />
+                    <ModalComponent isOpen={isModalOpen} onClose={setIsModalOpen} song={currentSong} />
                 </button>
                   <TipModal currentSong={currentSong}/>
                 <button>

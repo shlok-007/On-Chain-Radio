@@ -20,7 +20,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({isOpen, onClose, song}) 
                 <div className="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
                     <div>
                     <div className="max-w-md mx-auto bg-white rounded-xl overflow-hidden shadow-md my-4">
-                      <img className="w-full h-48 object-cover" src={song.ipfs_hash_cover_img} alt="Song Cover" />
+                      <img className="w-full h-48 object-cover" src={`https://ipfs.io/ipfs/${song.ipfs_hash_cover_img}`} alt="Song Cover" />
                       <div className="p-6">
                         <h2 className="text-xl font-semibold text-black mb-2">{song.title}</h2>
                         {

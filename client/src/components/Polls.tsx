@@ -142,11 +142,11 @@ const Polls: React.FC<PollProps> = ({ question, proposed_value, votes_against, v
       //write the tyhpe of question and option type??
 
     return (
-        <div className="bg-indigo-600 text-white shadow-md rounded px-8 pt-6 pb-2 mb-0 md:w-3/4 sm:w-full m-auto my-4">
+        <div className="bg-indigo-600 text-white shadow-md rounded px-0 pt-6 pb-2 mb-0 md:w-3/4 sm:w-full m-auto my-4">
             <div>
-                <p className="inline-block  w-3/4 text-lg font-bold">{pollMap[index]}</p>
-                <p className="inline-block  w-3/4 text-lg font-bold">{question}</p>
-                <p className="inline-block  w-3/4 text-lg font-bold">{"Proposed Value: "+proposed_value}</p>
+                <p className="inline-block text-left w-3/4 text-xl font-bold text-gray-300 l-0 pb-1">{pollMap[index]}</p>  
+                <p className="inline-block  w-3/4 text-3xl font-bold py-1">{question}</p>
+                <p className="inline-block  w-3/4 text-lg font-semibold pb-1">{"Proposed Value: "+proposed_value}</p>
                 {/* if you want to add the timer functionality uncomment the following code */}
                 {/* <Timer initialTime={time ? time : 0} onTimerEnd={() => setTimeUp(true)} /> */}
             </div>

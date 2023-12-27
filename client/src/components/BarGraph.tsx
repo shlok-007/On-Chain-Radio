@@ -13,6 +13,11 @@ const MyChart: React.FC<MyChartProps> = ({ votes_against, votes_for }) => {
 
   const data = {
     labels: ['For', 'Against'],
+    plugins: {
+      legends: {
+        display: false
+      }
+    },
     datasets: [
       {
         label: 'Votes',

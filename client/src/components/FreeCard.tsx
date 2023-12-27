@@ -14,6 +14,8 @@ import Classical from '../assets/Classical.jpeg'
 import Hiphop from '../assets/Hip hop.jpeg'
 import Rock from '../assets/Rock.jpeg'
 import Pop from '../assets/Pop.jpeg'
+import newArrivals from '../assets/newarrivals.jpg'
+import trending from '../assets/trending.png'
 
 interface FreeCardProps {
   genre: string
@@ -37,7 +39,7 @@ const FreeCard: React.FC<FreeCardProps> = ({genre}) => {
   const handlePlay = () => {
     login ? navigate("/playsongs/"+categoryMap.get(genre)) : navigate("/signup")
   }
-  const [image, setImage] = useState(genre === 'Jazz' ? Jazz : genre === 'HipHop' ? Hiphop : genre === 'Pop' ? Pop : genre === 'Classical' ? Classical : genre === 'New Arrivals' ? Pop : Rock );
+  const [image, setImage] = useState(genre === 'Jazz' ? Jazz : genre === 'HipHop' ? Hiphop : genre === 'Pop' ? Pop : genre === 'Classical' ? Classical : genre === 'Rock' ? Rock : genre === 'Trending Now' ? trending : newArrivals );
   return (
     <>
       {/* <!-- CARD 1 --> */}

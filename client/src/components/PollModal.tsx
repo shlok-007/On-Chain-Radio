@@ -184,12 +184,21 @@ const PollModal:React.FC<PollModalProps> = ({ setPolls, polls }) => {
           className="mt-1 p-2.5 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
+      <div className="grid grid-cols-2 gap-2">
       <button
         type="submit"
         className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         Submit
       </button>
+      <button
+        type="button"
+        onClick={handleClose}
+        className="w-full bg-white filled text-blue-500 font-medium py-2.5 rounded-md border border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Cancel
+      </button>
+      </div>
     </form>
         </div>
       </Modal>

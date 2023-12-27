@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { AptosClient } from 'aptos';
 import { useWallet, AptosWalletProviderProps } from "@aptos-labs/wallet-adapter-react";
 import { Provider, Network } from "aptos";
@@ -16,6 +16,22 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
   const provider = new Provider(Network.TESTNET);
   let userAcc = useAccountContext();
   const navigate = useNavigate();
+  const [price, setPrice] = useState(0);
+
+  const moduleAddress = process.env.REACT_APP_MODULE_ADDR_TEST || "";
+
+  const fetchCommunityParams = async () => {
+      try {
+        const commParams = await provider.getAccountResource(
+          moduleAddress,
+          `${moduleAddress}::community::CommunityParams`,
+          );
+          console.log(commParams.data);
+          setPrice((commParams as any).data.premium_price);
+      } catch (error) {
+        console.log(error);
+      }
+  };
 
   const handleTransaction = async (plan: Number) => {
     if(!connected){
@@ -42,6 +58,10 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
       console.error("Failed to connect wallet", error);
     }
   }
+
+  useEffect(() => {
+    fetchCommunityParams();
+  }, []);
   
 
   return (
@@ -169,9 +189,9 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
                   PRO
                 </h2>
                 <h1 className="text-5xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">
-                  <span>APT 2</span>
+                  <span>{price/1e8} APT</span>
                   <span className="text-lg ml-1 font-normal text-gray-500">
-                    /mo
+                    /M
                   </span>
                 </h1>
                 <p className="flex items-center text-gray-600 mb-2">
@@ -206,7 +226,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
                   </span>
                   1 month access
                 </p>
-                <p className="flex items-center text-gray-600 mb-2">
+                {/* <p className="flex items-center text-gray-600 mb-2">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center bg-indigo-500 text-white rounded-full flex-shrink-0">
                     <svg
                       fill="none"
@@ -221,7 +241,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ setUserAccount }: SubscribeProps)
                     </svg>
                   </span>
                   Unlimited access
-                </p>
+                </p> */}
                 <p className="flex items-center text-gray-600 mb-6">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center bg-indigo-500 text-white rounded-full flex-shrink-0">
                     <svg
